@@ -1,0 +1,78 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd">
+
+	<!-- This is a example file for the sl database Ar5/jordmon  -->
+
+	<bean id="overrideConfigurer"
+		class="org.springframework.beans.factory.config.PropertyOverrideConfigurer">
+		<property name="location"
+			value="classpath:/subscriber_db_setup.properties" />
+		<property name="ignoreResourceNotFound" value="true" />
+	</bean>
+
+	<!--  sl db start -->
+
+	<bean id="subscriber_db_dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="driverClass">
+			<value>org.postgresql.Driver</value>
+		</property>
+		<property name="jdbcUrl">
+			<value>jdbc:postgresql://subscriber_db_host:5432/subscriber_db</value>
+		</property>
+		<property name="user">
+			<value>subscriber_user</value>
+		</property>
+		<property name="password">
+			<value>subscriber_password</value>
+		</property>
+		<property name="maxPoolSize">
+			<value>3</value>
+		</property>
+	</bean>
+
+
+	<bean id="subscriber_db_sessionFactory"
+		class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+		<property name="dataSource" ref="subscriber_db_dataSource" />
+		<property name="exposeTransactionAwareSessionFactory">
+			<value>false</value>
+		</property>
+
+
+		<property name="packagesToScan">
+			<list>
+				<value>no.geonorge.subscriber.Arealressurs</value>
+			</list>
+		</property>
+
+
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.show_sql">false</prop>
+				<prop key="hibernate.generate_statistics">false</prop>
+				<prop key="hibernate.dialect">org.hibernatespatial.postgis.PostgisDialect</prop>
+				<prop key="hibernate.jdbc.batch_size">100</prop>
+				<prop key="hibernate.cache.use_second_level_cache">true</prop>
+				<prop key="hibernate.cache.use_query_cache">true</prop>
+				<prop key="hibernate.cache.provider_class">net.sf.ehcache.hibernate.EhCacheProvider</prop>
+				<prop key="hibernate.cache.provider_configuration_file_resource_path">sl_db_ehcache.xml</prop>
+			</props>
+		</property>
+	</bean>
+
+	<!--  Used by the application to get a db connections -->
+	
+	<bean id="subscriber_db_connection" class="no.skogoglandskap.db.util.SpringHibernateTemplate">
+		<property name="sessionFactory" ref="subscriber_db_sessionFactory" />
+	</bean>
+
+<!--  sl db stop -->
+
+
+
+</beans>
+

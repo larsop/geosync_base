@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<chlogf:TransactionCollection timeStamp="2001-12-17T09:30:47Z" numberMatched="1" numberReturned="1" startIndex="56" endIndex="56" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://skjema.geonorge.no/standard/geosynkronisering/1.0/endringslogg http://geosynkronisering.no/files/skjema/1.0/changelogfile.xsd http://skjema.geonorge.no/SOSI/produktspesifikasjon/Arealressurs/4.5 http://geosynkronisering.no/files/skjema/Arealressurs/4.5/FKB_AR5.xsd" xmlns:chlogf="http://skjema.geonorge.no/standard/geosynkronisering/1.0/endringslogg" xmlns:app="http://skjema.geonorge.no/SOSI/produktspesifikasjon/Arealressurs/4.5" xmlns:wfs="http://www.opengis.net/wfs/2.0" xmlns:gml="http://www.opengis.net/gml/3.2">
+  <chlogf:transactions service="WFS" version="2.0.0">
+    <wfs:Insert handle="0" inputFormat="application/gml+xml; version=3.2">
+      <app:ArealressursFlate gml:id="no.skogoglandskap.ar5.ArealressursFlate.5497">
+        <gml:boundedBy>
+          <gml:Envelope srsDimension="2" srsName="urn:ogc:def:crs:EPSG::4258">
+            <gml:lowerCorner>59.766212225774424 10.09726048240672</gml:lowerCorner>
+            <gml:upperCorner>59.76818704787362 10.098911720141858</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <app:datafangstdato>1997-01-07T23:00:00Z</app:datafangstdato>
+        <app:kvalitet>
+          <app:Posisjonskvalitet>
+            <app:målemetode codeSpace="http://skjema.geonorge.no/SOSI/produktspesifikasjon/Arealressurs/4.5/Målemetode.xml">32</app:målemetode>
+            <app:nøyaktighet>200</app:nøyaktighet>
+          </app:Posisjonskvalitet>
+        </app:kvalitet>
+        <app:verifiseringsdato>1997-01-07T23:00:00Z</app:verifiseringsdato>
+        <app:identifikasjon>
+          <app:Identifikasjon>
+            <app:lokalId>e48a254f-815e-46ef-b9f9-566ae3ea25e0</app:lokalId>
+            <app:navnerom>no.skogoglandskap.ar5.ArealressursFlate</app:navnerom>
+            <app:versjonId>1.0</app:versjonId>
+          </app:Identifikasjon>
+        </app:identifikasjon>
+        <app:område>
+          <gml:Polygon gml:id="no.skogoglandskap.ar5.ArealressursFlate.GEOM.5497" srsDimension="2" srsName="urn:ogc:def:crs:EPSG::4258">
+            <gml:exterior>
+              <gml:LinearRing>
+                <gml:posList>59.766212225774424 10.097330118581295 59.76625349626632 10.097313312081406 59.76630266967368 10.097285726026877 59.766376335441066 10.097293306227341 59.76645099217061 10.097332789201637 59.766522998594944 10.09736702205 59.76658139592146 10.09737481368877 59.766644178432884 10.097373668846297 59.76670260547442 10.097377900556406 59.766767259121984 10.09738928044862 59.76684179381127 10.09738958953633 59.76691349802055 10.09737395944276 59.76697177458723 10.097363942357068 59.76703014007728 10.097364789146736 59.767108252565244 10.097366818028998 59.767171201030855 10.09738882508277 59.76723398353682 10.097387680258764 59.76730398256396 10.097382677065827 59.76737130009667 10.097376161459435 59.767440399842805 10.0973713067685 59.7675121789656 10.097357459344664 59.767573133416825 10.097338627333412 59.76764033166941 10.09731412439733 59.76764033166941 10.09731412439733 59.76769169603903 10.097368335234833 59.767732402529965 10.097429852775619 59.767790784357565 10.097428741666736 59.76783810001889 10.097387027364592 59.76788457879123 10.097337985287924 59.767933766418224 10.097297934648381 59.767976742068385 10.097270499970566 59.768035018619265 10.09726048240672 59.768035018619265 10.09726048240672 59.7680953180701 10.097298605951492 59.768149589097426 10.09739190693184 59.76815462594148 10.09749854911927 59.768165890167616 10.097601478515353 59.76818704787362 10.097702596060083 59.76817599285565 10.09783274762123 59.76816755766213 10.097961026505283 59.76813410868362 10.098095072030244 59.768087810886016 10.098176169210287 59.76801820759508 10.098252049458003 59.76795116065547 10.098312166544652 59.76787245427636 10.098370476030578 59.76778727821115 10.098407740536418 59.767715604182364 10.098430491903262 59.76764836205556 10.098449471589696 59.76760191410677 10.098494773705823 59.7675366944108 10.098561893610103 59.767478629193235 10.098611087032628 59.767425056422 10.098670754836665 59.767368819029485 10.098737634995803 59.76731514102997 10.0987883964172 59.76725989115017 10.098855308608623 59.76720341108061 10.098886748206835 59.76714068909698 10.098902136178856 59.76707787682707 10.098906838167535 59.76700428657674 10.098911720141858 59.76694587396814 10.09889502277652 59.766882774940036 10.098848081326427 59.766825961418775 10.09879048563564 59.766767336888556 10.098723928261965 59.76671134567463 10.098653896680894 59.766661839990796 10.098624495067469 59.76658079243491 10.098576074734506 59.766522242283806 10.09853284474922 59.7664572094809 10.098448629456222 59.76638506620991 10.098366317526061 59.766337205120905 10.098312044287807 59.76630356371131 10.098232599639427 59.76625375488964 10.098131971091492 59.766215682960826 10.098056120304616 59.766215682960826 10.098056120304616 59.766212225774424 10.097330118581295</gml:posList>
+              </gml:LinearRing>
+            </gml:exterior>
+          </gml:Polygon>
+        </app:område>
+        <app:arealtype codeSpace="http://skjema.geonorge.no/SOSI/produktspesifikasjon/Arealressurs/4.5/ArealressursArealtype.xml">30</app:arealtype>
+        <app:skogbonitet codeSpace="http://skjema.geonorge.no/SOSI/produktspesifikasjon/Arealressurs/4.5/ArealressursSkogbonitet.xml">14</app:skogbonitet>
+        <app:treslag codeSpace="http://skjema.geonorge.no/SOSI/produktspesifikasjon/Arealressurs/4.5/ArealressursTreslag.xml">31</app:treslag>
+        <app:grunnforhold codeSpace="http://skjema.geonorge.no/SOSI/produktspesifikasjon/Arealressurs/4.5/ArealressursGrunnforhold.xml">44</app:grunnforhold>
+        <app:kartstandard codeSpace="http://skjema.geonorge.no/SOSI/produktspesifikasjon/Arealressurs/4.5/ArealressursKartstandard.xml">AR5</app:kartstandard>
+      </app:ArealressursFlate>
+    </wfs:Insert>
+  </chlogf:transactions>
+</chlogf:TransactionCollection>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<chlogf:TransactionCollection timeStamp="2001-12-17T09:30:47Z"
+	numberMatched="2" numberReturned="2" startIndex="29" endIndex="30"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://skjema.geonorge.no/sosi/produktspesifikasjon/geosynkronisering/fil/1.0 http://www.geosynkronisering.no/files/skjema/1.0/changelogfile.xsd 
+	http://skjema.geonorge.no/SOSI/produktspesifikasjon/Arealressurs/4.5 http://geosynkronisering.no/files/skjema/Arealressurs/4.5/FKB_AR5.xsd"
+	xmlns:app="http://skjema.geonorge.no/SOSI/produktspesifikasjon/Arealressurs/4.5"
+	xmlns:wfs="http://www.opengis.net/wfs/2.0" 
+	xmlns:fes="http://www.opengis.net/fes/2.0"
+	xmlns:chlogf="http://skjema.geonorge.no/standard/geosynkronisering/1.0/endringslogg"
+	xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:ns5="http://www.w3.org/1999/xlink"
+	xmlns:ns6="http://www.isotc211.org/2005/gco" xmlns:ns7="http://www.isotc211.org/2005/gmd"
+	xmlns:ns8="http://www.isotc211.org/2005/gts" xmlns:ns9="http://www.opengis.net/ows/1.1">
+  <chlogf:transactions service="WFS" version="2.0.0">
+    <wfs:Insert handle="0" inputFormat="application/gml+xml; version=3.2">
+ 	<gml:arealressursGrenseType gml:id="no.skogoglandskap.ar5.ArealressursGrense.1" xmlns="http://skjema.geonorge.no/SOSI/produktspesifikasjon/Arealressurs/4.5">
+        <gml:boundedBy>
+          <gml:Envelope srsDimension="2" srsName="urn:ogc:def:crs:EPSG::4258">
+            <gml:lowerCorner>59.66411140473505 9.998490360436271</gml:lowerCorner>
+            <gml:upperCorner>59.664242950417716 9.999406521354038</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <datafangstdato>1993-03-21T23:00:00Z</datafangstdato>
+        <kvalitet>
+          <Posisjonskvalitet>
+            <målemetode codeSpace="http://skjema.geonorge.no/SOSI/produktspesifikasjon/Arealressurs/4.5/Målemetode.xml">82</målemetode>
+          </Posisjonskvalitet>
+        </kvalitet>
+        <verifiseringsdato>1993-03-21T23:00:00Z</verifiseringsdato>
+        <identifikasjon>
+          <Identifikasjon>
+            <lokalId>a7fec06f-fb9e-468c-bb7c-559d86f9d3d5</lokalId>
+            <navnerom>no.skogoglandskap.ar5.ArealressursGrense</navnerom>
+            <versjonId>1.0</versjonId>
+          </Identifikasjon>
+        </identifikasjon>
+        <grense>
+          <gml:LineString gml:id="no.skogoglandskap.ar5.ArealressursGrense.GEOM.1" srsDimension="2" srsName="urn:ogc:def:crs:EPSG::4258">
+            <gml:posList>59.664114950742686 9.998490360436271 59.66411245828948 9.99853466141146 59.66411140473505 9.998673080333486 59.66411198149143 9.99877427266891 59.6641272789712 9.998935365487698 59.66414683408264 9.999068007537637 59.66417722507301 9.999216414703293 59.664208424939545 9.999329346041636 59.664242950417716 9.999406521354038</gml:posList>
+          </gml:LineString>
+        </grense>
+        <avgrensingType codeSpace="http://skjema.geonorge.no/SOSI/produktspesifikasjon/Arealressurs/4.5/ArealressursAvgrensingType.xml">4206</avgrensingType>
+      </gml:arealressursGrenseType>
+    </wfs:Insert>
+  </chlogf:transactions>
+</chlogf:TransactionCollection>

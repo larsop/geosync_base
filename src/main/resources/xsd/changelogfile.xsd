@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:chlogf="http://skjema.geonorge.no/standard/geosynkronisering/1.0/endringslogg"
+	xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:fes="http://www.opengis.net/fes/2.0"
+	xmlns:wfs="http://www.opengis.net/wfs/2.0"
+	targetNamespace="http://skjema.geonorge.no/standard/geosynkronisering/1.0/endringslogg"
+	elementFormDefault="qualified">
+	<!-- Generert av MetaTrans(0.9.0.2) - 20.08.2013 15:11:19 -->
+	<xs:import namespace="http://www.opengis.net/gml/3.2"
+		schemaLocation="http://schemas.opengis.net/gml/3.2.1/gml.xsd" />
+	<xs:import namespace="http://www.opengis.net/fes/2.0"
+		schemaLocation="http://schemas.opengis.net/filter/2.0/filterAll.xsd" />
+	<xs:import namespace="http://www.opengis.net/wfs/2.0"
+		schemaLocation="http://schemas.opengis.net/wfs/2.0/wfs.xsd" />
+	<xs:element name="TransactionCollection" type="chlogf:TransactionCollectionType" />
+	<xs:complexType name="TransactionCollectionType">
+		<xs:annotation>
+			<xs:documentation>samling av transaksjoner</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="transactions" type="wfs:TransactionType"
+				minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+		<xs:attribute name="timeStamp" type="xs:dateTime" use="required" />
+		<xs:attribute name="numberMatched" type="xs:integer" use="required" />
+		<xs:attribute name="numberReturned" type="xs:integer"
+			use="required" />
+		<xs:attribute name="startIndex" type="xs:integer" use="required" />
+		<xs:attribute name="endIndex" type="xs:integer" use="required" />
+	</xs:complexType>
+	
+	<!-- 
+		<xs:element name="TransactionCollection">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="transactions" type="chlogf:TransactionCollectionType"
+					minOccurs="1" maxOccurs="1" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="TransactionCollectionType">
+		<xs:annotation>
+			<xs:documentation>samling av transaksjoner</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="transactions" type="wfs:TransactionType"
+				minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+		<xs:attribute name="timeStamp" type="xs:dateTime" use="required" />
+		<xs:attribute name="numberMatched" type="xs:integer" use="required" />
+		<xs:attribute name="numberReturned" type="xs:integer"
+			use="required" />
+		<xs:attribute name="startIndex" type="xs:integer" use="required" />
+		<xs:attribute name="endIndex" type="xs:integer" use="required" />
+	</xs:complexType>
+	
+	 -->
+</xs:schema>

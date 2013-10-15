@@ -1,0 +1,1045 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:kyst="http://skjema.geonorge.no/SOSI/produktspesifikasjon/PrimaerdataKystkontur/1.0" xmlns:sc="http://www.interactive-instruments.de/ShapeChange/AppInfo" targetNamespace="http://skjema.geonorge.no/SOSI/produktspesifikasjon/PrimaerdataKystkontur/1.0" elementFormDefault="qualified" version="1.0.RC8">
+	<import namespace="http://www.interactive-instruments.de/ShapeChange/AppInfo" schemaLocation="http://shapechange.net/resources/schema/ShapeChangeAppinfo.xsd"/>
+	<import namespace="http://www.opengis.net/gml/3.2" schemaLocation="http://schemas.opengis.net/gml/3.2.1/gml.xsd"/>
+	<!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+	<element name="Flytebrygge" type="kyst:FlytebryggeType" substitutionGroup="kyst:SOSI_ObjektFlytebrygge">
+		<annotation>
+			<documentation>brygge som er forankret til bunn og hvor plasseringen kan avhenge av vind og strømretning
+
+
+&lt;b&gt;Tilleggsbeskrivelse for prod.spek.&lt;/b&gt;
+Fra S57 stilles det som krav at flytebrygger i sin helhet skal ligge i vann.
+Det henvises til FKB-BygnAnlegg 4.01 for minstekrav for registrering av Flytebrygger.
+
+&lt;b&gt;Høydereferanse&lt;/b&gt;
+MHV
+
+&lt;b&gt;Assosiasjoner&lt;/b&gt;
+Flytebrygge (flater) skal avgrenses av Flytebryggekant.
+Flytebrygge (kurve) skal ikke krysse eller tangere avgrensning land og sjø
+
+-- Definition -- 
+wharf chained to the bottom and whose location may depend on the direction of the wind and current</documentation>
+		</annotation>
+	</element>
+	<complexType name="FlytebryggeType">
+		<complexContent>
+			<extension base="kyst:SOSI_ObjektFlytebryggeType">
+				<sequence>
+					<element name="område" type="gml:SurfacePropertyType" minOccurs="0">
+						<annotation>
+							<documentation>objektets utstrekning
+
+-- Definition -- 
+area over which an object extends</documentation>
+						</annotation>
+					</element>
+					<element name="posisjon" type="gml:PointPropertyType" minOccurs="0">
+						<annotation>
+							<documentation>sted som objektet eksisterer på
+
+-- Definition -- 
+location where the object exists</documentation>
+						</annotation>
+					</element>
+					<element name="senterlinje" type="gml:CurvePropertyType" minOccurs="0">
+						<annotation>
+							<documentation>forløp som følger objektets sentrale del
+
+-- Definition -- 
+cource follwed by the central part of the object</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="FlytebryggePropertyType">
+		<sequence minOccurs="0">
+			<element ref="kyst:Flytebrygge"/>
+		</sequence>
+		<attributeGroup ref="gml:AssociationAttributeGroup"/>
+		<attributeGroup ref="gml:OwnershipAttributeGroup"/>
+	</complexType>
+	<element name="Flytebryggekant" type="kyst:FlytebryggekantType" substitutionGroup="kyst:SOSI_ObjektKystkontur">
+		<annotation>
+			<documentation>avgrensning av flytebrygge
+
+
+&lt;b&gt;Tilleggsbeskrivelse for prod.spek.&lt;/b&gt;
+Fra S57 stilles det som krav at flytebrygger i sin helhet skal ligge i vann.
+Det henvises til FKB-BygnAnlegg 4.01 for minstekrav for registrering av Flytebrygger.
+
+&lt;b&gt;Høydereferanse&lt;/b&gt;
+MHV
+
+&lt;b&gt;Assosiasjoner&lt;/b&gt;
+Flytebryggekant skal alltid avgrense Flytebrygge.
+Flytebryggekant skal ikke krysse eller tangere avgrensning land og sjø
+
+-- Definition -- 
+delimitation of floating stage</documentation>
+		</annotation>
+	</element>
+	<complexType name="FlytebryggekantType">
+		<complexContent>
+			<extension base="kyst:SOSI_ObjektKystkonturType">
+				<sequence>
+					<element name="grense" type="gml:CurvePropertyType">
+						<annotation>
+							<documentation>forløp som følger overgang mellom ulike fenomener
+
+-- Definition -- 
+course follwing the transition between different real world phenomena</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="FlytebryggekantPropertyType">
+		<sequence minOccurs="0">
+			<element ref="kyst:Flytebryggekant"/>
+		</sequence>
+		<attributeGroup ref="gml:AssociationAttributeGroup"/>
+		<attributeGroup ref="gml:OwnershipAttributeGroup"/>
+	</complexType>
+	<element name="HavElvSperre" type="kyst:HavElvSperreType" substitutionGroup="kyst:SOSI_ObjektSperrelinje">
+		<annotation>
+			<documentation>en fiktiv linje som definerer grensa mellom sjø og elv, i samme nivå som kystKontur (middel høyvann) 
+
+&lt;b&gt;Tilleggsbeskrivelse for prod.spek.&lt;/b&gt;
+HavElvSperre etableres som en rett linje mellom endepunkt på kystkontur i overgang mellom kystkontur og elvekant. Det antas å være vanskelig å registrere HavElvSperrens eksakte forløp i MHV.
+
+Kriterier for plassering av HavElvSperre:.
+- Overgang fra kyst til elv er der elva har høyde lik MHV. 
+- Der elvekanten er registrert med høyde MHV oppover i elva plasseres sperrelinja i et naturlig skille mellom kyst og elv, f.eks. ved bruer eller andre innsnevringer. Elvekanten på innsiden av sperrelinja kan registreres med MHV som høydeverdi, men ikke høydeverdier lavere enn MHV. 
+- Kystkontur bør ikke registreres opp i elver/bekker med bredde mindre enn 15 m.
+
+&lt;b&gt;Registreringsmetode&lt;/b&gt;
+Enkeltpunkt i sekvens. 
+
+&lt;b&gt;Grunnrissreferanse&lt;/b&gt;
+Lik kystkonturens nodepunkt.
+
+&lt;b&gt;Høydereferanse&lt;/b&gt;
+Lik kystkonturens nodepunkt.
+
+&lt;b&gt;Assosiasjoner&lt;/b&gt;
+Det skal dannes nodepunkt med øvrige vannobjekter. Der det er naturlig lages det 3D-nodepunkt.
+
+
+Merknad:
+Denne er identisk med samme linje nevnt under kapitlet Innsjøer og vassdrag).</documentation>
+		</annotation>
+	</element>
+	<complexType name="HavElvSperreType">
+		<complexContent>
+			<extension base="kyst:SOSI_ObjektSperrelinjeType">
+				<sequence>
+					<element name="grense" type="gml:CurvePropertyType">
+						<annotation>
+							<documentation>forløp som følger overgang mellom ulike fenomener</documentation>
+						</annotation>
+					</element>
+					<element name="høyde" type="double" minOccurs="0">
+						<annotation>
+							<documentation>et punkts vertikale avstand over en fysisk eller matematisk definert referanseflate [H]</documentation>
+							<appinfo>
+								<taggedValue xmlns="http://www.interactive-instruments.de/ShapeChange/AppInfo" tag="SOSI_navn">H</taggedValue>
+							</appinfo>
+						</annotation>
+					</element>
+					<element name="kystreferanse" type="kyst:KystreferanseType" minOccurs="0">
+						<annotation>
+							<documentation>kystkonturens referansenivå</documentation>
+							<appinfo>
+								<taggedValue xmlns="http://www.interactive-instruments.de/ShapeChange/AppInfo" tag="SOSI_navn">KYSTREF</taggedValue>
+							</appinfo>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="HavElvSperrePropertyType">
+		<sequence minOccurs="0">
+			<element ref="kyst:HavElvSperre"/>
+		</sequence>
+		<attributeGroup ref="gml:AssociationAttributeGroup"/>
+		<attributeGroup ref="gml:OwnershipAttributeGroup"/>
+	</complexType>
+	<element name="Identifikasjon" type="kyst:IdentifikasjonType" substitutionGroup="gml:AbstractObject">
+		<annotation>
+			<documentation>Unik identifikasjon av et objekt, ivaretatt av den ansvarlige produsent/forvalter, som kan benyttes av eksterne applikasjoner som referanse til objektet. 
+
+NOTE1 Denne eksterne objektidentifikasjonen må ikke forveksles med en tematisk objektidentifikasjon, slik som f.eks bygningsnummer. 
+
+NOTE 2 Denne unike identifikatoren vil ikke endres i løpet av objektets levetid.</documentation>
+			<appinfo>
+				<taggedValue xmlns="http://www.interactive-instruments.de/ShapeChange/AppInfo" tag="SOSI_navn">IDENT</taggedValue>
+			</appinfo>
+		</annotation>
+	</element>
+	<complexType name="IdentifikasjonType">
+		<sequence>
+			<element name="lokalId" type="string">
+				<annotation>
+					<documentation>lokal identifikator, tildelt av dataleverendør/dataforvalter. Den lokale identifikatoren er unik innenfor navnerommet, ingen andre objekter har samme identifikator.
+
+NOTE: Det er data leverendørens ansvar å sørge for at denne lokale identifikatoren er unik innenfor navnerommet.</documentation>
+					<appinfo>
+						<taggedValue xmlns="http://www.interactive-instruments.de/ShapeChange/AppInfo" tag="SOSI_navn">LOKALID</taggedValue>
+					</appinfo>
+				</annotation>
+			</element>
+			<element name="navnerom" type="string">
+				<annotation>
+					<documentation>navnerom som unikt identifiserer datakilden til objektet, starter med to bokstavs kode jfr ISO 3166. Benytter understreking  ("_") dersom data produsenten ikke er assosiert med bare et land.
+
+NOTE 1 : Verdien for nanverom vil eies av den dataprodusent som har ansvar for de unike identifikatorene og vil registreres i "INSPIRE external  Object Identifier Namespaces Register"
+
+Eksempel: NO for Norge.</documentation>
+					<appinfo>
+						<taggedValue xmlns="http://www.interactive-instruments.de/ShapeChange/AppInfo" tag="SOSI_navn">NAVNEROM</taggedValue>
+					</appinfo>
+				</annotation>
+			</element>
+			<element name="versjonId" type="string">
+				<annotation>
+					<documentation>identifikasjon av en spesiell versjon av et geografisk objekt (instans), maksimum lengde på 25 karakterers. Dersom spesifikasjonen av et geografisk objekt med en identifikasjon inkludererer livsløpssyklusinformasjon, benyttes denne versjonId for å skille mellom ulike versjoner av samme objekt. versjonId er en unik  identifikasjon av versjonen. 
+
+NOTE Maksimum lengde er valgt for å tillate tidsregistrering i henhold til  ISO 8601, slik som  "2007-02-12T12:12:12+05:30" som versjonId.</documentation>
+					<appinfo>
+						<taggedValue xmlns="http://www.interactive-instruments.de/ShapeChange/AppInfo" tag="SOSI_navn">VERSJONID</taggedValue>
+					</appinfo>
+				</annotation>
+			</element>
+		</sequence>
+	</complexType>
+	<complexType name="IdentifikasjonPropertyType">
+		<sequence>
+			<element ref="kyst:Identifikasjon"/>
+		</sequence>
+	</complexType>
+	<element name="Kopidata" type="kyst:KopidataType" substitutionGroup="gml:AbstractObject">
+		<annotation>
+			<documentation>angivelse av at objektet er hentet fra en kopi av originaldata
+
+Merknad: 
+Kan benyttes dersom man gjør et uttak av en database som ikke inneholder originaldataene.</documentation>
+		</annotation>
+	</element>
+	<complexType name="KopidataType">
+		<sequence>
+			<element name="områdeId" type="integer">
+				<annotation>
+					<documentation>identifikasjon av område som dataene dekker
+
+Merknad: Kan angis med kommunenummer eller fylkesnummer. Disse bør spesifiseres nærmere.</documentation>
+				</annotation>
+			</element>
+			<element name="originalDatavert" type="string">
+				<annotation>
+					<documentation>ansvarlig etat for forvaltning av data</documentation>
+				</annotation>
+			</element>
+			<element name="kopidato" type="dateTime">
+				<annotation>
+					<documentation>dato når objektet ble kopiert fra originaldatasettet  
+
+Merknad:
+Er en del av egenskapen Kopidata. Brukes i de tilfeller hvor en kopidatabase brukes til distribusjon.
+Å kopiere et datasett til en kopidatabase skal ikke føre til at Oppdateringsdato blir endret.
+Eventuell redigering av data i et kopidatasett medfører ny Oppdateringsdato, Datafangstdato og/eller Verifiseringsdato.</documentation>
+				</annotation>
+			</element>
+		</sequence>
+	</complexType>
+	<complexType name="KopidataPropertyType">
+		<sequence>
+			<element ref="kyst:Kopidata"/>
+		</sequence>
+	</complexType>
+	<simpleType name="KystMediumType">
+		<annotation>
+			<documentation>objektets beliggenhet i forhold til jordoverflaten
+
+Eksempel:
+Veg på bro, i tunnel, inne i et bygningsmessig anlegg, etc.</documentation>
+		</annotation>
+		<union memberTypes="kyst:KystMediumEnumerationType kyst:KystMediumOtherType"/>
+	</simpleType>
+	<simpleType name="KystMediumEnumerationType">
+		<annotation>
+			<documentation>objektets beliggenhet i forhold til jordoverflaten
+
+Eksempel:
+Veg på bro, i tunnel, inne i et bygningsmessig anlegg, etc.</documentation>
+		</annotation>
+		<restriction base="string">
+			<enumeration value="UnderTerrenget"/>
+			<enumeration value="På terrenget/på bakkenivå"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="KystMediumOtherType">
+		<restriction base="string">
+			<pattern value="other: \w{2,}"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="KystkonstruksjonstypeType">
+		<annotation>
+			<documentation>angivelse av kystkonturens konstruksjon</documentation>
+			<appinfo>
+				<taggedValue xmlns="http://www.interactive-instruments.de/ShapeChange/AppInfo" tag="SOSI_navn">KYSTKONSTRUKSJONSTYPE</taggedValue>
+			</appinfo>
+		</annotation>
+		<union memberTypes="kyst:KystkonstruksjonstypeEnumerationType kyst:KystkonstruksjonstypeOtherType"/>
+	</simpleType>
+	<simpleType name="KystkonstruksjonstypeEnumerationType">
+		<annotation>
+			<documentation>angivelse av kystkonturens konstruksjon</documentation>
+			<appinfo>
+				<taggedValue xmlns="http://www.interactive-instruments.de/ShapeChange/AppInfo" tag="SOSI_navn">KYSTKONSTRUKSJONSTYPE</taggedValue>
+			</appinfo>
+		</annotation>
+		<restriction base="string">
+			<enumeration value="1">
+				<annotation>
+					<documentation>Konstruksjon som beskytter et kystområde-,havn/havnebasseng eller ankringsområde mot bølger. En bølgebryter er ikke brukbar til fortøyning av båter.
+Merknad: Til forskjell fra molo: ikke brukbar til fortøyning av båter.</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="3">
+				<annotation>
+					<documentation>Konstruksjon som beskytter et kystområde-,havn/havnebasseng eller ankringsområde der båter kan legge til på lesiden. I noen tilfeller kan det ankres på begge sider av en molo.</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="4">
+				<annotation>
+					<documentation>Konstruksjon som stikker ut i sjøen der båter kan legge til. Konstruksjonen er bygget på pæler og har ingen funksjon som bølgebryter.</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="5">
+				<annotation>
+					<documentation>Konstruksjon som stikker ut i sjøen. Egnet for fritids- og rekreasjonsformål, men båter kan ikke legge til. Konstruksjonen er bygget på pæler og har ingen funksjon som bølgebryter.</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="6">
+				<annotation>
+					<documentation>Konstruksjon langs eller ut fra land, hvor båter kan legge til.</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="7">
+				<annotation>
+					<documentation>Forstøtningsvegg av profilerte jernpæler.</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="8">
+				<annotation>
+					<documentation>Voll til beskyttelse mot (hav)oversvømmelse</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="11">
+				<annotation>
+					<documentation>Brukes der trapper avgrenser sjø og land.</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="13">
+				<annotation>
+					<documentation>Skråplan for landsetting og sjøsetting av båter</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="50">
+				<annotation>
+					<documentation>Brukes der en bygnings yttervegg avgrenser sjø og land</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="51">
+				<annotation>
+					<documentation>Fylling en konstruert kystlinje av stein, jordmasser etc. Fylling er ikke egnet for anløp av båter og har ingen funksjon som bølgebryter.</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="99">
+				<annotation>
+					<documentation>Brukes der kystkonstruksjonstypen er ukjent.</documentation>
+				</annotation>
+			</enumeration>
+		</restriction>
+	</simpleType>
+	<simpleType name="KystkonstruksjonstypeOtherType">
+		<restriction base="string">
+			<pattern value="other: \w{2,}"/>
+		</restriction>
+	</simpleType>
+	<element name="Kystkontur" type="kyst:KystkonturType" substitutionGroup="kyst:SOSI_ObjektKystkontur">
+		<annotation>
+			<documentation>grense mellom land og sjø, definert som midlere høyvannslinje
+&lt;b&gt;
+&lt;/b&gt;&lt;b&gt;Tilleggsbeskrivelse for prod.spek.&lt;/b&gt;
+Nivåforskjellen mellom midlere høyvann og middelvann angis med konstanten M2 i cm. Dersom benyttet kystkontur ikke er den definerte linje, må dette framgå av dataene ved bruk av egenskapen KYSTREF.
+
+Ved fotogrammetriske metoder konstrueres kystkonturen som nivålinje på det høydenivået (over middelvann) som den tidevannsberegnede konstanten M2 angir. Fra andre kilder kan andre referanser være benyttet (fotovannstand, usikker, mv).
+
+Overgangen fra kyst til elv er der elva har høyde lik MHV. Se definisjon av HavElvSperre for detaljer om dette.
+
+Kystkonturen skal være registrert fullstendig og sammenhengende. 
+
+Grense mellom sjø/vann og land registreres som Kystkontur dersom grensa stedfestes til MHV (vannet følger tidevannet). Kystkonturen kan beskrive vannflater skilt fra resterende havflate dersom dette kriteriet er oppfylt.
+
+&lt;b&gt;Registreringsmetode&lt;/b&gt;
+Kontinuerlig registrering
+
+&lt;b&gt;Grunnrissreferanse&lt;/b&gt;
+Terreng/vannkant i riktig høyde, se høydereferanse.
+
+&lt;b&gt;Høydereferanse&lt;/b&gt;
+Verdien for HØYDE settes etter kommunevis tabell med MHV-verdier referert til 0-nivå NN1954.
+
+&lt;b&gt;Assosiasjoner&lt;/b&gt;
+Kystkonturen skal være gjennomgående under små brygger og lignende som står på pæler. 
+
+Kystkonturen skal være koblet mot andre situasjonsdetaljer (kai, mur, osv.) ved at kystkonturen konnekteres i 2 dimensjoner til objektet. Kystkonturen skal ha samme grunnrisskoordinater som objektet, men med riktig vannhøyde.
+
+Det skal bearbeides nodepunkt til andre vanntema. Nodepunktene dannes i 3D der dette er naturlig.
+
+&lt;b&gt;Minstestørrelse&lt;/b&gt;
+Minstestørrelse:
+1): Øyer større enn 10 m&lt;sup&gt;2&lt;/sup&gt; registreres som kystkontur.
+2): Ved kartkonstruksjon skal øyer større enn 10 m&lt;sup&gt;2&lt;/sup&gt; registreres som kystkontur. Ved digitalisering vil minstestørrelsen avhenge av eksisterende kart.
+
+
+Merknad:
+Tilsvarer COALNE i S-57</documentation>
+		</annotation>
+	</element>
+	<complexType name="KystkonturType">
+		<complexContent>
+			<extension base="kyst:SOSI_ObjektKystkonturType">
+				<sequence>
+					<element name="grense" type="gml:CurvePropertyType">
+						<annotation>
+							<documentation>forløp som følger overgang mellom ulike fenomener</documentation>
+						</annotation>
+					</element>
+					<element name="kystreferanse" type="kyst:KystreferanseType" minOccurs="0">
+						<annotation>
+							<documentation>kystkonturens referansenivå</documentation>
+							<appinfo>
+								<taggedValue xmlns="http://www.interactive-instruments.de/ShapeChange/AppInfo" tag="SOSI_navn">KYSTREF</taggedValue>
+							</appinfo>
+						</annotation>
+					</element>
+					<element name="høyde" type="double" minOccurs="0">
+						<annotation>
+							<documentation>et punkts vertikale avstand over en fysisk eller matematisk definert referanseflate [H]</documentation>
+							<appinfo>
+								<taggedValue xmlns="http://www.interactive-instruments.de/ShapeChange/AppInfo" tag="SOSI_navn">H</taggedValue>
+							</appinfo>
+						</annotation>
+					</element>
+					<element name="medium" type="kyst:KystMediumType" minOccurs="0">
+						<annotation>
+							<documentation>objektets beliggenhet i forhold til jordoverflaten
+
+Eksempel:
+På bro, i tunnel, inne i et bygningsmessig anlegg, etc.</documentation>
+							<appinfo>
+								<taggedValue xmlns="http://www.interactive-instruments.de/ShapeChange/AppInfo" tag="SOSI_navn">MEDIUM</taggedValue>
+							</appinfo>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="KystkonturPropertyType">
+		<sequence minOccurs="0">
+			<element ref="kyst:Kystkontur"/>
+		</sequence>
+		<attributeGroup ref="gml:AssociationAttributeGroup"/>
+		<attributeGroup ref="gml:OwnershipAttributeGroup"/>
+	</complexType>
+	<element name="KystkonturTekniskeAnlegg" type="kyst:KystkonturTekniskeAnleggType" substitutionGroup="kyst:SOSI_ObjektKystkontur">
+		<annotation>
+			<documentation>angivelse av kystkontur der denne består av tekniske anlegg, definert som  midlere høyvann
+
+&lt;b&gt;Tilleggsbeskrivelse for prod.spek.&lt;/b&gt;
+Benyttes der kystkonturen følger en skapt konstruksjon som for eksempel kaier eller utfyllinger. 
+
+Benyttes der kystkonturen følger en skapt konstruksjon som for eksempel kaier eller utfyllinger. Se figur under Kystkontur.
+Egenskapen Kystkonstrukstype skal registreres ved fotogrammetrisk datafangst. I FKB registreres den som egen objekttype under BygnAnlegg.
+
+Det henvises til FKB-BygnAnlegg 4.01 for minstekrav for registrering tekniske anlegg. Der det registreres et bygningsmessig anlegg i forbindelse med kystkonturen bør det alltid benyttes KystkonturTekniskeAnlegg. 
+
+&lt;b&gt;Registreringsmetode&lt;/b&gt;
+Enkeltpunkt i sekvens
+
+&lt;b&gt;Grunnrissreferanse&lt;/b&gt;
+Terreng/vannkant i riktig høyde, se høydereferanse.
+
+&lt;b&gt;Høydereferanse&lt;/b&gt;
+Verdien for HØYDE settes etter kommunevis tabell med MHV-verdier referert til 0-nivå NN1954.
+
+&lt;b&gt;Assosiasjoner&lt;/b&gt;
+Det skal bearbeides nodepunkt inntil Kystkontur. Nodepunktene dannes i 3D der dette er naturlig.
+
+KystkonturTeknsikeAnlegg skal om mulig konnekteres til det tekniske anlegget i 2 dimensjoner. KystkonturTeknsikeAnlegg skal (vanligvis) ha samme grunnrisskoordinater som objektet, men med riktig vannhøyde.
+
+
+
+
+Merknad:
+Tilsvarer SLCONS i S-57</documentation>
+		</annotation>
+	</element>
+	<complexType name="KystkonturTekniskeAnleggType">
+		<complexContent>
+			<extension base="kyst:SOSI_ObjektKystkonturType">
+				<sequence>
+					<element name="grense" type="gml:CurvePropertyType">
+						<annotation>
+							<documentation>forløp som følger overgang mellom ulike fenomener</documentation>
+						</annotation>
+					</element>
+					<element name="kystkonstruksjonstype" type="kyst:KystkonstruksjonstypeType">
+						<annotation>
+							<documentation>angivelse av kystkonturens konstruksjon</documentation>
+							<appinfo>
+								<taggedValue xmlns="http://www.interactive-instruments.de/ShapeChange/AppInfo" tag="SOSI_navn">KYSTKONSTRUKSJONSTYPE</taggedValue>
+							</appinfo>
+						</annotation>
+					</element>
+					<element name="kystreferanse" type="kyst:KystreferanseType" minOccurs="0">
+						<annotation>
+							<documentation>kystkonturens referansenivå</documentation>
+							<appinfo>
+								<taggedValue xmlns="http://www.interactive-instruments.de/ShapeChange/AppInfo" tag="SOSI_navn">KYSTREF</taggedValue>
+							</appinfo>
+						</annotation>
+					</element>
+					<element name="høyde" type="double" minOccurs="0">
+						<annotation>
+							<documentation>et punkts vertikale avstand over en fysisk eller matematisk definert referanseflate [H]</documentation>
+							<appinfo>
+								<taggedValue xmlns="http://www.interactive-instruments.de/ShapeChange/AppInfo" tag="SOSI_navn">H</taggedValue>
+							</appinfo>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="KystkonturTekniskeAnleggPropertyType">
+		<sequence minOccurs="0">
+			<element ref="kyst:KystkonturTekniskeAnlegg"/>
+		</sequence>
+		<attributeGroup ref="gml:AssociationAttributeGroup"/>
+		<attributeGroup ref="gml:OwnershipAttributeGroup"/>
+	</complexType>
+	<simpleType name="KystreferanseType">
+		<annotation>
+			<documentation>kystkonturens referansenivå</documentation>
+			<appinfo>
+				<taggedValue xmlns="http://www.interactive-instruments.de/ShapeChange/AppInfo" tag="SOSI_navn">KYSTREF</taggedValue>
+			</appinfo>
+		</annotation>
+		<union memberTypes="kyst:KystreferanseEnumerationType kyst:KystreferanseOtherType"/>
+	</simpleType>
+	<simpleType name="KystreferanseEnumerationType">
+		<annotation>
+			<documentation>kystkonturens referansenivå</documentation>
+			<appinfo>
+				<taggedValue xmlns="http://www.interactive-instruments.de/ShapeChange/AppInfo" tag="SOSI_navn">KYSTREF</taggedValue>
+			</appinfo>
+		</annotation>
+		<restriction base="string"/>
+	</simpleType>
+	<simpleType name="KystreferanseOtherType">
+		<restriction base="string">
+			<pattern value="other: \w{2,}"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="MediumType">
+		<annotation>
+			<documentation>objektets beliggenhet i forhold til jordoverflaten
+
+Eksempel:
+Veg på bro, i tunnel, inne i et bygningsmessig anlegg, etc.</documentation>
+		</annotation>
+		<union memberTypes="kyst:MediumEnumerationType kyst:MediumOtherType"/>
+	</simpleType>
+	<simpleType name="MediumEnumerationType">
+		<annotation>
+			<documentation>objektets beliggenhet i forhold til jordoverflaten
+
+Eksempel:
+Veg på bro, i tunnel, inne i et bygningsmessig anlegg, etc.</documentation>
+		</annotation>
+		<restriction base="string">
+			<enumeration value="Alltid i vann"/>
+			<enumeration value="I bygning/bygningsmessig anlegg"/>
+			<enumeration value="I luft"/>
+			<enumeration value="På isbre"/>
+			<enumeration value="På sjøbunnen"/>
+			<enumeration value="På terrenget/på bakkenivå">
+				<annotation>
+					<documentation>default</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="På vannoverflaten"/>
+			<enumeration value="Tidvis under vann"/>
+			<enumeration value="Ukjent">
+				<annotation>
+					<documentation>ukjent</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="Under isbre"/>
+			<enumeration value="Under sjøbunnen"/>
+			<enumeration value="Under terrenget"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="MediumOtherType">
+		<restriction base="string">
+			<pattern value="other: \w{2,}"/>
+		</restriction>
+	</simpleType>
+	<element name="Posisjonskvalitet" type="kyst:PosisjonskvalitetType" substitutionGroup="gml:AbstractObject"/>
+	<complexType name="PosisjonskvalitetType">
+		<sequence>
+			<element name="målemetode" type="gml:CodeType">
+				<annotation>
+					<documentation>metode som ligger til grunn fir registrering av posisjon</documentation>
+				</annotation>
+			</element>
+			<element name="nøyaktighet" type="integer" minOccurs="0">
+				<annotation>
+					<documentation>nøyaktighet i grunnriss i cm</documentation>
+				</annotation>
+			</element>
+			<element name="synbarhet" type="gml:CodeType" minOccurs="0">
+				<annotation>
+					<documentation>hvor godt den kartlagte detaljen var synbar ved kartleggingen</documentation>
+				</annotation>
+			</element>
+			<element name="målemetodeHøyde" type="gml:CodeType" minOccurs="0">
+				<annotation>
+					<documentation>metode for å måle objekttypens høydeverdi</documentation>
+				</annotation>
+			</element>
+			<element name="nøyaktighetHøyde" type="integer" minOccurs="0">
+				<annotation>
+					<documentation>nøyaktighet i høyde i cm</documentation>
+				</annotation>
+			</element>
+			<element name="maksimaltAvvik" type="integer" minOccurs="0"/>
+		</sequence>
+	</complexType>
+	<complexType name="PosisjonskvalitetPropertyType">
+		<sequence>
+			<element ref="kyst:Posisjonskvalitet"/>
+		</sequence>
+	</complexType>
+	<element name="Registreringsversjon" type="kyst:RegistreringsversjonType" substitutionGroup="gml:AbstractObject">
+		<annotation>
+			<documentation>angir hvilken versjon av registreringsinstruksen som ble benyttet ved datafangst
+
+Eksempel:
+I et datasett kan det finnes objekter som er etablert fra ulike registreringsversjoner. For eksempel har registreringsinstruksen for objekttypen Takkant i FKB blitt endret fra SOSI/FKB-versjon 3.4 til versjon 4.0. Dersom en kommune ønsker å ajourføre Takkant for et delområde av kommunen etter FKB/SOSI-versjon 4.0, vil han etter ajourføring ha et kommunedekkende datasett der Takkant er registrert med forskjellig registreringsinstruks. I disse tilfellene kan det være nyttig å kunne skille på objektnivå hvilken registreringsversjon som er benyttet ved datafangst. Egenskapen kan benyttes til dette.</documentation>
+		</annotation>
+	</element>
+	<complexType name="RegistreringsversjonType">
+		<sequence>
+			<element name="produkt" type="string">
+				<annotation>
+					<documentation>entydig navn på produktet i form av et kortnavn</documentation>
+				</annotation>
+			</element>
+			<element name="versjon" type="string">
+				<annotation>
+					<documentation>versjonsnummer</documentation>
+				</annotation>
+			</element>
+		</sequence>
+	</complexType>
+	<complexType name="RegistreringsversjonPropertyType">
+		<sequence>
+			<element ref="kyst:Registreringsversjon"/>
+		</sequence>
+	</complexType>
+	<element name="SOSI_ObjektFlytebrygge" type="kyst:SOSI_ObjektFlytebryggeType" abstract="true" substitutionGroup="gml:AbstractFeature">
+		<annotation>
+			<documentation>abstrakt objekt som bærer en rekke egenskaper som er fagområde-uavhengige og kan benyttes for alle objekttyper
+
+Merknad:
+Spesielt i produktspesifikasjonsarbeid vil en velge egenskaper og av grensningslinjer fra denne klassen.</documentation>
+		</annotation>
+	</element>
+	<complexType name="SOSI_ObjektFlytebryggeType" abstract="true">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="datafangstdato" type="dateTime" minOccurs="0">
+						<annotation>
+							<documentation>dato når objektet siste gang ble registrert/observert/målt i terrenget
+
+Merknad: I mange tilfeller er denne forskjellig fra Oppdateringsdato, da registrerte endringer kan bufres i en kortere eller lengre periode før disse legges inn i databasen.
+Ved førstegangsregistrering settes Datafangstdato lik førsteDatafangstdato.</documentation>
+							<appinfo>
+								<taggedValue xmlns="http://www.interactive-instruments.de/ShapeChange/AppInfo" tag="SOSI_navn">DATAFANGSTDATO</taggedValue>
+							</appinfo>
+						</annotation>
+					</element>
+					<element name="informasjon" type="string" minOccurs="0" maxOccurs="unbounded">
+						<annotation>
+							<documentation>generell opplysning
+
+Merknad:
+mulighet til å legge inn utfyllende informasjon om objektet</documentation>
+							<appinfo>
+								<taggedValue xmlns="http://www.interactive-instruments.de/ShapeChange/AppInfo" tag="SOSI_navn">INFORMASJON</taggedValue>
+							</appinfo>
+						</annotation>
+					</element>
+					<element name="kopidata" type="kyst:KopidataPropertyType" minOccurs="0">
+						<annotation>
+							<documentation>angivelse av at objektet er hentet fra et kopidatasett og ikke fra originaldatasettet
+
+Merknad: Inneholder informasjon om når kopidatasettet ble kopiert fra originaldatasettet og hvem som er originaldataansvarlig</documentation>
+							<appinfo>
+								<taggedValue xmlns="http://www.interactive-instruments.de/ShapeChange/AppInfo" tag="SOSI_navn">KOPIDATA</taggedValue>
+							</appinfo>
+						</annotation>
+					</element>
+					<element name="kvalitet" type="kyst:PosisjonskvalitetPropertyType" minOccurs="0">
+						<annotation>
+							<documentation>beskrivelse av kvaliteten på stedfestingen
+
+Merknad: Denne er identisk med ..KVALITET i tidligere versjoner av SOSI.</documentation>
+						</annotation>
+					</element>
+					<element name="oppdateringsdato" type="dateTime" minOccurs="0">
+						<annotation>
+							<documentation>dato for siste endring på objektetdataene 
+
+Merknad: 
+Oppdateringsdato kan være forskjellig fra Datafangsdato ved at data som er registrert kan bufres en kortere eller lengre periode før disse legges inn i datasystemet (databasen).</documentation>
+							<appinfo>
+								<taggedValue xmlns="http://www.interactive-instruments.de/ShapeChange/AppInfo" tag="SOSI_navn">OPPDATERINGSDATO</taggedValue>
+							</appinfo>
+						</annotation>
+					</element>
+					<element name="opphav" type="string" minOccurs="0">
+						<annotation>
+							<appinfo>
+								<taggedValue xmlns="http://www.interactive-instruments.de/ShapeChange/AppInfo" tag="SOSI_navn">OPPHAV</taggedValue>
+							</appinfo>
+						</annotation>
+					</element>
+					<element name="prosesshistorie" type="string" minOccurs="0" maxOccurs="unbounded">
+						<annotation>
+							<documentation>beskrivelse av de prosesser som dataene er gått gjennom som kan ha betydning for kvaliteten og bruken av dataene
+
+Merknad:
+Prosesshistorie vil kunne inneholde informasjon om transformasjoner. Hva slags informasjon som angis er ofte gitt i andre standarder, f.eks kvalitet og kvalitetsikring.</documentation>
+							<appinfo>
+								<taggedValue xmlns="http://www.interactive-instruments.de/ShapeChange/AppInfo" tag="SOSI_navn">PROSESS_HISTORIE</taggedValue>
+							</appinfo>
+						</annotation>
+					</element>
+					<element name="registreringsversjon" type="kyst:RegistreringsversjonPropertyType" minOccurs="0">
+						<annotation>
+							<documentation>angivelse av hvilken produktspesifikasjon som er utgangspunkt  for dataene</documentation>
+							<appinfo>
+								<taggedValue xmlns="http://www.interactive-instruments.de/ShapeChange/AppInfo" tag="SOSI_navn">REGISTRERINGSVERSJON</taggedValue>
+							</appinfo>
+						</annotation>
+					</element>
+					<element name="verifiseringsdato" type="dateTime" minOccurs="0">
+						<annotation>
+							<documentation>dato når dataene er fastslått å være i samsvar med virkeligheten
+
+Merknad: Verifiseringsdato er identisk med ..DATO i tidligere versjoner av SOSI</documentation>
+							<appinfo>
+								<taggedValue xmlns="http://www.interactive-instruments.de/ShapeChange/AppInfo" tag="SOSI_navn">VERIFISERINGSDATO</taggedValue>
+							</appinfo>
+						</annotation>
+					</element>
+					<element name="identifikasjon" type="kyst:IdentifikasjonPropertyType" minOccurs="0"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="SOSI_ObjektFlytebryggePropertyType">
+		<sequence minOccurs="0">
+			<element ref="kyst:SOSI_ObjektFlytebrygge"/>
+		</sequence>
+		<attributeGroup ref="gml:AssociationAttributeGroup"/>
+		<attributeGroup ref="gml:OwnershipAttributeGroup"/>
+	</complexType>
+	<element name="SOSI_ObjektKystkontur" type="kyst:SOSI_ObjektKystkonturType" abstract="true" substitutionGroup="gml:AbstractFeature">
+		<annotation>
+			<documentation>abstrakt objekt som bærer en rekke egenskaper som er fagområde-uavhengige og kan benyttes for alle objekttyper
+
+Merknad:
+Spesielt i produktspesifikasjonsarbeid vil en velge egenskaper og av grensningslinjer fra denne klassen.</documentation>
+		</annotation>
+	</element>
+	<complexType name="SOSI_ObjektKystkonturType" abstract="true">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="datafangstdato" type="dateTime">
+						<annotation>
+							<documentation>dato når objektet siste gang ble registrert/observert/målt i terrenget
+
+Merknad: I mange tilfeller er denne forskjellig fra Oppdateringsdato, da registrerte endringer kan bufres i en kortere eller lengre periode før disse legges inn i databasen.
+Ved førstegangsregistrering settes Datafangstdato lik førsteDatafangstdato.</documentation>
+							<appinfo>
+								<taggedValue xmlns="http://www.interactive-instruments.de/ShapeChange/AppInfo" tag="SOSI_navn">DATAFANGSTDATO</taggedValue>
+							</appinfo>
+						</annotation>
+					</element>
+					<element name="informasjon" type="string" minOccurs="0" maxOccurs="unbounded">
+						<annotation>
+							<documentation>generell opplysning
+
+Merknad:
+mulighet til å legge inn utfyllende informasjon om objektet</documentation>
+							<appinfo>
+								<taggedValue xmlns="http://www.interactive-instruments.de/ShapeChange/AppInfo" tag="SOSI_navn">INFORMASJON</taggedValue>
+							</appinfo>
+						</annotation>
+					</element>
+					<element name="kopidata" type="kyst:KopidataPropertyType" minOccurs="0">
+						<annotation>
+							<documentation>angivelse av at objektet er hentet fra et kopidatasett og ikke fra originaldatasettet
+
+Merknad: Inneholder informasjon om når kopidatasettet ble kopiert fra originaldatasettet og hvem som er originaldataansvarlig</documentation>
+							<appinfo>
+								<taggedValue xmlns="http://www.interactive-instruments.de/ShapeChange/AppInfo" tag="SOSI_navn">KOPIDATA</taggedValue>
+							</appinfo>
+						</annotation>
+					</element>
+					<element name="kvalitet" type="kyst:PosisjonskvalitetPropertyType">
+						<annotation>
+							<documentation>beskrivelse av kvaliteten på stedfestingen
+
+Merknad: Denne er identisk med ..KVALITET i tidligere versjoner av SOSI.</documentation>
+						</annotation>
+					</element>
+					<element name="oppdateringsdato" type="dateTime" minOccurs="0">
+						<annotation>
+							<documentation>dato for siste endring på objektetdataene 
+
+Merknad: 
+Oppdateringsdato kan være forskjellig fra Datafangsdato ved at data som er registrert kan bufres en kortere eller lengre periode før disse legges inn i datasystemet (databasen).</documentation>
+							<appinfo>
+								<taggedValue xmlns="http://www.interactive-instruments.de/ShapeChange/AppInfo" tag="SOSI_navn">OPPDATERINGSDATO</taggedValue>
+							</appinfo>
+						</annotation>
+					</element>
+					<element name="opphav" type="string" minOccurs="0">
+						<annotation>
+							<appinfo>
+								<taggedValue xmlns="http://www.interactive-instruments.de/ShapeChange/AppInfo" tag="SOSI_navn">OPPHAV</taggedValue>
+							</appinfo>
+						</annotation>
+					</element>
+					<element name="prosesshistorie" type="string" minOccurs="0" maxOccurs="unbounded">
+						<annotation>
+							<documentation>beskrivelse av de prosesser som dataene er gått gjennom som kan ha betydning for kvaliteten og bruken av dataene
+
+Merknad:
+Prosesshistorie vil kunne inneholde informasjon om transformasjoner. Hva slags informasjon som angis er ofte gitt i andre standarder, f.eks kvalitet og kvalitetsikring.</documentation>
+							<appinfo>
+								<taggedValue xmlns="http://www.interactive-instruments.de/ShapeChange/AppInfo" tag="SOSI_navn">PROSESS_HISTORIE</taggedValue>
+							</appinfo>
+						</annotation>
+					</element>
+					<element name="registreringsversjon" type="kyst:RegistreringsversjonPropertyType" minOccurs="0">
+						<annotation>
+							<documentation>angivelse av hvilken produktspesifikasjon som er utgangspunkt  for dataene</documentation>
+							<appinfo>
+								<taggedValue xmlns="http://www.interactive-instruments.de/ShapeChange/AppInfo" tag="SOSI_navn">REGISTRERINGSVERSJON</taggedValue>
+							</appinfo>
+						</annotation>
+					</element>
+					<element name="verifiseringsdato" type="dateTime" minOccurs="0">
+						<annotation>
+							<documentation>dato når dataene er fastslått å være i samsvar med virkeligheten
+
+Merknad: Verifiseringsdato er identisk med ..DATO i tidligere versjoner av SOSI</documentation>
+							<appinfo>
+								<taggedValue xmlns="http://www.interactive-instruments.de/ShapeChange/AppInfo" tag="SOSI_navn">VERIFISERINGSDATO</taggedValue>
+							</appinfo>
+						</annotation>
+					</element>
+					<element name="identifikasjon" type="kyst:IdentifikasjonPropertyType" minOccurs="0"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="SOSI_ObjektKystkonturPropertyType">
+		<sequence minOccurs="0">
+			<element ref="kyst:SOSI_ObjektKystkontur"/>
+		</sequence>
+		<attributeGroup ref="gml:AssociationAttributeGroup"/>
+		<attributeGroup ref="gml:OwnershipAttributeGroup"/>
+	</complexType>
+	<element name="SOSI_ObjektSperrelinje" type="kyst:SOSI_ObjektSperrelinjeType" abstract="true" substitutionGroup="gml:AbstractFeature">
+		<annotation>
+			<documentation>abstrakt objekt som bærer en rekke egenskaper som er fagområde-uavhengige og kan benyttes for alle objekttyper
+
+Merknad:
+Spesielt i produktspesifikasjonsarbeid vil en velge egenskaper og av grensningslinjer fra denne klassen.</documentation>
+		</annotation>
+	</element>
+	<complexType name="SOSI_ObjektSperrelinjeType" abstract="true">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="datafangstdato" type="dateTime">
+						<annotation>
+							<documentation>dato når objektet siste gang ble registrert/observert/målt i terrenget
+
+Merknad: I mange tilfeller er denne forskjellig fra Oppdateringsdato, da registrerte endringer kan bufres i en kortere eller lengre periode før disse legges inn i databasen.
+Ved førstegangsregistrering settes Datafangstdato lik førsteDatafangstdato.</documentation>
+							<appinfo>
+								<taggedValue xmlns="http://www.interactive-instruments.de/ShapeChange/AppInfo" tag="SOSI_navn">DATAFANGSTDATO</taggedValue>
+							</appinfo>
+						</annotation>
+					</element>
+					<element name="informasjon" type="string" minOccurs="0" maxOccurs="unbounded">
+						<annotation>
+							<documentation>generell opplysning
+
+Merknad:
+mulighet til å legge inn utfyllende informasjon om objektet</documentation>
+							<appinfo>
+								<taggedValue xmlns="http://www.interactive-instruments.de/ShapeChange/AppInfo" tag="SOSI_navn">INFORMASJON</taggedValue>
+							</appinfo>
+						</annotation>
+					</element>
+					<element name="identifikasjon" type="kyst:IdentifikasjonPropertyType" minOccurs="0"/>
+					<element name="kopidata" type="kyst:KopidataPropertyType" minOccurs="0">
+						<annotation>
+							<documentation>angivelse av at objektet er hentet fra et kopidatasett og ikke fra originaldatasettet
+
+Merknad: Inneholder informasjon om når kopidatasettet ble kopiert fra originaldatasettet og hvem som er originaldataansvarlig</documentation>
+							<appinfo>
+								<taggedValue xmlns="http://www.interactive-instruments.de/ShapeChange/AppInfo" tag="SOSI_navn">KOPIDATA</taggedValue>
+							</appinfo>
+						</annotation>
+					</element>
+					<element name="kvalitet" type="kyst:PosisjonskvalitetPropertyType" minOccurs="0">
+						<annotation>
+							<documentation>beskrivelse av kvaliteten på stedfestingen
+
+Merknad: Denne er identisk med ..KVALITET i tidligere versjoner av SOSI.</documentation>
+						</annotation>
+					</element>
+					<element name="oppdateringsdato" type="dateTime" minOccurs="0">
+						<annotation>
+							<documentation>dato for siste endring på objektetdataene 
+
+Merknad: 
+Oppdateringsdato kan være forskjellig fra Datafangsdato ved at data som er registrert kan bufres en kortere eller lengre periode før disse legges inn i datasystemet (databasen).</documentation>
+							<appinfo>
+								<taggedValue xmlns="http://www.interactive-instruments.de/ShapeChange/AppInfo" tag="SOSI_navn">OPPDATERINGSDATO</taggedValue>
+							</appinfo>
+						</annotation>
+					</element>
+					<element name="opphav" type="string" minOccurs="0">
+						<annotation>
+							<appinfo>
+								<taggedValue xmlns="http://www.interactive-instruments.de/ShapeChange/AppInfo" tag="SOSI_navn">OPPHAV</taggedValue>
+							</appinfo>
+						</annotation>
+					</element>
+					<element name="prosesshistorie" type="string" minOccurs="0" maxOccurs="unbounded">
+						<annotation>
+							<documentation>beskrivelse av de prosesser som dataene er gått gjennom som kan ha betydning for kvaliteten og bruken av dataene
+
+Merknad:
+Prosesshistorie vil kunne inneholde informasjon om transformasjoner. Hva slags informasjon som angis er ofte gitt i andre standarder, f.eks kvalitet og kvalitetsikring.</documentation>
+							<appinfo>
+								<taggedValue xmlns="http://www.interactive-instruments.de/ShapeChange/AppInfo" tag="SOSI_navn">PROSESS_HISTORIE</taggedValue>
+							</appinfo>
+						</annotation>
+					</element>
+					<element name="registreringsversjon" type="kyst:RegistreringsversjonPropertyType" minOccurs="0">
+						<annotation>
+							<documentation>angivelse av hvilken produktspesifikasjon som er utgangspunkt  for dataene</documentation>
+							<appinfo>
+								<taggedValue xmlns="http://www.interactive-instruments.de/ShapeChange/AppInfo" tag="SOSI_navn">REGISTRERINGSVERSJON</taggedValue>
+							</appinfo>
+						</annotation>
+					</element>
+					<element name="verifiseringsdato" type="dateTime" minOccurs="0">
+						<annotation>
+							<documentation>dato når dataene er fastslått å være i samsvar med virkeligheten
+
+Merknad: Verifiseringsdato er identisk med ..DATO i tidligere versjoner av SOSI</documentation>
+							<appinfo>
+								<taggedValue xmlns="http://www.interactive-instruments.de/ShapeChange/AppInfo" tag="SOSI_navn">VERIFISERINGSDATO</taggedValue>
+							</appinfo>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="SOSI_ObjektSperrelinjePropertyType">
+		<sequence minOccurs="0">
+			<element ref="kyst:SOSI_ObjektSperrelinje"/>
+		</sequence>
+		<attributeGroup ref="gml:AssociationAttributeGroup"/>
+		<attributeGroup ref="gml:OwnershipAttributeGroup"/>
+	</complexType>
+	<element name="Skjær" type="kyst:SkjærType" substitutionGroup="kyst:SOSI_ObjektKystkontur">
+		<annotation>
+			<documentation>generalisert punktobjekt for små øyer eller landareal
+
+&lt;b&gt;Tilleggsbeskrivelse for prod.spek.&lt;/b&gt;
+Skal benyttes på små øyer som ikke registreres som kystkontur.
+Øyer mindre enn 5m2 skal registreres som skjær. Øyer større enn 10m2 skal registreres med kystkontur (ikke Skjær). For størrelse mellom 5 og 10 m2 vurderes skjær eller kystkontur ut fra øyas form.
+
+&lt;b&gt;Grunnrissreferanse&lt;/b&gt;
+Senter av skjæret.
+
+&lt;b&gt;Høydereferanse&lt;/b&gt;
+Topp skjær. Verdien skal være høyere eller lik enn midlere høyvann.</documentation>
+		</annotation>
+	</element>
+	<complexType name="SkjærType">
+		<complexContent>
+			<extension base="kyst:SOSI_ObjektKystkonturType">
+				<sequence>
+					<element name="posisjon" type="gml:PointPropertyType">
+						<annotation>
+							<appinfo>
+								<taggedValue xmlns="http://www.interactive-instruments.de/ShapeChange/AppInfo" tag="SOSI_navn">NØ</taggedValue>
+							</appinfo>
+						</annotation>
+					</element>
+					<element name="høyde" type="double" minOccurs="0">
+						<annotation>
+							<appinfo>
+								<taggedValue xmlns="http://www.interactive-instruments.de/ShapeChange/AppInfo" tag="SOSI_navn">H</taggedValue>
+							</appinfo>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="SkjærPropertyType">
+		<sequence minOccurs="0">
+			<element ref="kyst:Skjær"/>
+		</sequence>
+		<attributeGroup ref="gml:AssociationAttributeGroup"/>
+		<attributeGroup ref="gml:OwnershipAttributeGroup"/>
+	</complexType>
+</schema>

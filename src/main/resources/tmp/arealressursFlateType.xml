@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gml:arealressursFlateType xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:ns2="http://www.w3.org/1999/xlink"
+                           xmlns:ns3="http://skjema.geonorge.no/SOSI/produktspesifikasjon/Arealressurs/4.5"
+                           xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gmd"
+                           xmlns:ns6="http://www.isotc211.org/2005/gts">
+    <gml:boundedBy xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/>
+    <ns3:datafangstdato>2013-09-02T13:09:15.095+02:00</ns3:datafangstdato>
+    <ns3:område>
+        <gml:AbstractSurface xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gml:PolygonType">
+            <gml:exterior>
+                <gml:Ring>
+                    <gml:curveMember>
+                        <gml:LineString>
+                            <gml:coordinates>12.021918457142856,60.627196057142854 12.021914528571429,60.6272032
+                                12.021881285714286,60.62726214285714 12.021862314285714,60.627330185714285
+                                12.021849214285714,60.627387514285715 12.0218417,60.6274422
+                                12.021829814285715,60.627467228571426 12.021816257142858,60.62748775714286
+                                12.021786171428571,60.62751081428571 12.021743457142858,60.62752928571429
+                                12.021717557142857,60.62753802857143 12.021673314285714,60.6275484
+                                12.021548157142858,60.62757331428571 12.021541285714285,60.62756158571429
+                                12.021476114285715,60.627447000000004 12.021433971428571,60.627303014285715
+                                12.021419442857143,60.627202342857146 12.021678457142857,60.62721364285714
+                                12.021865314285714,60.627200071428575 12.021918457142856,60.627196057142854
+                            </gml:coordinates>
+                        </gml:LineString>
+                    </gml:curveMember>
+                </gml:Ring>
+            </gml:exterior>
+        </gml:AbstractSurface>
+    </ns3:område>
+    <ns3:arealtype codeSpace="codespace">valueforcodespace</ns3:arealtype>
+</gml:arealressursFlateType>

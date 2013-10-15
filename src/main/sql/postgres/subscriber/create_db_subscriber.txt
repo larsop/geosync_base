@@ -1,0 +1,4 @@
+psql -Upostgres -c "CREATE DATABASE subscriber_db LC_COLLATE='nb_NO.utf8' template=template0;"
+createlang -Upostgres plpgsql subscriber_db;
+psql -Upostgres -d subscriber_db -f /usr/pgsql-9.2/share/contrib/postgis-2.1/postgis.sql
+psql -Upostgres -d subscriber_db -f /usr/pgsql-9.2/share/contrib/postgis-2.1/spatial_ref_sys.sql

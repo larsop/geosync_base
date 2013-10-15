@@ -1,0 +1,606 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>no.skogoglandskap</groupId>
+	<artifactId>geosync</artifactId>
+	<version>1.0-SNAPSHOT</version>
+	<name>geosync</name>
+
+	<packaging>jar</packaging>
+
+	<properties>
+		<axis2.version>1.6.2</axis2.version>
+		<!-- Common properties that can be used in child poms eg. ${spring.ws.core.version} -->
+		<spring.ws.core.version>2.1.2.RELEASE</spring.ws.core.version>
+		<spring.version>3.2.3.RELEASE</spring.version>
+		<geotools.version>10-RC1</geotools.version>
+		<gt-opengis.version>2.7.4</gt-opengis.version>
+
+		<jts.version>1.13</jts.version>
+
+	</properties>
+
+	<dependencies>
+
+		<!-- Hibernate Spatial for postgis. This will include Hibernate Spatial 
+			Core and JTS -->
+		<dependency>
+			<groupId>org.hibernatespatial</groupId>
+			<artifactId>hibernate-spatial-postgis</artifactId>
+			<version>1.1.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>3.6.0.Final</version>
+		</dependency>
+
+
+		<!-- Uses Castor for XML -->
+		<dependency>
+			<groupId>org.codehaus.castor</groupId>
+			<artifactId>castor</artifactId>
+			<version>1.2</version>
+		</dependency>
+
+		<!-- <dependency> -->
+		<!-- <groupId>org.codehaus.castor</groupId> -->
+		<!-- <artifactId>castor</artifactId> -->
+		<!-- <version>1.3.3-rc1</version> -->
+		<!-- </dependency> -->
+
+		<!-- Castor need this -->
+		<!--<dependency> -->
+		<!--<groupId>xerces</groupId> -->
+		<!--<artifactId>xercesImpl</artifactId> -->
+		<!--<version>2.8.1</version> -->
+		<!--</dependency> -->
+
+		<!-- spring core -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+
+		<!-- Spring framwork -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-beans</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-orm</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-tx</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+
+
+
+		<!-- the Postgis JDBC driver -->
+		<dependency>
+			<groupId>org.postgis</groupId>
+			<artifactId>postgis-jdbc</artifactId>
+			<version>1.5.2</version>
+		</dependency>
+
+		<!-- the postgresql driver -->
+		<dependency>
+			<!-- <groupId>postgresql</groupId> -->
+			<!-- <artifactId>postgresql</artifactId> -->
+			<!-- <version>8.4-701.jdbc3</version> -->
+			<groupId>postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>9.1-901.jdbc4</version>
+		</dependency>
+
+		<!-- Hibernate cache impl -->
+		<dependency>
+			<groupId>net.sf.ehcache</groupId>
+			<artifactId>ehcache</artifactId>
+			<version>1.6.2</version> <!-- newest version is 2.5.1 -->
+			<!-- Version 2.x requires <type>pom</type> -->
+		</dependency>
+
+		<!-- Connection driver -->
+		<dependency>
+			<groupId>c3p0</groupId>
+			<artifactId>c3p0</artifactId>
+			<version>0.9.1.2</version>
+		</dependency>
+
+		<!-- xml parser -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-oxm</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.17</version>
+		</dependency>
+
+		<!-- jUnit test framework -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.10</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- test framework -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>${spring.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- axis 1.4 support -->
+
+		<dependency>
+			<groupId>org.apache.axis2</groupId>
+			<artifactId>axis2</artifactId>
+			<version>1.6.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.ws.commons.axiom</groupId>
+			<artifactId>axiom-api</artifactId>
+			<version>1.2.14</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.ws.commons.axiom</groupId>
+			<artifactId>axiom-impl</artifactId>
+			<version>1.2.14</version>
+		</dependency>
+
+		<dependency>
+			<groupId>wsdl4j</groupId>
+			<artifactId>wsdl4j</artifactId>
+			<version>1.6.2</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>org.apache.xmlbeans</groupId>
+			<artifactId>xmlbeans</artifactId>
+			<version>2.6.0</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>commons-discovery</groupId>
+			<artifactId>commons-discovery</artifactId>
+			<version>0.4</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.ws.xmlschema</groupId>
+			<artifactId>xmlschema-core</artifactId>
+			<version>2.0.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.neethi</groupId>
+			<artifactId>neethi</artifactId>
+			<version>3.0.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.axis2</groupId>
+			<artifactId>axis2-transport-local</artifactId>
+			<version>1.6.2</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.apache.ws.commons.schema</groupId>
+					<artifactId>XmlSchema</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-httpclient</groupId>
+			<artifactId>commons-httpclient</artifactId>
+			<version>3.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.axis2</groupId>
+			<artifactId>axis2-transport-http</artifactId>
+			<version>1.6.2</version>
+		</dependency>
+
+		<!-- Add tools for geo -->
+		<dependency>
+			<groupId>com.vividsolutions</groupId>
+			<artifactId>jts</artifactId>
+			<version>${jts.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.geotools</groupId>
+			<artifactId>gt-referencing</artifactId>
+			<version>${geotools.version}</version>
+		</dependency>
+
+		<!-- <dependency> <groupId>com.sun.media</groupId> <artifactId>jai_core</artifactId> 
+			<version>1.1.3</version> </dependency> -->
+
+		<dependency>
+			<groupId>org.geotools</groupId>
+			<artifactId>gt-shapefile</artifactId>
+			<version>${geotools.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.geotools</groupId>
+			<artifactId>gt-epsg-wkt</artifactId>
+			<version>${geotools.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jvnet.jaxb2_commons</groupId>
+			<artifactId>jaxb2-basics-runtime</artifactId>
+			<version>0.6.4</version>
+		</dependency>
+
+		<!-- <dependency> <groupId>com.sun.xml.bind</groupId> <artifactId>jaxb-impl</artifactId> 
+			<version>2.2-promoted-b65</version> </dependency> -->
+
+		<dependency>
+			<groupId>com.googlecode.jaxb-namespaceprefixmapper-interfaces</groupId>
+			<artifactId>JAXBNamespacePrefixMapper</artifactId>
+			<version>2.2.4</version>
+		</dependency>
+
+		<!-- <dependency> <groupId>com.sun.xml.bind</groupId> <artifactId>jaxb-impl</artifactId> 
+			<version>2.1.9</version> <scope>system</scope> <systemPath>${java.home}/lib/rt.jar</systemPath> 
+			</dependency> -->
+		<dependency>
+			<groupId>org.jibx</groupId>
+			<artifactId>jibx-run</artifactId>
+			<version>1.2.5</version>
+		</dependency>
+		<!-- needed to process classes after compile -->
+		<dependency>
+			<groupId>org.jibx</groupId>
+			<artifactId>jibx-extras</artifactId>
+			<version>1.2.5</version>
+		</dependency>
+
+		<!-- Used for equals testing -->
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>2.2</version>
+		</dependency>
+
+	</dependencies>
+
+	<repositories>
+
+		<repository>
+			<id>jboss-public</id>
+			<name>JBoss Public Nexus Repository</name>
+			<url>https://repository.jboss.org/nexus/content/groups/public/</url>
+		</repository>
+
+		<repository>
+			<id>maven2-repository.dev.java.net</id>
+			<name>Java.net repository</name>
+			<url>http://download.java.net/maven/2</url>
+		</repository>
+		<repository>
+			<id>osgeo</id>
+			<name>Open Source Geospatial Foundation Repository</name>
+			<url>http://download.osgeo.org/webdav/geotools/</url>
+		</repository>
+		<repository>
+			<id>opengeo</id>
+			<name>OpenGeo Maven Repository</name>
+			<url>http://repo.opengeo.org</url>
+		</repository>
+
+		<repository>
+			<id>maven2-repository.dev.java.repositorynet</id>
+			<name>Java.net Maven 2 Repository</name>
+			<url>http://download.java.net/maven/2</url>
+		</repository>
+
+		<repository>
+			<id>Hibernate Spatial repo</id>
+			<url>http://www.hibernatespatial.org/repository</url>
+		</repository>
+
+	</repositories>
+
+	<build>
+		<plugins>
+
+			<plugin>
+				<inherited>true</inherited>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+					<!-- <generatedSourcesDirectory>${project.build.directory}/generated-sources/</generatedSourcesDirectory> -->
+				</configuration>
+
+			</plugin>
+
+
+			<!-- Working Ok -->
+			<!-- <plugin> -->
+			<!-- <groupId>org.apache.axis2</groupId> -->
+			<!-- <artifactId>axis2-wsdl2code-maven-plugin</artifactId> -->
+			<!-- <version>1.6.2</version> -->
+			<!-- <executions> -->
+			<!-- <execution> -->
+			<!-- <id>ws5</id> -->
+			<!-- <goals> -->
+			<!-- <goal>wsdl2code</goal> -->
+			<!-- </goals> -->
+			<!-- <configuration> -->
+			<!-- <wsdlFile>http://geosynkronisering.no/files/skjema/v0.5/geosync.wsdl</wsdlFile> -->
+			<!-- <databindingName>xmlbeans</databindingName> -->
+			<!-- <packageName>org.apache.xmlbeans</packageName> -->
+			<!-- </configuration> -->
+			<!-- </execution> -->
+			<!-- </executions> -->
+			<!-- </plugin> -->
+
+
+			<plugin>
+				<groupId>org.jvnet.jaxb2.maven2</groupId>
+				<artifactId>maven-jaxb2-plugin</artifactId>
+				<version>0.8.3</version>
+				<executions>
+					<execution>
+						<id>schema1-generate-ar5</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<schemaDirectory>src/main/resources/xsd</schemaDirectory>
+							<schemaIncludes>
+								<include>FKB_AR5.xsd</include>
+							</schemaIncludes>
+							<bindingIncludes>
+								<include>FKB_AR5.xjb.xml</include>
+								<include>global.xjb.xml</include>
+							</bindingIncludes>
+							<generatePackage>
+								no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45
+							</generatePackage>
+
+							<generateDirectory>
+								${project.build.directory}/generated-sources/ar5
+							</generateDirectory>
+							<extension>true</extension>
+							<args>
+								<arg>-Xannotate</arg>
+							</args>
+							<plugins>
+								<plugin>
+									<groupId>org.jvnet.jaxb2_commons</groupId>
+									<artifactId>jaxb2-basics-annotate</artifactId>
+									<version>0.6.4</version>
+								</plugin>
+								<plugin>
+									<groupId>org.jvnet.jaxb2_commons</groupId>
+									<artifactId>jaxb2-basics</artifactId>
+									<version>0.6.4</version>
+								</plugin>
+							</plugins>
+						</configuration>
+					</execution>
+
+
+					<!-- <execution> -->
+					<!-- <id>schema1-generate-kyst</id> -->
+					<!-- <goals> -->
+					<!-- <goal>generate</goal> -->
+					<!-- </goals> -->
+					<!-- <configuration> -->
+					<!-- <schemaDirectory>src/main/resources/xsd</schemaDirectory> -->
+					<!-- <schemaIncludes> -->
+					<!-- <include>PrimaerdataKystkontur.xsd</include> -->
+					<!-- </schemaIncludes> -->
+					<!-- <bindingIncludes> -->
+					<!-- <include>PrimaerdataKystkontur.xjb.xml</include> -->
+					<!-- <include>global.xjb.xml</include> -->
+					<!-- </bindingIncludes> -->
+					<!-- <generatePackage> -->
+					<!-- no.geonorge.skjema.sosi.produktspesifikasjon.PrimaerdataKystkontur_10 -->
+					<!-- </generatePackage> -->
+
+					<!-- <generateDirectory> -->
+					<!-- ${project.build.directory}/generated-sources/kyst -->
+					<!-- </generateDirectory> -->
+					<!-- <extension>true</extension> -->
+					<!-- <args> -->
+					<!-- <arg>-Xannotate</arg> -->
+					<!-- </args> -->
+					<!-- <plugins> -->
+					<!-- <plugin> -->
+					<!-- <groupId>org.jvnet.jaxb2_commons</groupId> -->
+					<!-- <artifactId>jaxb2-basics-annotate</artifactId> -->
+					<!-- <version>0.6.4</version> -->
+					<!-- </plugin> -->
+					<!-- <plugin> -->
+					<!-- <groupId>org.jvnet.jaxb2_commons</groupId> -->
+					<!-- <artifactId>jaxb2-basics</artifactId> -->
+					<!-- <version>0.6.4</version> -->
+					<!-- </plugin> -->
+					<!-- </plugins> -->
+					<!-- </configuration> -->
+					<!-- </execution> -->
+
+
+
+					<execution>
+						<id>schema1-generate-changelogfile</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<schemaDirectory>src/main/resources/xsd</schemaDirectory>
+							<schemaIncludes>
+								<include>changelogfile.xsd</include>
+							</schemaIncludes>
+							<bindingIncludes>
+								<include>changelogfile.xjb.xml</include>
+								<include>global.xjb.xml</include>
+							</bindingIncludes>
+							<generatePackage>
+								no.geonorge.skjema.changelogfile
+							</generatePackage>
+
+							<generateDirectory>
+								${project.build.directory}/generated-sources/chlog
+							</generateDirectory>
+							<extension>true</extension>
+							<args>
+								<arg>-Xannotate</arg>
+							</args>
+							<plugins>
+								<plugin>
+									<groupId>org.jvnet.jaxb2_commons</groupId>
+									<artifactId>jaxb2-basics-annotate</artifactId>
+									<version>0.6.4</version>
+								</plugin>
+								<plugin>
+									<groupId>org.jvnet.jaxb2_commons</groupId>
+									<artifactId>jaxb2-basics</artifactId>
+									<version>0.6.4</version>
+								</plugin>
+							</plugins>
+						</configuration>
+					</execution>
+
+				</executions>
+
+				<configuration>
+					<extension>true</extension>
+					<args>
+						<arg>-XtoString</arg>
+						<arg>-Xequals</arg>
+						<arg>-XhashCode</arg>
+						<arg>-Xcopyable</arg>
+						<arg>-Xmergeable</arg>
+						<!-- <arg>-Xannotate</arg> -->
+					</args>
+					<plugins>
+						<plugin>
+							<groupId>org.jvnet.jaxb2_commons</groupId>
+							<artifactId>jaxb2-basics</artifactId>
+							<version>0.6.4</version>
+						</plugin>
+						<!-- <plugin> -->
+						<!-- <groupid>org.jvnet.jaxb2_commons</groupid> -->
+						<!-- <artifactid>jaxb2-basics-annotate</artifactid> -->
+						<!-- <version>0.6.4</version> -->
+						<!-- </plugin> -->
+					</plugins>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.6</version>
+				<executions>
+					<execution>
+						<id>copy-resources</id>
+						<!-- here the phase you need -->
+						<phase>validate</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${basedir}/target/classes</outputDirectory>
+							<resources>
+								<resource>
+									<directory>src/main/xsd</directory>
+									<!-- <filtering>true</filtering> -->
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+
+			<!-- this tells maven to copy the openejb-javaagent jar into your target/ 
+				directory -->
+			<!-- where surefire can see it -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.1</version>
+				<executions>
+					<execution>
+						<id>copy</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.apache.openejb</groupId>
+									<artifactId>openejb-javaagent</artifactId>
+									<version>3.0-beta-2</version>
+									<outputDirectory>${project.build.directory}</outputDirectory>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+		<resources>
+			<resource>
+				<directory>target/generated-sources/axis2/wsdl2code/resources</directory>
+			</resource>
+			<resource>
+				<directory>target/generated-sources/xmlbeans/resources</directory>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+		</resources>
+	</build>
+</project>
+

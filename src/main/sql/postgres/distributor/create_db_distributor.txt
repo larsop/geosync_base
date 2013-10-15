@@ -1,0 +1,6 @@
+
+psql -Upostgres -c "CREATE DATABASE distributor_db LC_COLLATE='nb_NO.utf8' template=template0;"
+createlang -Upostgres plpgsql distributor_db;
+psql -Upostgres -d distributor_db -f /usr/pgsql-9.2/share/contrib/postgis-2.0/postgis.sql
+psql -Upostgres -d distributor_db -f /usr/pgsql-9.2/share/contrib/postgis-2.0/spatial_ref_sys.sql
+

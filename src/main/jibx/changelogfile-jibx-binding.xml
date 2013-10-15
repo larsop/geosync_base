@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+
+<binding name="AR5_WFS_T"
+         forwards="false"
+         package="no.geonorge.skjema.changelogfile">
+
+	<mapping name="TransactionCollection"
+		class="no.geonorge.skjema.changelogfile.TransactionCollection">
+		<namespace
+			uri="http://skjema.geonorge.no/standard/geosynkronisering/1.0/endringslogg"
+			prefix="chlogf" default="all" />
+
+		<value style="attribute" name="numberMatched" field="numberMatched" />
+
+
+		<collection name="transactions" field="transactions" 
+			factory="no.geonorge.skjema.changelogfile.SimpleTransaction.listFactory">
+			<structure type="no.geonorge.skjema.changelogfile.Transaction">
+			</structure>
+		</collection>
+
+	</mapping>
+
+	<mapping name="Insert" class="no.geonorge.skjema.changelogfile.Transaction">
+	    <namespace uri="http://www.opengis.net/wfs/2.0" prefix="wfs" default="elements"/>
+		<namespace uri="http://skjema.geonorge.no/standard/geosynkronisering/1.0/endringslogg" prefix="" default="attributes" />
+
+<!-- 		<value style="attribute" name="handle" field="handle" /> -->
+
+<!-- 		<collection field="abstractTransactionActions" 	 -->
+<!-- 			factory="no.geonorge.skjema.changelogfile.SimpleTransaction.listFactory"> -->
+<!-- 			<structure type="no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ArealressursGrenseType"></structure> -->
+<!-- 		</collection> -->
+
+	</mapping>
+</binding>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<jaxb:bindings version="2.0" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+	xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:annox="http://annox.dev.java.net"
+	xmlns:ar5="http://skjema.geonorge.no/SOSI/produktspesifikasjon/PrimaerdataKystkontur/1.0"
+	xmlns:chlogf="http://skjema.geonorge.no/standard/geosynkronisering/1.0/endringslogg"
+	jaxb:extensionBindingPrefixes="xjc annox"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/jaxb ">
+
+
+	
+
+	<jaxb:bindings schemaLocation="PrimaerdataKystkontur.xsd" >
+	
+		<jaxb:bindings node="//xs:complexType[@name='FlytebryggeType']">
+			<annox:annotate target="class">
+				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement"
+					name="FlytebryggeType"
+					namespace="http://skjema.geonorge.no/SOSI/produktspesifikasjon/PrimaerdataKystkontur/1.0" />
+			</annox:annotate>
+		</jaxb:bindings>
+<!--         <jaxb:schemaBindings> -->
+<!--             <jaxb:package name="no.geonorge.skjema.sosi.produktspesifikasjon.PrimaerdataKystkontur_10"/> -->
+<!--         </jaxb:schemaBindings> -->
+	</jaxb:bindings>
+
+
+
+
+</jaxb:bindings>

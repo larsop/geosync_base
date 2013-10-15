@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<chlogf:TransactionCollection
+        xmlns:chlogf="http://skjema.geonorge.no/sosi/produktspesifikasjon/geosynkronisering/fil/0.3">
+    <chlogf:transactions>
+        <wfs:Insert xmlns:wfs="http://www.opengis.net/wfs/2.0">
+            <wfs:member>
+                <ArealressursFlateType>
+                    <arealtype>a very strange value!</arealtype>
+                </ArealressursFlateType>
+            </wfs:member>
+        </wfs:Insert>
+        <Delete>
+            <bar>bar</bar>
+        </Delete>
+        <wfs:Insert xmlns:wfs="http://www.opengis.net/wfs/2.0">
+            <wfs:member>
+                <ArealressursFlateType>
+                    <arealtype>a very strange value!</arealtype>
+                </ArealressursFlateType>
+            </wfs:member>
+        </wfs:Insert>
+    </chlogf:transactions>
+</chlogf:TransactionCollection>

@@ -25,18 +25,19 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import junit.framework.Assert;
-import schemas.opengis.net.wfs_2_0.wfs.InsertType;
-import schemas.opengis.net.wfs_2_0.wfs.Transaction;
-import schemas.opengis.net_gml_3_2_1.AbstractRingPropertyType;
-import schemas.opengis.net_gml_3_2_1.AbstractRingType;
-import schemas.opengis.net_gml_3_2_1.AbstractSurfaceType;
 import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ArealressursFlateType;
 import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ArealressursGrenseType;
-import schemas.opengis.net_gml_3_2_1.CoordinatesType;
-import schemas.opengis.net_gml_3_2_1.PolygonType;
 import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.util.InspireWayDaoDummyAr5Classes;
 import no.geonorge.skjema.util.GenericMarshallerJaxb2Helper;
 import no.geonorge.skjema.util.gml_geos.geoserver.GML321_2JTS;
+
+import opengis.net.wfs_2_0.wfs.InsertType;
+import opengis.net.wfs_2_0.wfs.Transaction;
+import opengis.net_gml_3_2_1.AbstractRingPropertyType;
+import opengis.net_gml_3_2_1.AbstractRingType;
+import opengis.net_gml_3_2_1.AbstractSurfaceType;
+import opengis.net_gml_3_2_1.CoordinatesType;
+import opengis.net_gml_3_2_1.PolygonType;
 
 import org.geotools.data.shapefile.shp.JTSUtilities;
 import org.junit.Before;
@@ -217,7 +218,7 @@ public class TestChangelogfileJaxb2Helper {
 					AbstractRingPropertyType exterior = value.getExterior();
 					JAXBElement<? extends AbstractRingType> abstractRing = exterior.getAbstractRing();
 
-					schemas.opengis.net_gml_3_2_1.LinearRingType ringType = (schemas.opengis.net_gml_3_2_1.LinearRingType) abstractRing
+					opengis.net_gml_3_2_1.LinearRingType ringType = (opengis.net_gml_3_2_1.LinearRingType) abstractRing
 							.getValue();
 
 					Polygon createPolygon  = (Polygon) GML321_2JTS.toJTS(ringType);

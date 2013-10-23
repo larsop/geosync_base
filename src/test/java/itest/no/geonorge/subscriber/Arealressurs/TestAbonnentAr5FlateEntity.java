@@ -15,17 +15,18 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 
 import no.geonorge.skjema.changelogfile.TransactionCollection;
-import schemas.opengis.net.wfs_2_0.wfs.InsertType;
-import schemas.opengis.net.wfs_2_0.wfs.Transaction;
-import schemas.opengis.net_gml_3_2_1.AbstractRingPropertyType;
-import schemas.opengis.net_gml_3_2_1.AbstractRingType;
-import schemas.opengis.net_gml_3_2_1.AbstractSurfaceType;
 import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ArealressursFlateType;
-import schemas.opengis.net_gml_3_2_1.PolygonType;
 import no.geonorge.skjema.util.GenericMarshallerJaxb2Helper;
 import no.geonorge.skjema.util.gml_geos.geoserver.GML321_2JTS;
 import no.geonorge.subscriber.Arealressurs.Ar5FlateEntity;
 import no.skogoglandskap.db.util.SpringHibernateTemplate;
+
+import opengis.net.wfs_2_0.wfs.InsertType;
+import opengis.net.wfs_2_0.wfs.Transaction;
+import opengis.net_gml_3_2_1.AbstractRingPropertyType;
+import opengis.net_gml_3_2_1.AbstractRingType;
+import opengis.net_gml_3_2_1.AbstractSurfaceType;
+import opengis.net_gml_3_2_1.PolygonType;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -133,7 +134,7 @@ public class TestAbonnentAr5FlateEntity {
 		AbstractRingPropertyType exterior = value.getExterior();
 		JAXBElement<? extends AbstractRingType> abstractRing = exterior.getAbstractRing();
 
-		schemas.opengis.net_gml_3_2_1.LinearRingType ringType = (schemas.opengis.net_gml_3_2_1.LinearRingType) abstractRing
+		opengis.net_gml_3_2_1.LinearRingType ringType = (opengis.net_gml_3_2_1.LinearRingType) abstractRing
 				.getValue();
 
 		Polygon border = (Polygon) GML321_2JTS.toJTS(ringType);

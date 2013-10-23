@@ -6,11 +6,12 @@ package no.geonorge.skjema.util.gml_geos.inspire;
 
 import java.util.List;
 
-import schemas.opengis.net_gml_3_2_1.AbstractRingType;
-import schemas.opengis.net_gml_3_2_1.CoordinatesType;
-import schemas.opengis.net_gml_3_2_1.CurvePropertyType;
-import schemas.opengis.net_gml_3_2_1.LineStringType;
-import schemas.opengis.net_gml_3_2_1.RingType;
+import opengis.net_gml_3_2_1.AbstractRingType;
+import opengis.net_gml_3_2_1.CoordinatesType;
+import opengis.net_gml_3_2_1.CurvePropertyType;
+import opengis.net_gml_3_2_1.LineStringType;
+import opengis.net_gml_3_2_1.RingType;
+
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;

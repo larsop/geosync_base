@@ -8,17 +8,18 @@ import java.util.Calendar;
 
 import javax.xml.bind.JAXBElement;
 
+import opengis.net_gml_3_2_1.AbstractCodeType;
+import opengis.net_gml_3_2_1.AbstractCurveType;
+import opengis.net_gml_3_2_1.AbstractGeometryType;
+import opengis.net_gml_3_2_1.AbstractSurfaceType;
+import opengis.net_gml_3_2_1.CurvePropertyType;
+import opengis.net_gml_3_2_1.SurfacePropertyType;
+
 import org.junit.Before;
 
-import schemas.opengis.net_gml_3_2_1.AbstractCodeType;
-import schemas.opengis.net_gml_3_2_1.AbstractCurveType;
-import schemas.opengis.net_gml_3_2_1.AbstractGeometryType;
-import schemas.opengis.net_gml_3_2_1.AbstractSurfaceType;
 import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ArealressursFlateType;
 import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ArealressursGrenseType;
-import schemas.opengis.net_gml_3_2_1.CurvePropertyType;
 import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ObjectFactory;
-import schemas.opengis.net_gml_3_2_1.SurfacePropertyType;
 import no.geonorge.skjema.util.gml_geos.inspire.JTS2GML321;
 
 import com.vividsolutions.jts.geom.LineString;
@@ -62,7 +63,7 @@ public class InspireWayDaoDummyAr5Classes {
 
 		Calendar datafangstdato = Calendar.getInstance();
 		ar5.setDatafangstdato(datafangstdato);
-		schemas.opengis.net_gml_3_2_1.ObjectFactory of = new  schemas.opengis.net_gml_3_2_1.ObjectFactory();
+		opengis.net_gml_3_2_1.ObjectFactory of = new  opengis.net_gml_3_2_1.ObjectFactory();
 
 		SurfacePropertyType omrade = new SurfacePropertyType();
 		AbstractSurfaceType abstractSurfaceType = (AbstractSurfaceType) JTS2GML321.toGML(borderPolygon);
@@ -85,7 +86,7 @@ public class InspireWayDaoDummyAr5Classes {
 		ar5.setDatafangstdato(datafangstdato);
 
 
-		schemas.opengis.net_gml_3_2_1.ObjectFactory of = new  schemas.opengis.net_gml_3_2_1.ObjectFactory();
+		opengis.net_gml_3_2_1.ObjectFactory of = new  opengis.net_gml_3_2_1.ObjectFactory();
 		
 		CurvePropertyType omrade = new CurvePropertyType();
 		AbstractGeometryType abstractSurfaceType =  JTS2GML321.toGML(borderLineString);

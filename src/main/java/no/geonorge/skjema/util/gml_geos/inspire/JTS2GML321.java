@@ -6,24 +6,25 @@ package no.geonorge.skjema.util.gml_geos.inspire;
 
 import javax.xml.bind.JAXBElement;
 
-import schemas.opengis.net_gml_3_2_1.AbstractGeometricAggregateType;
-import schemas.opengis.net_gml_3_2_1.AbstractGeometryType;
-import schemas.opengis.net_gml_3_2_1.AbstractRingPropertyType;
-import schemas.opengis.net_gml_3_2_1.CoordinatesType;
-import schemas.opengis.net_gml_3_2_1.CurvePropertyType;
-import schemas.opengis.net_gml_3_2_1.DirectPositionType;
-import schemas.opengis.net_gml_3_2_1.EnvelopeType;
-import schemas.opengis.net_gml_3_2_1.LineStringType;
-import schemas.opengis.net_gml_3_2_1.MultiCurveType;
-import schemas.opengis.net_gml_3_2_1.MultiGeometryType;
-import schemas.opengis.net_gml_3_2_1.MultiPointType;
-import schemas.opengis.net_gml_3_2_1.MultiSurfaceType;
-import schemas.opengis.net_gml_3_2_1.ObjectFactory;
-import schemas.opengis.net_gml_3_2_1.PointPropertyType;
-import schemas.opengis.net_gml_3_2_1.PointType;
-import schemas.opengis.net_gml_3_2_1.PolygonType;
-import schemas.opengis.net_gml_3_2_1.RingType;
-import schemas.opengis.net_gml_3_2_1.SurfacePropertyType;
+import opengis.net_gml_3_2_1.AbstractGeometricAggregateType;
+import opengis.net_gml_3_2_1.AbstractGeometryType;
+import opengis.net_gml_3_2_1.AbstractRingPropertyType;
+import opengis.net_gml_3_2_1.CoordinatesType;
+import opengis.net_gml_3_2_1.CurvePropertyType;
+import opengis.net_gml_3_2_1.DirectPositionType;
+import opengis.net_gml_3_2_1.EnvelopeType;
+import opengis.net_gml_3_2_1.LineStringType;
+import opengis.net_gml_3_2_1.MultiCurveType;
+import opengis.net_gml_3_2_1.MultiGeometryType;
+import opengis.net_gml_3_2_1.MultiPointType;
+import opengis.net_gml_3_2_1.MultiSurfaceType;
+import opengis.net_gml_3_2_1.ObjectFactory;
+import opengis.net_gml_3_2_1.PointPropertyType;
+import opengis.net_gml_3_2_1.PointType;
+import opengis.net_gml_3_2_1.PolygonType;
+import opengis.net_gml_3_2_1.RingType;
+import opengis.net_gml_3_2_1.SurfacePropertyType;
+
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;

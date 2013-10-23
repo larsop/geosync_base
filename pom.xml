@@ -385,7 +385,7 @@
 								<include>changelogfile.xsd</include> 
 							</schemaIncludes>
 							<bindingIncludes>
-								<include>custom-client.xml</include>
+								<include>base-global.xjb.xml</include>
 								<include>FKB_AR5.xjb.xml</include> 
 								<include>PrimaerdataKystkontur.xjb.xml</include> 
 								<include>changelogfile.xjb.xml</include> 

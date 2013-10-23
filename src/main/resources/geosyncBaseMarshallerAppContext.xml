@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:oxm="http://www.springframework.org/schema/oxm"
+	xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       http://www.springframework.org/schema/oxm http://www.springframework.org/schema/oxm/spring-oxm-3.0.xsd">
+
+	<bean id="changeLogMarshallerHelper"
+		class="no.geonorge.skjema.changelogfile.util.ChangeLogMarshallerHelper">
+		<constructor-arg index="0" ref="changeLogMarshaller" />
+	</bean>
+
+	<bean id="changeLogMarshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+		<property name="packagesToScan">
+			<list>
+				<value>no.geonorge.skjema.sosi.produktspesifikasjon.*</value>
+				<value>opengis.*</value>
+				<value>net.opengis.*</value>
+				<value>no.geonorge.skjema.changelogfile</value>
+			</list>
+		</property>
+	</bean>
+
+
+	<bean id="sosiProduktMarshallerHelper"
+		class="no.geonorge.skjema.sosi.produktspesifikasjon.util.SosiProduktMarshallerHelper">
+		<constructor-arg index="0" ref="sosiProduktMarshaller" />
+	</bean>
+
+
+	<bean id="sosiProduktMarshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+
+		<property name="packagesToScan">
+			<list>
+				<value>no.geonorge.skjema.sosi.produktspesifikasjon.*</value>
+				<value>opengis.*</value>
+				<value>net.opengis.*</value>
+			</list>
+		</property>
+	</bean>
+
+</beans>

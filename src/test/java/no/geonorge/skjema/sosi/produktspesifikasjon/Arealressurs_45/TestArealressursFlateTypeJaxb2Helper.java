@@ -3,6 +3,7 @@ package no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45;
 
 
 
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -15,8 +16,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import no.geonorge.skjema.changelogfile.util.ChangeLogMarshallerHelper;
 import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.util.InspireWayDaoDummyAr5Classes;
-import no.geonorge.skjema.util.GenericMarshallerJaxb2Helper;
 import no.geonorge.skjema.util.gml_geos.inspire.GML321_2JTS;
 
 import opengis.net_gml_3_2_1.AbstractRingPropertyType;
@@ -45,12 +46,12 @@ import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.io.ParseException;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "/testSetup.xml", "/GenericMarshallerJaxb2HelperAppContext.xml" })
+@ContextConfiguration(locations = { "/testSetup.xml", "/geosyncBaseMarshallerAppContext.xml" })
 public class TestArealressursFlateTypeJaxb2Helper {
 
 
 	@Autowired
-	GenericMarshallerJaxb2Helper arealressursFlateTypeJaxb2Helper;
+	ChangeLogMarshallerHelper arealressursFlateTypeJaxb2Helper;
 
 	private InspireWayDaoDummyAr5Classes daoDummyAr5Classes;
 

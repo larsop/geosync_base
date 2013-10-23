@@ -1,6 +1,7 @@
 package no.geonorge.skjema.changelogfile;
 
 
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
@@ -25,10 +26,10 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import junit.framework.Assert;
+import no.geonorge.skjema.changelogfile.util.ChangeLogMarshallerHelper;
 import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ArealressursFlateType;
 import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ArealressursGrenseType;
 import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.util.InspireWayDaoDummyAr5Classes;
-import no.geonorge.skjema.util.GenericMarshallerJaxb2Helper;
 import no.geonorge.skjema.util.gml_geos.geoserver.GML321_2JTS;
 
 import opengis.net.wfs_2_0.wfs.InsertType;
@@ -60,13 +61,14 @@ import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.io.ParseException;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "/testSetup.xml", "/ChangelogfileJaxb2HelperAppContext.xml", "/GenericMarshallerJaxb2HelperAppContext.xml" })
+@ContextConfiguration(locations = { "/testSetup.xml", "/geosyncBaseMarshallerAppContext.xml" })
 public class TestChangelogfileJaxb2Helper {
 
 	@Autowired
-	no.geonorge.skjema.util.ChangelogfileJaxb2Helper changelogfileJaxb2Helper;
+	ChangeLogMarshallerHelper changelogfileJaxb2Helper;
+	
 	@Autowired
-	GenericMarshallerJaxb2Helper genericMarshaller;
+	ChangeLogMarshallerHelper genericMarshaller;
 
 	private InspireWayDaoDummyAr5Classes daoDummyAr5Classes;
 
@@ -200,14 +202,9 @@ public class TestChangelogfileJaxb2Helper {
 				List<Object> anies = insertType.getAnies();
 				for (Object object : anies) {
 
-					com.sun.org.apache.xerces.internal.dom.ElementImpl delement =  (ElementImpl) object;
-
-					
-					Source source = new DOMSource(delement);
-					Unmarshaller unmarshaller = genericMarshaller.getUnmarshaller();
 					
 
-					JAXBElement jaxblement = (JAXBElement) unmarshaller.unmarshal(source);
+					JAXBElement jaxblement = (JAXBElement) object;
 					 ArealressursFlateType simpleAr5FromXml = (ArealressursFlateType) jaxblement.getValue();
 					 
 					 

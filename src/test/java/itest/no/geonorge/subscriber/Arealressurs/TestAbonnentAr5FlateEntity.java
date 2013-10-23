@@ -1,5 +1,6 @@
 package itest.no.geonorge.subscriber.Arealressurs;
 
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.sql.Date;
@@ -15,8 +16,9 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 
 import no.geonorge.skjema.changelogfile.TransactionCollection;
+import no.geonorge.skjema.changelogfile.util.ChangeLogMarshallerHelper;
 import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ArealressursFlateType;
-import no.geonorge.skjema.util.GenericMarshallerJaxb2Helper;
+import no.geonorge.skjema.sosi.produktspesifikasjon.util.SosiProduktMarshallerHelper;
 import no.geonorge.skjema.util.gml_geos.geoserver.GML321_2JTS;
 import no.geonorge.subscriber.Arealressurs.Ar5FlateEntity;
 import no.skogoglandskap.db.util.SpringHibernateTemplate;
@@ -43,17 +45,17 @@ import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.io.WKTReader;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "/subscriber_db_setup.xml", "/ChangelogfileJaxb2HelperAppContext.xml", "/GenericMarshallerJaxb2HelperAppContext.xml" })
+@ContextConfiguration(locations = { "/subscriber_db_setup.xml", "/geosyncBaseMarshallerAppContext.xml"})
 public class TestAbonnentAr5FlateEntity {
 
 	@Autowired
 	private SpringHibernateTemplate abonnent_db_connection;
 
 	@Autowired
-	private no.geonorge.skjema.util.ChangelogfileJaxb2Helper changelogfileJaxb2Helper;
+	private ChangeLogMarshallerHelper changelogfileJaxb2Helper;
 
 	@Autowired
-	private GenericMarshallerJaxb2Helper genericMarshaller;
+	private SosiProduktMarshallerHelper genericMarshaller;
 
 	/**
 	 * Test that gpiwsEndpointHandler is set
@@ -162,12 +164,8 @@ public class TestAbonnentAr5FlateEntity {
 
 					for (Object object : anies) {
 
-						com.sun.org.apache.xerces.internal.dom.ElementImpl delement = (ElementImpl) object;
 
-						Source source = new DOMSource(delement);
-						Unmarshaller unmarshaller = genericMarshaller.getUnmarshaller();
-
-						JAXBElement jaxblement = (JAXBElement) unmarshaller.unmarshal(source);
+						JAXBElement jaxblement = (JAXBElement) object;;
 						ArealressursFlateType simpleAr5FromXml = (ArealressursFlateType) jaxblement.getValue();
 
 						arrayListInsert.add(simpleAr5FromXml);

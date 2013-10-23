@@ -355,31 +355,16 @@
 				<configuration>
 					<source>1.7</source>
 					<target>1.7</target>
-					<!-- <generatedSourcesDirectory>${project.build.directory}/generated-sources/</generatedSourcesDirectory> -->
 				</configuration>
-
 			</plugin>
 
 
-			<!-- Working Ok -->
-			<!-- <plugin> -->
-			<!-- <groupId>org.apache.axis2</groupId> -->
-			<!-- <artifactId>axis2-wsdl2code-maven-plugin</artifactId> -->
-			<!-- <version>1.6.2</version> -->
-			<!-- <executions> -->
-			<!-- <execution> -->
-			<!-- <id>ws5</id> -->
-			<!-- <goals> -->
-			<!-- <goal>wsdl2code</goal> -->
-			<!-- </goals> -->
-			<!-- <configuration> -->
-			<!-- <wsdlFile>http://geosynkronisering.no/files/skjema/v0.5/geosync.wsdl</wsdlFile> -->
-			<!-- <databindingName>xmlbeans</databindingName> -->
-			<!-- <packageName>org.apache.xmlbeans</packageName> -->
-			<!-- </configuration> -->
-			<!-- </execution> -->
-			<!-- </executions> -->
-			<!-- </plugin> -->
+			<plugin>
+				<groupId>org.jvnet.jaxb2.maven2</groupId>
+				<artifactId>maven-jaxb2-plugin</artifactId>
+				<version>0.8.3</version>
+			</plugin>
+
 
 
 			<plugin>
@@ -388,7 +373,7 @@
 				<version>0.8.3</version>
 				<executions>
 					<execution>
-						<id>schema1-generate-ar5</id>
+						<id>xsd-generate</id>
 						<goals>
 							<goal>generate</goal>
 						</goals>
@@ -396,22 +381,19 @@
 							<schemaDirectory>src/main/resources/xsd</schemaDirectory>
 							<schemaIncludes>
 								<include>FKB_AR5.xsd</include>
+								<include>changelogfile.xsd</include> 
 							</schemaIncludes>
 							<bindingIncludes>
-								<include>FKB_AR5.xjb.xml</include>
-								<include>global.xjb.xml</include>
+								<include>custom-client.xml</include>
+								<include>FKB_AR5.xjb.xml</include> 
+								<include>changelogfile.xjb.xml</include> 
 							</bindingIncludes>
-							<generatePackage>
-								no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45
-							</generatePackage>
-
-							<generateDirectory>
-								${project.build.directory}/generated-sources/ar5
-							</generateDirectory>
-							<extension>true</extension>
 							<args>
+								<arg>-extension</arg>
+								<arg>-Xnamespace-prefix</arg>
 								<arg>-Xannotate</arg>
 							</args>
+							<extension>true</extension>
 							<plugins>
 								<plugin>
 									<groupId>org.jvnet.jaxb2_commons</groupId>
@@ -426,6 +408,46 @@
 							</plugins>
 						</configuration>
 					</execution>
+				
+<!-- 					<execution> -->
+<!-- 						<id>schema1-generate-ar5</id> -->
+<!-- 						<goals> -->
+<!-- 							<goal>generate</goal> -->
+<!-- 						</goals> -->
+<!-- 						<configuration> -->
+<!-- 							<schemaDirectory>src/main/resources/xsd</schemaDirectory> -->
+<!-- 							<schemaIncludes> -->
+<!-- 								<include>FKB_AR5.xsd</include> -->
+<!-- 							</schemaIncludes> -->
+<!-- 							<bindingIncludes> -->
+<!-- 								<include>FKB_AR5.xjb.xml</include> -->
+<!-- 								<include>global.xjb.xml</include> -->
+<!-- 							</bindingIncludes> -->
+<!-- 							<generatePackage> -->
+<!-- 								no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45 -->
+<!-- 							</generatePackage> -->
+
+<!-- 							<generateDirectory> -->
+<!-- 								${project.build.directory}/generated-sources/ar5 -->
+<!-- 							</generateDirectory> -->
+<!-- 							<extension>true</extension> -->
+<!-- 							<args> -->
+<!-- 								<arg>-Xannotate</arg> -->
+<!-- 							</args> -->
+<!-- 							<plugins> -->
+<!-- 								<plugin> -->
+<!-- 									<groupId>org.jvnet.jaxb2_commons</groupId> -->
+<!-- 									<artifactId>jaxb2-basics-annotate</artifactId> -->
+<!-- 									<version>0.6.4</version> -->
+<!-- 								</plugin> -->
+<!-- 								<plugin> -->
+<!-- 									<groupId>org.jvnet.jaxb2_commons</groupId> -->
+<!-- 									<artifactId>jaxb2-basics</artifactId> -->
+<!-- 									<version>0.6.4</version> -->
+<!-- 								</plugin> -->
+<!-- 							</plugins> -->
+<!-- 						</configuration> -->
+<!-- 					</execution> -->
 
 
 					<!-- <execution> -->
@@ -470,71 +492,55 @@
 
 
 
-					<execution>
-						<id>schema1-generate-changelogfile</id>
-						<goals>
-							<goal>generate</goal>
-						</goals>
-						<configuration>
-							<schemaDirectory>src/main/resources/xsd</schemaDirectory>
-							<schemaIncludes>
-								<include>changelogfile.xsd</include>
-							</schemaIncludes>
-							<bindingIncludes>
-								<include>changelogfile.xjb.xml</include>
-								<include>global.xjb.xml</include>
-							</bindingIncludes>
-							<generatePackage>
-								no.geonorge.skjema.changelogfile
-							</generatePackage>
+<!-- 					<execution> -->
+<!-- 						<id>schema1-generate-changelogfile</id> -->
+<!-- 						<goals> -->
+<!-- 							<goal>generate</goal> -->
+<!-- 						</goals> -->
+<!-- 						<configuration> -->
+<!-- 							<schemaDirectory>src/main/resources/xsd</schemaDirectory> -->
+<!-- 							<schemaIncludes> -->
+<!-- 								<include>changelogfile.xsd</include> -->
+<!-- 							</schemaIncludes> -->
+<!-- 							<bindingIncludes> -->
+<!-- 								<include>changelogfile.xjb.xml</include> -->
+<!-- 								<include>global.xjb.xml</include> -->
+<!-- 							</bindingIncludes> -->
+<!-- 							<generatePackage> -->
+<!-- 								no.geonorge.skjema.changelogfile -->
+<!-- 							</generatePackage> -->
 
-							<generateDirectory>
-								${project.build.directory}/generated-sources/chlog
-							</generateDirectory>
-							<extension>true</extension>
-							<args>
-								<arg>-Xannotate</arg>
-							</args>
-							<plugins>
-								<plugin>
-									<groupId>org.jvnet.jaxb2_commons</groupId>
-									<artifactId>jaxb2-basics-annotate</artifactId>
-									<version>0.6.4</version>
-								</plugin>
-								<plugin>
-									<groupId>org.jvnet.jaxb2_commons</groupId>
-									<artifactId>jaxb2-basics</artifactId>
-									<version>0.6.4</version>
-								</plugin>
-							</plugins>
-						</configuration>
-					</execution>
+<!-- 							<generateDirectory> -->
+<!-- 								${project.build.directory}/generated-sources/chlog -->
+<!-- 							</generateDirectory> -->
+<!-- 							<extension>true</extension> -->
+<!-- 							<args> -->
+<!-- 								<arg>-Xannotate</arg> -->
+<!-- 							</args> -->
+<!-- 							<plugins> -->
+<!-- 								<plugin> -->
+<!-- 									<groupId>org.jvnet.jaxb2_commons</groupId> -->
+<!-- 									<artifactId>jaxb2-basics-annotate</artifactId> -->
+<!-- 									<version>0.6.4</version> -->
+<!-- 								</plugin> -->
+<!-- 								<plugin> -->
+<!-- 									<groupId>org.jvnet.jaxb2_commons</groupId> -->
+<!-- 									<artifactId>jaxb2-basics</artifactId> -->
+<!-- 									<version>0.6.4</version> -->
+<!-- 								</plugin> -->
+<!-- 							</plugins> -->
+<!-- 						</configuration> -->
+<!-- 					</execution> -->
 
 				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>org.jvnet.jaxb2_commons</groupId>
+						<artifactId>jaxb2-namespace-prefix</artifactId>
+						<version>1.0</version>
+					</dependency>
+				</dependencies>
 
-				<configuration>
-					<extension>true</extension>
-					<args>
-						<arg>-XtoString</arg>
-						<arg>-Xequals</arg>
-						<arg>-XhashCode</arg>
-						<arg>-Xcopyable</arg>
-						<arg>-Xmergeable</arg>
-						<!-- <arg>-Xannotate</arg> -->
-					</args>
-					<plugins>
-						<plugin>
-							<groupId>org.jvnet.jaxb2_commons</groupId>
-							<artifactId>jaxb2-basics</artifactId>
-							<version>0.6.4</version>
-						</plugin>
-						<!-- <plugin> -->
-						<!-- <groupid>org.jvnet.jaxb2_commons</groupid> -->
-						<!-- <artifactid>jaxb2-basics-annotate</artifactid> -->
-						<!-- <version>0.6.4</version> -->
-						<!-- </plugin> -->
-					</plugins>
-				</configuration>
 			</plugin>
 
 			<plugin>

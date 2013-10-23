@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <jaxb:bindings version="2.0" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+	xmlns:namespace="http://jaxb2-commons.dev.java.net/namespace-prefix"
 	xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc" xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:annox="http://annox.dev.java.net"
 	xmlns:ar5="http://skjema.geonorge.no/SOSI/produktspesifikasjon/Arealressurs/4.5"
@@ -9,10 +10,18 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/jaxb ">
 
 
-	
+	<jaxb:bindings schemaLocation="FKB_AR5.xsd">
+		<jaxb:schemaBindings>
+			<jaxb:package
+				name="no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45" />
+			<jaxb:nameXmlTransform>
+				<jaxb:elementName suffix="Element" />
+			</jaxb:nameXmlTransform>
+		</jaxb:schemaBindings>
+		<jaxb:bindings>
+			<namespace:prefix name="ar5" />
+		</jaxb:bindings>
 
-	<jaxb:bindings schemaLocation="FKB_AR5.xsd" >
-	
 		<jaxb:bindings node="//xs:complexType[@name='ArealressursFlateType']">
 			<annox:annotate target="class">
 				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement"
@@ -20,16 +29,16 @@
 					namespace="http://skjema.geonorge.no/SOSI/produktspesifikasjon/Arealressurs/4.5" />
 			</annox:annotate>
 		</jaxb:bindings>
+		
 		<jaxb:bindings node="//xs:complexType[@name='ArealressursGrenseType']">
 			<annox:annotate target="class">
-				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" />
+				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement"
+					name="ArealressursGrenseType"
+					namespace="http://skjema.geonorge.no/SOSI/produktspesifikasjon/Arealressurs/4.5" />
 			</annox:annotate>
 		</jaxb:bindings>
-<!--         <jaxb:schemaBindings> -->
-<!--             <jaxb:package name="no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45"/> -->
-<!--         </jaxb:schemaBindings> -->
+		
 	</jaxb:bindings>
-
 
 
 

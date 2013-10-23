@@ -2,21 +2,23 @@ package no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.util;
 
 
 
+
+
 import java.util.Calendar;
 
 import javax.xml.bind.JAXBElement;
 
 import org.junit.Before;
 
-import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.AbstractCodeType;
-import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.AbstractCurveType;
-import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.AbstractGeometryType;
-import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.AbstractSurfaceType;
+import schemas.opengis.net_gml_3_2_1.AbstractCodeType;
+import schemas.opengis.net_gml_3_2_1.AbstractCurveType;
+import schemas.opengis.net_gml_3_2_1.AbstractGeometryType;
+import schemas.opengis.net_gml_3_2_1.AbstractSurfaceType;
 import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ArealressursFlateType;
 import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ArealressursGrenseType;
-import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.CurvePropertyType;
+import schemas.opengis.net_gml_3_2_1.CurvePropertyType;
 import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ObjectFactory;
-import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.SurfacePropertyType;
+import schemas.opengis.net_gml_3_2_1.SurfacePropertyType;
 import no.geonorge.skjema.util.gml_geos.inspire.JTS2GML321;
 
 import com.vividsolutions.jts.geom.LineString;
@@ -47,11 +49,11 @@ public class InspireWayDaoDummyAr5Classes {
 	}
 
 	public ArealressursFlateType simpleAr5Flate() throws ParseException {
-		ObjectFactory of = new ObjectFactory();
+		no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ObjectFactory ofar5 = new no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ObjectFactory();
 
 		// DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 
-		ArealressursFlateType ar5 = of.createArealressursFlateType();
+		ArealressursFlateType ar5 = ofar5.createArealressursFlateType();
 
 		AbstractCodeType arealtype = new AbstractCodeType();
 		arealtype.setCodeSpace("codespace");
@@ -60,6 +62,7 @@ public class InspireWayDaoDummyAr5Classes {
 
 		Calendar datafangstdato = Calendar.getInstance();
 		ar5.setDatafangstdato(datafangstdato);
+		schemas.opengis.net_gml_3_2_1.ObjectFactory of = new  schemas.opengis.net_gml_3_2_1.ObjectFactory();
 
 		SurfacePropertyType omrade = new SurfacePropertyType();
 		AbstractSurfaceType abstractSurfaceType = (AbstractSurfaceType) JTS2GML321.toGML(borderPolygon);
@@ -72,15 +75,17 @@ public class InspireWayDaoDummyAr5Classes {
 	
 
 	public ArealressursGrenseType simpleAr5Grense() throws ParseException {
-		no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ObjectFactory of = new no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ObjectFactory();
+		no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ObjectFactory ofar5 = new no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ObjectFactory();
 
-		ArealressursGrenseType ar5 = of.createArealressursGrenseType();
+		ArealressursGrenseType ar5 = ofar5.createArealressursGrenseType();
 
 		//ar5.setArealtype(arealtype);
 
 		Calendar datafangstdato = Calendar.getInstance();
 		ar5.setDatafangstdato(datafangstdato);
 
+
+		schemas.opengis.net_gml_3_2_1.ObjectFactory of = new  schemas.opengis.net_gml_3_2_1.ObjectFactory();
 		
 		CurvePropertyType omrade = new CurvePropertyType();
 		AbstractGeometryType abstractSurfaceType =  JTS2GML321.toGML(borderLineString);

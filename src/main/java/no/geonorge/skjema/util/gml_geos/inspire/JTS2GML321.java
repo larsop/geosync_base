@@ -3,26 +3,27 @@
  */
 package no.geonorge.skjema.util.gml_geos.inspire;
 
+
 import javax.xml.bind.JAXBElement;
 
-import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.AbstractGeometricAggregateType;
-import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.AbstractGeometryType;
-import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.AbstractRingPropertyType;
-import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.CoordinatesType;
-import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.CurvePropertyType;
-import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.DirectPositionType;
-import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.EnvelopeType;
-import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.LineStringType;
-import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.MultiCurveType;
-import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.MultiGeometryType;
-import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.MultiPointType;
-import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.MultiSurfaceType;
-import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ObjectFactory;
-import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.PointPropertyType;
-import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.PointType;
-import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.PolygonType;
-import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.RingType;
-import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.SurfacePropertyType;
+import schemas.opengis.net_gml_3_2_1.AbstractGeometricAggregateType;
+import schemas.opengis.net_gml_3_2_1.AbstractGeometryType;
+import schemas.opengis.net_gml_3_2_1.AbstractRingPropertyType;
+import schemas.opengis.net_gml_3_2_1.CoordinatesType;
+import schemas.opengis.net_gml_3_2_1.CurvePropertyType;
+import schemas.opengis.net_gml_3_2_1.DirectPositionType;
+import schemas.opengis.net_gml_3_2_1.EnvelopeType;
+import schemas.opengis.net_gml_3_2_1.LineStringType;
+import schemas.opengis.net_gml_3_2_1.MultiCurveType;
+import schemas.opengis.net_gml_3_2_1.MultiGeometryType;
+import schemas.opengis.net_gml_3_2_1.MultiPointType;
+import schemas.opengis.net_gml_3_2_1.MultiSurfaceType;
+import schemas.opengis.net_gml_3_2_1.ObjectFactory;
+import schemas.opengis.net_gml_3_2_1.PointPropertyType;
+import schemas.opengis.net_gml_3_2_1.PointType;
+import schemas.opengis.net_gml_3_2_1.PolygonType;
+import schemas.opengis.net_gml_3_2_1.RingType;
+import schemas.opengis.net_gml_3_2_1.SurfacePropertyType;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;

@@ -28,6 +28,15 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.xml.sax.SAXException;
 
+import schemas.opengis.net_gml_3_2_1.AbstractRingPropertyType;
+import schemas.opengis.net_gml_3_2_1.AbstractRingType;
+import schemas.opengis.net_gml_3_2_1.AbstractSurfaceType;
+import schemas.opengis.net_gml_3_2_1.CoordinatesType;
+import schemas.opengis.net_gml_3_2_1.CurvePropertyType;
+import schemas.opengis.net_gml_3_2_1.LineStringType;
+import schemas.opengis.net_gml_3_2_1.PolygonType;
+import schemas.opengis.net_gml_3_2_1.RingType;
+
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;

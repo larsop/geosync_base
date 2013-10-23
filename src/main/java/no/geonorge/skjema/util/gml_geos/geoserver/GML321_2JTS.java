@@ -3,9 +3,10 @@
  */
 package no.geonorge.skjema.util.gml_geos.geoserver;
 
+
 import java.util.List;
 
-import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.AbstractRingType;
+import schemas.opengis.net_gml_3_2_1.AbstractRingType;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
@@ -33,8 +34,8 @@ public class GML321_2JTS {
 	 * @return
 	 */
 	public static Geometry toJTS(AbstractRingType geom) {
-		if (geom instanceof no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.LinearRingType)
-			return toJTSImpl((no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.LinearRingType) geom);
+		if (geom instanceof schemas.opengis.net_gml_3_2_1.LinearRingType)
+			return toJTSImpl((schemas.opengis.net_gml_3_2_1.LinearRingType) geom);
 		else
 			throw new RuntimeException("Not handle conevertion from GML to JTS  " + geom.getClass().getSimpleName());
 	}
@@ -47,7 +48,7 @@ public class GML321_2JTS {
 	 */
 	// TOTO fix this code
 	// TODO handle srid
-	private static Geometry toJTSImpl(no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.LinearRingType geom) {
+	private static Geometry toJTSImpl(schemas.opengis.net_gml_3_2_1.LinearRingType geom) {
 
 		if (geom != null) {
 

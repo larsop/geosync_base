@@ -18,7 +18,9 @@
 		<property name="packagesToScan">
 			<list>
 				<value>no.geonorge.skjema.sosi.produktspesifikasjon.*</value>
-<!-- 				<value>no.geonorge.skjema.changelogfile</value> -->
+				<value>schemas.opengis.*</value>
+				<value>net.opengis.*</value>
+				<value>no.geonorge.skjema.changelogfile</value>
 			</list>
 		</property>
 	</bean>

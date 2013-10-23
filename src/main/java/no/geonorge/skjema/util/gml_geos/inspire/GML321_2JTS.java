@@ -3,13 +3,14 @@
  */
 package no.geonorge.skjema.util.gml_geos.inspire;
 
+
 import java.util.List;
 
-import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.AbstractRingType;
-import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.CoordinatesType;
-import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.CurvePropertyType;
-import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.LineStringType;
-import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.RingType;
+import schemas.opengis.net_gml_3_2_1.AbstractRingType;
+import schemas.opengis.net_gml_3_2_1.CoordinatesType;
+import schemas.opengis.net_gml_3_2_1.CurvePropertyType;
+import schemas.opengis.net_gml_3_2_1.LineStringType;
+import schemas.opengis.net_gml_3_2_1.RingType;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;

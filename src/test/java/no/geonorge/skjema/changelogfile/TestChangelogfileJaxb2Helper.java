@@ -1,5 +1,6 @@
 package no.geonorge.skjema.changelogfile;
 
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
@@ -24,13 +25,15 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import junit.framework.Assert;
-import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.AbstractRingPropertyType;
-import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.AbstractRingType;
-import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.AbstractSurfaceType;
+import schemas.opengis.net.wfs_2_0.wfs.InsertType;
+import schemas.opengis.net.wfs_2_0.wfs.Transaction;
+import schemas.opengis.net_gml_3_2_1.AbstractRingPropertyType;
+import schemas.opengis.net_gml_3_2_1.AbstractRingType;
+import schemas.opengis.net_gml_3_2_1.AbstractSurfaceType;
 import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ArealressursFlateType;
 import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ArealressursGrenseType;
-import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.CoordinatesType;
-import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.PolygonType;
+import schemas.opengis.net_gml_3_2_1.CoordinatesType;
+import schemas.opengis.net_gml_3_2_1.PolygonType;
 import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.util.InspireWayDaoDummyAr5Classes;
 import no.geonorge.skjema.util.GenericMarshallerJaxb2Helper;
 import no.geonorge.skjema.util.gml_geos.geoserver.GML321_2JTS;
@@ -79,13 +82,13 @@ public class TestChangelogfileJaxb2Helper {
 	 * @throws IOException
 	 * @throws ParserConfigurationException
 	 */
-	//@Test
+	@Test
 	public void testTransactionCollection_gemreic_Marshal() throws ParseException, SAXException, IOException, ParserConfigurationException {
 
 		no.geonorge.skjema.changelogfile.TransactionCollection simpleAr5 = new no.geonorge.skjema.changelogfile.TransactionCollection();
 
 		List<Transaction> transactions2 = simpleAr5.getTransactions();
-		no.geonorge.skjema.changelogfile.Transaction e = new no.geonorge.skjema.changelogfile.Transaction();
+		Transaction e = new Transaction();
 		transactions2.add(e);
 		
 		Marshaller marshaller = genericMarshaller.getMarshaller();
@@ -105,19 +108,6 @@ public class TestChangelogfileJaxb2Helper {
 
 	}
 
-	@Test
-	public void testTransactionCollection_Marshal() throws ParseException, SAXException, IOException, ParserConfigurationException {
-
-		no.geonorge.skjema.changelogfile.TransactionCollection simpleAr5 = new no.geonorge.skjema.changelogfile.TransactionCollection();
-
-		List<Transaction> transactions2 = simpleAr5.getTransactions();
-		no.geonorge.skjema.changelogfile.Transaction e = new no.geonorge.skjema.changelogfile.Transaction();
-		transactions2.add(e);
-		
-		changelogfileJaxb2Helper.marshal(simpleAr5, "/tmp/log.xml");
-		
-
-	}
 
 
 	/**
@@ -132,7 +122,7 @@ public class TestChangelogfileJaxb2Helper {
 	 * @throws TransformerFactoryConfigurationError
 	 * @throws TransformerException
 	 */
-	@Test
+	//@Test
 	public void testTransactionCollectionGrense_unMarshal1() throws ParseException, SAXException, IOException, ParserConfigurationException,
 			TransformerFactoryConfigurationError, TransformerException {
 
@@ -145,7 +135,7 @@ public class TestChangelogfileJaxb2Helper {
 			for (JAXBElement<? extends Serializable> jaxbElement : abstractTransactionActions) {
 				Serializable value = jaxbElement.getValue();
 
-				no.geonorge.skjema.changelogfile.InsertType insertType = (InsertType) value;
+				InsertType insertType = (InsertType) value;
 
 				List<Object> anies = insertType.getAnies();
 				for (Object object : anies) {
@@ -204,7 +194,7 @@ public class TestChangelogfileJaxb2Helper {
 			for (JAXBElement<? extends Serializable> jaxbElement : abstractTransactionActions) {
 				Serializable valueInsert = jaxbElement.getValue();
 
-				no.geonorge.skjema.changelogfile.InsertType insertType = (InsertType) valueInsert;
+				InsertType insertType = (InsertType) valueInsert;
 
 				List<Object> anies = insertType.getAnies();
 				for (Object object : anies) {
@@ -227,7 +217,7 @@ public class TestChangelogfileJaxb2Helper {
 					AbstractRingPropertyType exterior = value.getExterior();
 					JAXBElement<? extends AbstractRingType> abstractRing = exterior.getAbstractRing();
 
-					no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.LinearRingType ringType = (no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.LinearRingType) abstractRing
+					schemas.opengis.net_gml_3_2_1.LinearRingType ringType = (schemas.opengis.net_gml_3_2_1.LinearRingType) abstractRing
 							.getValue();
 
 					Polygon createPolygon  = (Polygon) GML321_2JTS.toJTS(ringType);

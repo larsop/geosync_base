@@ -14,14 +14,14 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 
-import no.geonorge.skjema.changelogfile.InsertType;
-import no.geonorge.skjema.changelogfile.Transaction;
 import no.geonorge.skjema.changelogfile.TransactionCollection;
-import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.AbstractRingPropertyType;
-import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.AbstractRingType;
-import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.AbstractSurfaceType;
+import schemas.opengis.net.wfs_2_0.wfs.InsertType;
+import schemas.opengis.net.wfs_2_0.wfs.Transaction;
+import schemas.opengis.net_gml_3_2_1.AbstractRingPropertyType;
+import schemas.opengis.net_gml_3_2_1.AbstractRingType;
+import schemas.opengis.net_gml_3_2_1.AbstractSurfaceType;
 import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ArealressursFlateType;
-import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.PolygonType;
+import schemas.opengis.net_gml_3_2_1.PolygonType;
 import no.geonorge.skjema.util.GenericMarshallerJaxb2Helper;
 import no.geonorge.skjema.util.gml_geos.geoserver.GML321_2JTS;
 import no.geonorge.subscriber.Arealressurs.Ar5FlateEntity;
@@ -133,7 +133,7 @@ public class TestAbonnentAr5FlateEntity {
 		AbstractRingPropertyType exterior = value.getExterior();
 		JAXBElement<? extends AbstractRingType> abstractRing = exterior.getAbstractRing();
 
-		no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.LinearRingType ringType = (no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.LinearRingType) abstractRing
+		schemas.opengis.net_gml_3_2_1.LinearRingType ringType = (schemas.opengis.net_gml_3_2_1.LinearRingType) abstractRing
 				.getValue();
 
 		Polygon border = (Polygon) GML321_2JTS.toJTS(ringType);
@@ -155,7 +155,7 @@ public class TestAbonnentAr5FlateEntity {
 
 				if (operaTionType instanceof InsertType) {
 
-					no.geonorge.skjema.changelogfile.InsertType insertType = (InsertType) operaTionType;
+					InsertType insertType = (InsertType) operaTionType;
 
 					List<Object> anies = insertType.getAnies();
 

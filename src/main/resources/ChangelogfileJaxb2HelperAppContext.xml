@@ -11,13 +11,24 @@
         <property name="unmarshaller" ref="jaxb2MarshallerJaxb2Helper"/>
     </bean>
     
+    
+	<bean id="jaxb2MarshallerJaxb2Helper" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
 
-    <!-- Create JAXB marshaller bean with the OXM framework -->
+		<property name="packagesToScan">
+			<list>
+<!-- 				<value>no.geonorge.skjema.sosi.produktspesifikasjon.*</value> -->
+				<value>schemas.opengis.*</value>
+				<value>no.geonorge.skjema.changelogfile</value>
+			</list>
+		</property>
+	</bean>
+    
 
-    <oxm:jaxb2-marshaller id="jaxb2MarshallerJaxb2Helper">
-        <oxm:class-to-be-bound
-                name="no.geonorge.skjema.changelogfile.TransactionCollection"/>
-    </oxm:jaxb2-marshaller>
+<!--     Create JAXB marshaller bean with the OXM framework -->
+<!--     <oxm:jaxb2-marshaller id="jaxb2MarshallerJaxb2Helper"> -->
+<!--         <oxm:class-to-be-bound -->
+<!--                 name="no.geonorge.skjema.changelogfile.TransactionCollection"/> -->
+<!--     </oxm:jaxb2-marshaller> -->
 
 
 

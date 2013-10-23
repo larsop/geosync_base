@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<jaxb:bindings version="2.0" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+<jaxb:bindings version="2.1" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+	xmlns:namespace="http://jaxb2-commons.dev.java.net/namespace-prefix"
+
 	xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc" xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:annox="http://annox.dev.java.net"
 	xmlns:ar5="http://skjema.geonorge.no/SOSI/produktspesifikasjon/Arealressurs/4.5"
@@ -8,55 +10,21 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/jaxb ">
 
-	<!-- xmlns:ar5="http://skjema.geonorge.no/SOSI/produktspesifikasjon/Arealressurs/4.5" -->
-
 	<!-- TransactionCollection this one is not needed -->
-    <jaxb:bindings schemaLocation="changelogfile.xsd" >
+	<jaxb:bindings schemaLocation="changelogfile.xsd">
+		<jaxb:schemaBindings>
+			<jaxb:package name="no.geonorge.skjema.changelogfile" />
+		</jaxb:schemaBindings>
+		<jaxb:bindings>
+			<namespace:prefix name="chlogf" />
+		</jaxb:bindings>
+
 		<jaxb:bindings node="//xs:element[@name='TransactionCollection']">
 			<annox:annotate target="class">
 				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" />
 			</annox:annotate>
 		</jaxb:bindings>
 
-<!--         <jaxb:schemaBindings> -->
-<!--             <jaxb:package name="no.geonorge.skjema.changelogfile"/> -->
-<!--         </jaxb:schemaBindings> -->
-    </jaxb:bindings>
-
-
-
-
-	<jaxb:bindings schemaLocation="http://schemas.opengis.net/wfs/2.0/wfs.xsd">
-		<jaxb:bindings node="//xs:complexType [@name='ValueListType']">
-			<jaxb:class name="AbstractValueListType" />
-		</jaxb:bindings>
 	</jaxb:bindings>
 
-
-	<jaxb:bindings schemaLocation="http://schemas.opengis.net/ows/1.1.0/owsCommon.xsd">
-		<jaxb:bindings node="//xs:element[@name='AbstractMetaData']">
-			<jaxb:property name="valueInstAbstractMetaData" />
-			<jaxb:factoryMethod name="valueInstAbstractMetaData" />
-		</jaxb:bindings>
-	</jaxb:bindings>
-
-	<jaxb:bindings schemaLocation="http://schemas.opengis.net/ows/1.1.0/owsDomainType.xsd">
-		<jaxb:bindings node="//xs:element[@name='Value']">
-			<jaxb:property name="valueInst" />
-			<jaxb:factoryMethod name="valueInst" />
-		</jaxb:bindings>
-	</jaxb:bindings>
-
-	<jaxb:bindings schemaLocation="http://schemas.opengis.net/ows/1.1.0/owsDomainType.xsd">
-		<jaxb:bindings node="//xs:element[@name='MinimumValue']">
-			<jaxb:property name="minimumValueInst" />
-			<jaxb:factoryMethod name="minimumValueInst" />
-		</jaxb:bindings>
-		<jaxb:bindings node="//xs:element[@name='MaximumValue']">
-			<jaxb:property name="maximumValueInst" />
-			<jaxb:factoryMethod name="maximumValueInst" />
-		</jaxb:bindings>
-	</jaxb:bindings>
-
-s
 </jaxb:bindings>

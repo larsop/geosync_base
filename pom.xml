@@ -381,11 +381,13 @@
 							<schemaDirectory>src/main/resources/xsd</schemaDirectory>
 							<schemaIncludes>
 								<include>FKB_AR5.xsd</include>
+								<include>PrimaerdataKystkontur.xsd</include>
 								<include>changelogfile.xsd</include> 
 							</schemaIncludes>
 							<bindingIncludes>
 								<include>custom-client.xml</include>
 								<include>FKB_AR5.xjb.xml</include> 
+								<include>PrimaerdataKystkontur.xjb.xml</include> 
 								<include>changelogfile.xjb.xml</include> 
 							</bindingIncludes>
 							<args>

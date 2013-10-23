@@ -1,0 +1,433 @@
+<?xml version="1.0"?>
+<jaxb:bindings xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+	xmlns:namespace="http://jaxb2-commons.dev.java.net/namespace-prefix"
+	xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:annox="http://annox.dev.java.net"
+	xmlns:ar5="http://skjema.geonorge.no/SOSI/produktspesifikasjon/Arealressurs/4.5"
+	xmlns:chlogf="http://skjema.geonorge.no/standard/geosynkronisering/1.0/endringslogg"
+	jaxb:extensionBindingPrefixes="xjc annox"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/jaxb " jaxb:version="2.1">
+
+
+
+	<jaxb:globalBindings>
+		<xjc:simple />
+		<xjc:serializable uid="-1" />
+		<jaxb:javaType name="java.util.Calendar" xmlType="xs:dateTime"
+			parseMethod="javax.xml.bind.DatatypeConverter.parseDateTime"
+			printMethod="javax.xml.bind.DatatypeConverter.printDateTime" />
+	</jaxb:globalBindings>
+
+
+
+
+	<jaxb:bindings schemaLocation="http://schemas.opengis.net/wfs/2.0/wfs.xsd">
+		<jaxb:schemaBindings>
+			<jaxb:package name="schemas.opengis.net.wfs_2_0.wfs" />
+		</jaxb:schemaBindings>
+		<jaxb:bindings>
+			<namespace:prefix name="wfs" />
+		</jaxb:bindings>
+		<jaxb:bindings node="//xs:complexType [@name='ValueListType']">
+			<jaxb:class name="AbstractValueListType" />
+		</jaxb:bindings>
+
+	</jaxb:bindings>
+
+	<jaxb:bindings
+		schemaLocation="http://schemas.opengis.net/ows/1.1.0/owsGetCapabilities.xsd">
+		<jaxb:schemaBindings>
+			<jaxb:package name="schemas.opengis.net.ows_1_1_0.owsGetCapabilities" />
+		</jaxb:schemaBindings>
+		<jaxb:bindings>
+			<namespace:prefix name="ows" />
+		</jaxb:bindings>
+
+	</jaxb:bindings>
+
+	<jaxb:bindings schemaLocation="http://schemas.opengis.net/ows/1.1.0/owsCommon.xsd">
+		<jaxb:bindings node="//xs:element[@name='AbstractMetaData']">
+			<jaxb:property name="valueInstAbstractMetaData" />
+			<jaxb:factoryMethod name="valueInstAbstractMetaData" />
+		</jaxb:bindings>
+	</jaxb:bindings>
+
+	<jaxb:bindings schemaLocation="http://schemas.opengis.net/ows/1.1.0/owsDomainType.xsd">
+		<jaxb:bindings node="//xs:element[@name='Value']">
+			<jaxb:property name="valueInst" />
+			<jaxb:factoryMethod name="valueInst" />
+		</jaxb:bindings>
+		<jaxb:bindings node="//xs:element[@name='MinimumValue']">
+			<jaxb:property name="minimumValueInst" />
+			<jaxb:factoryMethod name="minimumValueInst" />
+		</jaxb:bindings>
+		<jaxb:bindings node="//xs:element[@name='MaximumValue']">
+			<jaxb:property name="maximumValueInst" />
+			<jaxb:factoryMethod name="maximumValueInst" />
+		</jaxb:bindings>
+	</jaxb:bindings>
+
+
+
+	<jaxb:bindings schemaLocation="http://www.w3.org/1999/xlink.xsd">
+		<jaxb:schemaBindings>
+			<jaxb:package name="www.w3.org_1999_xlink" />
+			<jaxb:nameXmlTransform>
+				<jaxb:elementName suffix="Element" />
+			</jaxb:nameXmlTransform>
+		</jaxb:schemaBindings>
+		<jaxb:bindings>
+			<namespace:prefix name="xlink" />
+		</jaxb:bindings>
+
+		<jaxb:bindings
+			node="//xs:group[@name='locatorModel']/xs:sequence/xs:element[@ref='xlink:title']">
+			<jaxb:property name="groupTitle" />
+		</jaxb:bindings>
+
+		<jaxb:bindings
+			node="//xs:attributeGroup[@name='arcAttrs']/xs:attribute[@ref='xlink:title']">
+			<jaxb:property name="arcAttrsTitle" />
+		</jaxb:bindings>
+	</jaxb:bindings>
+
+	<jaxb:bindings schemaLocation="http://schemas.opengis.net/gml/3.2.1/valueObjects.xsd">
+		<jaxb:schemaBindings>
+			<jaxb:package name="schemas.opengis.net_gml_3_2_1" />
+			<jaxb:nameXmlTransform>
+				<jaxb:elementName suffix="Element" />
+			</jaxb:nameXmlTransform>
+		</jaxb:schemaBindings>
+		<jaxb:bindings>
+			<namespace:prefix name="gml" />
+		</jaxb:bindings>
+
+		<jaxb:bindings
+			node="//xs:complexType[@name='CompositeValueType']/xs:complexContent/xs:extension/xs:sequence/xs:element[@ref='gml:valueComponents']">
+			<jaxb:property name="valueComponentsAttribute" />
+		</jaxb:bindings>
+	</jaxb:bindings>
+
+
+	<jaxb:bindings schemaLocation="http://schemas.opengis.net/gml/3.2.1/datums.xsd">
+		<jaxb:bindings node="//xs:element[@name='GeodeticDatum']">
+			<jaxb:factoryMethod name="TypeGeodeticDatum" />
+		</jaxb:bindings>
+		<jaxb:bindings node="//xs:element[@name='secondDefiningParameter']">
+			<jaxb:class name="AbstractSecondDefiningParameter" />
+		</jaxb:bindings>
+		<jaxb:bindings node="//xs:element[@name='TemporalDatum']">
+			<jaxb:factoryMethod name="TypeTemporalDatum" />
+		</jaxb:bindings>
+		<jaxb:bindings node="//xs:element[@name='Ellipsoid']">
+			<jaxb:factoryMethod name="TypeEllipsoid" />
+		</jaxb:bindings>
+		<jaxb:bindings node="//xs:element[@name='primeMeridian']">
+			<jaxb:factoryMethod name="TypePrimeMeridian" />
+		</jaxb:bindings>
+		<jaxb:bindings node="//xs:element[@name='EngineeringDatum']">
+			<jaxb:factoryMethod name="TypeEngineeringDatum" />
+		</jaxb:bindings>
+	</jaxb:bindings>
+
+
+
+
+
+	<jaxb:bindings
+		schemaLocation="http://schemas.opengis.net/gml/3.2.1/geometryPrimitives.xsd">
+		<jaxb:bindings
+			node="//xs:group[@name='PointGrid']/xs:sequence/xs:element[@name='rows']">
+			<jaxb:property name="rowsAttribute" />
+		</jaxb:bindings>
+	</jaxb:bindings>
+
+
+	<jaxb:bindings
+		schemaLocation="http://schemas.opengis.net/gml/3.2.1/geometryBasic0d1d.xsd">
+		<jaxb:bindings
+			node="//xs:attributeGroup[@name='SRSInformationGroup']/xs:attribute[@name='axisLabels']">
+			<jaxb:property name="axisLabelsAttribute" />
+		</jaxb:bindings>
+	</jaxb:bindings>
+
+
+	<jaxb:bindings
+		schemaLocation="http://schemas.opengis.net/gml/3.2.1/deprecatedTypes.xsd">
+		<jaxb:bindings node="//xs:element[@name='FeatureCollection']">
+			<jaxb:factoryMethod name="TypeFeatureCollection" />
+		</jaxb:bindings>
+		<jaxb:bindings node="//xs:complexType [@name='FeatureCollectionType']">
+			<jaxb:class name="AbstractFeatureCollectionType2" />
+			<jaxb:bindings
+				node="//xs:complexType[@name='BagType']/xs:complexContent/xs:extension/xs:sequence/xs:element[@ref='gml:members']">
+				<jaxb:property name="membersAttribute" />
+			</jaxb:bindings>
+		</jaxb:bindings>
+
+		<jaxb:bindings
+			node="//xs:complexType[@name='AbstractFeatureCollectionType']/xs:complexContent/xs:extension/xs:sequence/xs:element[@ref='gml:featureMembers']">
+			<jaxb:property name="featureMembersAttribute" />
+		</jaxb:bindings>
+	</jaxb:bindings>
+
+
+
+	<jaxb:bindings
+		schemaLocation="http://schemas.opengis.net/gml/3.2.1/geometryAggregates.xsd">
+		<jaxb:bindings
+			node="//xs:complexType[@name='MultiCurveType']/xs:complexContent/xs:extension/xs:sequence/xs:element[@ref='gml:curveMembers']">
+			<jaxb:property name="curveMembersAttribute" />
+		</jaxb:bindings>
+		<jaxb:bindings
+			node="//xs:complexType[@name='MultiSurfaceType']/xs:complexContent/xs:extension/xs:sequence/xs:element[@ref='gml:surfaceMembers']">
+			<jaxb:property name="curveMembersAttribute" />
+		</jaxb:bindings>
+		<jaxb:bindings
+			node="//xs:complexType[@name='MultiSolidType']/xs:complexContent/xs:extension/xs:sequence/xs:element[@ref='gml:solidMembers']">
+			<jaxb:property name="solidMembersAttribute" />
+		</jaxb:bindings>
+		<jaxb:bindings
+			node="//xs:complexType[@name='MultiGeometryType']/xs:complexContent/xs:extension/xs:sequence/xs:element[@ref='gml:geometryMembers']">
+			<jaxb:property name="geometryMembersAttribute" />
+		</jaxb:bindings>
+		<jaxb:bindings
+			node="//xs:complexType[@name='MultiPointType']/xs:complexContent/xs:extension/xs:sequence/xs:element[@ref='gml:pointMembers']">
+			<jaxb:property name="pointMembersAttribute" />
+		</jaxb:bindings>
+	</jaxb:bindings>
+
+
+
+	<jaxb:bindings schemaLocation="http://schemas.opengis.net/gml/3.2.1/topology.xsd">
+		<jaxb:bindings
+			node="//xs:complexType[@name='TopoComplexType']/xs:complexContent/xs:extension/xs:sequence/xs:element[@ref='gml:topoPrimitiveMembers']">
+			<jaxb:property name="topoPrimitiveMembersAttribute" />
+		</jaxb:bindings>
+	</jaxb:bindings>
+
+
+
+
+	<jaxb:bindings
+		schemaLocation="http://schemas.opengis.net/gml/3.2.1/coordinateReferenceSystems.xsd">
+		<jaxb:bindings node="//xs:element[@name='imageDatum']">
+			<jaxb:factoryMethod name="TypeImageDatum" />
+		</jaxb:bindings>
+	</jaxb:bindings>
+
+
+
+
+	<!-- <jaxb:bindings -->
+	<!-- schemaLocation="http://schemas.opengis.net/iso/19139/20070417/gco/gcoBase.xsd"> -->
+	<!-- <jaxb:bindings node="//xs:element[@name='AbstractObject']"> -->
+	<!-- <jaxb:factoryMethod name="TypeAbstractObject" /> -->
+	<!-- </jaxb:bindings> -->
+	<!-- </jaxb:bindings> -->
+
+
+	<jaxb:bindings
+		schemaLocation="http://schemas.opengis.net/gml/3.2.1/coordinateReferenceSystems.xsd">
+		<jaxb:bindings node="//xs:element[@name='conversion']">
+			<jaxb:factoryMethod name="Typeconversion" />
+		</jaxb:bindings>
+		<jaxb:bindings node="//xs:element[@name='sphericalCS']">
+			<jaxb:factoryMethod name="TypesphericalCS" />
+		</jaxb:bindings>
+	</jaxb:bindings>
+
+
+	<!-- <jaxb:bindings -->
+	<!-- schemaLocation="http://schemas.opengis.net/iso/19139/20070417/gco/basicTypes.xsd"> -->
+	<!-- <jaxb:bindings node="//xs:complexType [@name='Measure_PropertyType']"> -->
+	<!-- <jaxb:factoryMethod name="TypeMeasure_PropertyType" /> -->
+	<!-- </jaxb:bindings> -->
+	<!-- </jaxb:bindings> -->
+
+	<!-- [ERROR] Two declarations cause a collision in the ObjectFactory class. 
+		line 113 of http://schemas.opengis.net/iso/19139/20070417/gco/basicTypes.xsd 
+		[ERROR] (Related to above error) This is the other declaration. line 15 of 
+		http://schemas.opengis.net/gml/3.2.1/measures.xsd -->
+
+	<!-- <jaxb:bindings -->
+	<!-- schemaLocation="http://schemas.opengis.net/iso/19139/20070417/gco/basicTypes.xsd"> -->
+	<!-- <jaxb:bindings node="//xs:element[@name='Measure']"> -->
+	<!-- <jaxb:factoryMethod name="TypeMeasure" /> -->
+	<!-- </jaxb:bindings> -->
+	<!-- </jaxb:bindings> -->
+
+	<!-- [ERROR] Two declarations cause a collision in the ObjectFactory class. 
+		line 243 of http://schemas.opengis.net/gml/3.2.1/coordinateOperations.xsd 
+		[ERROR] (Related to above error) This is the other declaration. line 300 
+		of http://schemas.opengis.net/gml/3.2.1/coordinateOperations.xsd -->
+
+	<jaxb:bindings
+		schemaLocation="http://schemas.opengis.net/gml/3.2.1/coordinateOperations.xsd">
+		<jaxb:bindings node="//xs:element[@name='parameterValue']">
+			<jaxb:factoryMethod name="TypeParameterValue" />
+		</jaxb:bindings>
+	</jaxb:bindings>
+
+
+
+	<!-- <jaxb:bindings -->
+	<!-- schemaLocation="http://schemas.opengis.net/gml/3.2.1/coordinateReferenceSystems.xsd"> -->
+	<!-- <jaxb:bindings node="//xs:element[@name='timeCS']"> -->
+	<!-- <jaxb:factoryMethod name="TypetimeCS" /> -->
+	<!-- </jaxb:bindings> -->
+	<!-- </jaxb:bindings> -->
+
+	<jaxb:bindings schemaLocation="http://schemas.opengis.net/gml/3.2.1/gmlBase.xsd">
+		<jaxb:bindings node="//xs:element[@name='name']">
+			<jaxb:factoryMethod name="TypeName" />
+		</jaxb:bindings>
+	</jaxb:bindings>
+
+
+	<jaxb:bindings schemaLocation="http://schemas.opengis.net/gml/3.2.1/basicTypes.xsd">
+		<jaxb:bindings node="//xs:complexType [@name='MeasureType']">
+			<jaxb:class name="AbstractMeasureType" />
+		</jaxb:bindings>
+	</jaxb:bindings>
+
+
+
+	<jaxb:bindings schemaLocation="http://schemas.opengis.net/gml/3.2.1/basicTypes.xsd">
+		<jaxb:bindings node="//xs:complexType [@name='CodeType']">
+			<jaxb:class name="AbstractCodeType" />
+		</jaxb:bindings>
+	</jaxb:bindings>
+
+	<!-- [ERROR] Error while generating code.Location [ http://schemas.opengis.net/gml/3.2.1/gmlBase.xsd{93,36}]. 
+		org.xml.sax.SAXParseException; systemId: http://schemas.opengis.net/gml/3.2.1/gmlBase.xsd; 
+		lineNumber: 93; columnNumber: 36; A class/interface with the same name "no.geonorge.skjema.changelogfile.ReferenceType" 
+		is already in use. Use a class customization to resolve this conflict. -->
+
+	<jaxb:bindings schemaLocation="http://schemas.opengis.net/gml/3.2.1/gmlBase.xsd">
+		<jaxb:bindings node="//xs:complexType [@name='ReferenceType']">
+			<jaxb:class name="AbstractReferenceType" />
+		</jaxb:bindings>
+	</jaxb:bindings>
+
+
+	<jaxb:bindings
+		schemaLocation="http://schemas.opengis.net/gml/3.2.1/coordinateOperations.xsd">
+		<jaxb:bindings node="//xs:element [@name='valueList']">
+			<jaxb:class name="AbstractValueList" />
+		</jaxb:bindings>
+	</jaxb:bindings>
+
+	<!-- [ERROR] Error while generating code.Location [ http://schemas.opengis.net/wfs/2.0/wfs.xsd{263,60}]. 
+		org.xml.sax.SAXParseException; systemId: http://schemas.opengis.net/wfs/2.0/wfs.xsd; 
+		lineNumber: 263; columnNumber: 60; (Relevant to above error) another "ValueList" 
+		is generated from here. -->
+
+
+
+	<jaxb:bindings
+		schemaLocation="http://schemas.opengis.net/gml/3.2.1/coordinateReferenceSystems.xsd">
+		<jaxb:bindings node="//xs:element[@name='geodeticDatum']">
+			<jaxb:factoryMethod name="TypegeodeticDatum" />
+		</jaxb:bindings>
+	</jaxb:bindings>
+
+
+	<jaxb:bindings schemaLocation="http://schemas.opengis.net/gml/3.2.1/gmlBase.xsd">
+		<jaxb:bindings node="//xs:element[@name='identifier']">
+			<jaxb:factoryMethod name="Typeidentifier" />
+		</jaxb:bindings>
+	</jaxb:bindings>
+
+
+	<jaxb:bindings
+		schemaLocation="http://schemas.opengis.net/iso/19139/20070417/gco/gcoBase.xsd">
+		<jaxb:bindings node="//xs:element[@name='AbstractObject']">
+			<jaxb:factoryMethod name="TypeAbstractObject" />
+		</jaxb:bindings>
+	</jaxb:bindings>
+
+
+
+	<jaxb:bindings
+		schemaLocation="http://schemas.opengis.net/gml/3.2.1/coordinateSystems.xsd">
+
+		<jaxb:bindings node="//xs:element[@name='PolarCS']">
+			<jaxb:factoryMethod name="TypePolarCS" />
+		</jaxb:bindings>
+		<jaxb:bindings node="//xs:element[@name='AffineCS']">
+			<jaxb:factoryMethod name="TypeAffineCS" />
+		</jaxb:bindings>
+		<jaxb:bindings node="//xs:element[@name='EllipsoidalCS']">
+			<jaxb:factoryMethod name="TypeEllipsoidalCS" />
+		</jaxb:bindings>
+		<jaxb:bindings node="//xs:element[@name='VerticalCS']">
+			<jaxb:factoryMethod name="TypeVerticalCS" />
+		</jaxb:bindings>
+
+		<jaxb:bindings node="//xs:element[@name='LinearCS']">
+			<jaxb:factoryMethod name="TypeLinearCS" />
+		</jaxb:bindings>
+
+		<jaxb:bindings node="//xs:element[@name='CartesianCS']">
+			<jaxb:factoryMethod name="TypeCartesianCS" />
+		</jaxb:bindings>
+
+		<jaxb:bindings node="//xs:element[@name='UserDefinedCS']">
+			<jaxb:factoryMethod name="TypeUserDefinedCS" />
+		</jaxb:bindings>
+
+		<jaxb:bindings node="//xs:element[@name='CylindricalCS']">
+			<jaxb:factoryMethod name="TypeCylindricalCS" />
+		</jaxb:bindings>
+
+	</jaxb:bindings>
+
+	<jaxb:bindings
+		schemaLocation="http://schemas.opengis.net/iso/19139/20070417/gco/basicTypes.xsd">
+		<jaxb:bindings node="//xs:complexType [@name='Measure_PropertyType']">
+			<jaxb:factoryMethod name="TypeMeasure_PropertyType" />
+		</jaxb:bindings>
+		<jaxb:bindings node="//xs:element[@name='Measure']">
+			<jaxb:factoryMethod name="TypeMeasure" />
+		</jaxb:bindings>
+	</jaxb:bindings>
+
+
+	<jaxb:bindings schemaLocation="http://schemas.opengis.net/gml/3.2.1/measures.xsd">
+		<jaxb:bindings node="//xs:element[@name='angle']">
+			<jaxb:factoryMethod name="Typeangle" />
+		</jaxb:bindings>
+	</jaxb:bindings>
+
+
+	<jaxb:bindings
+		schemaLocation="http://schemas.opengis.net/gml/3.2.1/coordinateReferenceSystems.xsd">
+		<jaxb:bindings node="//xs:element[@name='timeCS']">
+			<jaxb:factoryMethod name="TypetimeCS" />
+		</jaxb:bindings>
+		<jaxb:bindings node="//xs:element[@name='verticalDatum']">
+			<jaxb:factoryMethod name="TypeverticalDatum" />
+		</jaxb:bindings>
+	</jaxb:bindings>
+
+
+	<jaxb:bindings
+		schemaLocation="http://schemas.opengis.net/gml/3.2.1/coordinateOperations.xsd">
+		<jaxb:bindings node="//xs:element[@name='operationParameter']">
+			<jaxb:factoryMethod name="TypeoperationParameter" />
+		</jaxb:bindings>
+		<jaxb:bindings node="//xs:element[@name='value']">
+			<jaxb:property name="valueInstcoordinateOperations" />
+			<jaxb:factoryMethod name="valueInstcoordinateOperations" />
+		</jaxb:bindings>
+	</jaxb:bindings>
+
+
+
+
+</jaxb:bindings>
+
+
+

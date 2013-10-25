@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<chlogf:TransactionCollection timeStamp="2001-12-17T09:30:47Z" numberMatched="7" numberReturned="7" startIndex="1" endIndex="63" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://skjema.geonorge.no/standard/geosynkronisering/1.0/endringslogg http://geosynkronisering.no/files/skjema/1.0/changelogfile.xsd http://skjema.geonorge.no/SOSI/produktspesifikasjon/Arealressurs/4.5 http://geosynkronisering.no/files/skjema/Arealressurs/4.5/FKB_AR5.xsd" xmlns:chlogf="http://skjema.geonorge.no/standard/geosynkronisering/1.0/endringslogg" xmlns:app="http://skjema.geonorge.no/SOSI/produktspesifikasjon/Arealressurs/4.5" xmlns:wfs="http://www.opengis.net/wfs/2.0" xmlns:gml="http://www.opengis.net/gml/3.2">
+  <chlogf:transactions service="WFS" version="2.0.0">
+    <wfs:Delete handle="0" typeName="app:ArealressursFlate" inputFormat="application/gml+xml; version=3.2" xmlns:app="http://skjema.geonorge.no/SOSI/produktspesifikasjon/Arealressurs/4.5">
+      <Filter xmlns="http://www.opengis.net/fes/2.0">
+        <PropertyIsEqualTo>
+          <ValueReference>identifikasjon/Identifikasjon/lokalId</ValueReference>
+          <Literal>e48a254f-815e-46ef-b9f9-566ae3ea25e0</Literal>
+        </PropertyIsEqualTo>
+      </Filter>
+    </wfs:Delete>
+    <wfs:Delete handle="1" typeName="app:ArealressursFlate" inputFormat="application/gml+xml; version=3.2" xmlns:app="http://skjema.geonorge.no/SOSI/produktspesifikasjon/Arealressurs/4.5">
+      <Filter xmlns="http://www.opengis.net/fes/2.0">
+        <PropertyIsEqualTo>
+          <ValueReference>identifikasjon/Identifikasjon/lokalId</ValueReference>
+          <Literal>ae545b10-f806-46fa-b107-aeaf352abc65</Literal>
+        </PropertyIsEqualTo>
+      </Filter>
+    </wfs:Delete>
+    <wfs:Delete handle="2" typeName="app:ArealressursFlate" inputFormat="application/gml+xml; version=3.2" xmlns:app="http://skjema.geonorge.no/SOSI/produktspesifikasjon/Arealressurs/4.5">
+      <Filter xmlns="http://www.opengis.net/fes/2.0">
+        <PropertyIsEqualTo>
+          <ValueReference>identifikasjon/Identifikasjon/lokalId</ValueReference>
+          <Literal>bae13ddc-fe1e-44be-b39d-248bfa285e54</Literal>
+        </PropertyIsEqualTo>
+      </Filter>
+    </wfs:Delete>
+  </chlogf:transactions>
+</chlogf:TransactionCollection>

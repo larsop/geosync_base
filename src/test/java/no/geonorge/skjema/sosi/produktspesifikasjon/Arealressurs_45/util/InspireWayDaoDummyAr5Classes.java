@@ -1,9 +1,5 @@
 package no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.util;
 
-
-
-
-
 import java.util.Calendar;
 
 import javax.xml.bind.JAXBElement;
@@ -27,9 +23,7 @@ import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.io.WKTReader;
 
-
 public class InspireWayDaoDummyAr5Classes {
-
 
 	public Polygon borderPolygon;
 	public LineString borderLineString;
@@ -37,7 +31,7 @@ public class InspireWayDaoDummyAr5Classes {
 	public InspireWayDaoDummyAr5Classes() throws ParseException {
 		setUp();
 	}
-	
+
 	public void setUp() throws ParseException {
 		WKTReader reader = new WKTReader();
 		borderPolygon = (Polygon) reader
@@ -63,7 +57,7 @@ public class InspireWayDaoDummyAr5Classes {
 
 		Calendar datafangstdato = Calendar.getInstance();
 		ar5.setDatafangstdato(datafangstdato);
-		opengis.net_gml_3_2_1.ObjectFactory of = new  opengis.net_gml_3_2_1.ObjectFactory();
+		opengis.net_gml_3_2_1.ObjectFactory of = new opengis.net_gml_3_2_1.ObjectFactory();
 
 		SurfacePropertyType omrade = new SurfacePropertyType();
 		AbstractSurfaceType abstractSurfaceType = (AbstractSurfaceType) JTS2GML321.toGML(borderPolygon);
@@ -73,30 +67,27 @@ public class InspireWayDaoDummyAr5Classes {
 
 		return ar5;
 	}
-	
 
 	public ArealressursGrenseType simpleAr5Grense() throws ParseException {
 		no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ObjectFactory ofar5 = new no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ObjectFactory();
 
 		ArealressursGrenseType ar5 = ofar5.createArealressursGrenseType();
 
-		//ar5.setArealtype(arealtype);
+		// ar5.setArealtype(arealtype);
 
 		Calendar datafangstdato = Calendar.getInstance();
 		ar5.setDatafangstdato(datafangstdato);
 
+		opengis.net_gml_3_2_1.ObjectFactory of = new opengis.net_gml_3_2_1.ObjectFactory();
 
-		opengis.net_gml_3_2_1.ObjectFactory of = new  opengis.net_gml_3_2_1.ObjectFactory();
-		
 		CurvePropertyType omrade = new CurvePropertyType();
-		AbstractGeometryType abstractSurfaceType =  JTS2GML321.toGML(borderLineString);
+		AbstractGeometryType abstractSurfaceType = JTS2GML321.toGML(borderLineString);
 		AbstractCurveType sddd = (AbstractCurveType) abstractSurfaceType;
-		JAXBElement<? extends AbstractCurveType> value = of.createAbstractCurve(sddd );
+		JAXBElement<? extends AbstractCurveType> value = of.createAbstractCurve(sddd);
 		omrade.setAbstractCurve(value);
 		ar5.setGrense(omrade);
 
-		
-AbstractCodeType avgrensingarealtype = new AbstractCodeType();
+		AbstractCodeType avgrensingarealtype = new AbstractCodeType();
 		avgrensingarealtype.setCodeSpace("codespace");
 		avgrensingarealtype.setValue("valueforcodespace");
 		ar5.setAvgrensingType(avgrensingarealtype);

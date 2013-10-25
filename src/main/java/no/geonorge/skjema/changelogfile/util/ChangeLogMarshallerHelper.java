@@ -135,18 +135,20 @@ public class ChangeLogMarshallerHelper {
 			}
 
 
-			int operationNumber = 0; 
+			// so first row will be 0
+			int operationNumber = -1; 
 			
 			for (Transaction transaction : transactions) {
 				List<JAXBElement<? extends Serializable>> abstractTransactionActions = transaction.getAbstractTransactionActions();
 				for (JAXBElement<? extends Serializable> jaxbElement : abstractTransactionActions) {
 					Serializable wfsOperation = jaxbElement.getValue();
 
+					operationNumber++;
+
 					if (logger.isDebugEnabled()) {
 						logger.debug("found object of type " + wfsOperation.getClass() + " at row number " + operationNumber);
 					}
 
-					operationNumber++;
 
 					if (wfsOperation instanceof InsertType) {
 						InsertType insertType = (InsertType) wfsOperation;

@@ -2,7 +2,7 @@ package no.geonorge.skjema.changelogfile.util;
 
 public class WSFOperation {
 
-	// the data to be added
+	// the DAO data to be added, this is a DAO where all objects are extracted.
 	public Object product;
 	
 	// what ype of opeartoins

@@ -1,13 +1,12 @@
 package no.geonorge.skjema.changelogfile;
 
-
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.JAXBContext;
@@ -27,6 +26,7 @@ import javax.xml.transform.stream.StreamSource;
 
 import junit.framework.Assert;
 import no.geonorge.skjema.changelogfile.util.ChangeLogMarshallerHelper;
+import no.geonorge.skjema.changelogfile.util.ChangeLogResult;
 import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ArealressursFlateType;
 import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ArealressursGrenseType;
 import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.util.InspireWayDaoDummyAr5Classes;
@@ -66,7 +66,7 @@ public class TestChangelogfileJaxb2Helper {
 
 	@Autowired
 	ChangeLogMarshallerHelper changelogfileJaxb2Helper;
-	
+
 	@Autowired
 	ChangeLogMarshallerHelper genericMarshaller;
 
@@ -94,8 +94,8 @@ public class TestChangelogfileJaxb2Helper {
 		Transaction e = new Transaction();
 		transactions2.add(e);
 		
+
 		Marshaller marshaller = genericMarshaller.getMarshaller();
-		
 
 		FileOutputStream os = null;
 		try {
@@ -111,12 +111,8 @@ public class TestChangelogfileJaxb2Helper {
 
 	}
 
-
-
 	/**
-	 * Test unmarshaller by using changelogfileJaxb2HelperJaxb2Helper and then arealressurs_jaxb2Helper to Ar5Grense
-	 * 
-	 * Use file modified file TransactionCollectionOneRowTest2_ar5.xml
+	 * Test reading off a file with only inserts
 	 * 
 	 * @throws ParseException
 	 * @throws SAXException
@@ -124,110 +120,99 @@ public class TestChangelogfileJaxb2Helper {
 	 * @throws ParserConfigurationException
 	 * @throws TransformerFactoryConfigurationError
 	 * @throws TransformerException
-	 */
-	//@Test
-	public void testTransactionCollectionGrense_unMarshal1() throws ParseException, SAXException, IOException, ParserConfigurationException,
-			TransformerFactoryConfigurationError, TransformerException {
-
-		TransactionCollection unmarshal = changelogfileJaxb2Helper.unmarshal(getClass().getResource(
-				"/tmp/TransactionCollection5_test_ar5_Grense.xml").getFile());
-
-		List<Transaction> transactions = unmarshal.getTransactions();
-		for (Transaction transaction : transactions) {
-			List<JAXBElement<? extends Serializable>> abstractTransactionActions = transaction.getAbstractTransactionActions();
-			for (JAXBElement<? extends Serializable> jaxbElement : abstractTransactionActions) {
-				Serializable value = jaxbElement.getValue();
-
-				InsertType insertType = (InsertType) value;
-
-				List<Object> anies = insertType.getAnies();
-				for (Object object : anies) {
-					com.sun.org.apache.xerces.internal.dom.ElementNSImpl delement = (ElementNSImpl) object;
-					ByteArrayOutputStream out = new ByteArrayOutputStream();
-					Transformer transformer = TransformerFactory.newInstance().newTransformer();
-					transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-					Source source = new DOMSource(delement);
-					Result target = new StreamResult(out);
-					transformer.transform(source, target);
-					String string = out.toString();
-					ByteArrayInputStream is = new ByteArrayInputStream(string.getBytes());
-					ArealressursGrenseType simpleAr5FromXml = (ArealressursGrenseType) genericMarshaller.getUnmarshaller().unmarshal(new StreamSource(is));
-					is.close();
-
-					Assert.assertEquals("simpleAr5FromXml.getAvgrensingType().getValue()", simpleAr5FromXml.getAvgrensingType().getValue(), "4206");
-					Assert.assertEquals("simpleAr5FromXml.getKvalitet().getPosisjonskvalitet().getMålemetode().getValue()", simpleAr5FromXml.getKvalitet()
-							.getPosisjonskvalitet().getMålemetode().getValue(), "82");
-
-					System.out.println("eeeeeeeeeeeeeeeeeeeeeeee" + simpleAr5FromXml.getAvgrensingType().getValue());
-					System.out.println("eeeeeeeeeeeeeeeeeeeeeeee" + simpleAr5FromXml.getAvgrensingType().getValue());
-					System.out.println("eeeeeeeeeeeeeeeeeeeeeeee" + simpleAr5FromXml.getAvgrensingType().getValue());
-
-				}
-
-			}
-		}
-
-	}
-
-	/**
-	 * Test unmarshaller by using changelogfileJaxb2HelperJaxb2Helper and then arealressurs_jaxb2Helper to Ar5Grense
-	 * 
-	 * Use file modified file TransactionCollectionOneRowTest2_ar5.xml
-	 * 
-	 * @throws ParseException
-	 * @throws SAXException
-	 * @throws IOException
-	 * @throws ParserConfigurationException
-	 * @throws TransformerFactoryConfigurationError
-	 * @throws TransformerException
-	 * @throws JAXBException 
+	 * @throws JAXBException
 	 */
 	@Test
-	public void test_ar5_simple_unMarshal1() throws ParseException, SAXException, IOException, ParserConfigurationException,
+	public void test_read_file_Cxxx_6_ar5() throws ParseException, SAXException, IOException, ParserConfigurationException,
 			TransformerFactoryConfigurationError, TransformerException, JAXBException {
 
-		GeometryFactory geometryFactory = new GeometryFactory();
+		TransactionCollection unmarshal = changelogfileJaxb2Helper.unmarshal(getClass().getResource("/tmp/file_Cxxx_6_ar5.xml").getFile());
 
-		TransactionCollection unmarshal = changelogfileJaxb2Helper.unmarshal(getClass()
-				.getResource("/tmp/TransactionCollection5_test_ar5_Flate.xml").getFile());
+		// get all rows
+		Assert.assertEquals("To few rows found for insert ", 4, changelogfileJaxb2Helper.getChangeLogResult(unmarshal, null).insertTypetList.size());
 
-		List<Transaction> transactions = unmarshal.getTransactions();
-		for (Transaction transaction : transactions) {
-			List<JAXBElement<? extends Serializable>> abstractTransactionActions = transaction.getAbstractTransactionActions();
-			for (JAXBElement<? extends Serializable> jaxbElement : abstractTransactionActions) {
-				Serializable valueInsert = jaxbElement.getValue();
+		// get ar5 rows
+		Class<?>[] rowTypes = {ArealressursFlateType.class};
+		ChangeLogResult result = changelogfileJaxb2Helper.getChangeLogResult(unmarshal, rowTypes );
 
-				InsertType insertType = (InsertType) valueInsert;
+		ArrayList<Object> insertList = result.insertTypetList;
+		
+		Assert.assertEquals("To few rows found for insert ", 2, insertList.size());
 
-				List<Object> anies = insertType.getAnies();
-				for (Object object : anies) {
+		for (Object object : insertList) {
+				ArealressursFlateType simpleAr5FromXml = (ArealressursFlateType) object;
+				System.out.println("Found area:" + simpleAr5FromXml.getOmråde());
 
-					
+				JAXBElement<? extends AbstractSurfaceType> abstractSurface = simpleAr5FromXml.getOmråde().getAbstractSurface();
 
-					JAXBElement jaxblement = (JAXBElement) object;
-					 ArealressursFlateType simpleAr5FromXml = (ArealressursFlateType) jaxblement.getValue();
-					 
-					 
+				PolygonType value = (PolygonType) abstractSurface.getValue();
+				AbstractRingPropertyType exterior = value.getExterior();
+				JAXBElement<? extends AbstractRingType> abstractRing = exterior.getAbstractRing();
 
-					JAXBElement<? extends AbstractSurfaceType> abstractSurface = simpleAr5FromXml.getOmråde().getAbstractSurface();
+				opengis.net_gml_3_2_1.LinearRingType ringType = (opengis.net_gml_3_2_1.LinearRingType) abstractRing.getValue();
 
-					PolygonType value = (PolygonType) abstractSurface.getValue();
-					AbstractRingPropertyType exterior = value.getExterior();
-					JAXBElement<? extends AbstractRingType> abstractRing = exterior.getAbstractRing();
+				Polygon createPolygon = (Polygon) GML321_2JTS.toJTS(ringType);
 
-					opengis.net_gml_3_2_1.LinearRingType ringType = (opengis.net_gml_3_2_1.LinearRingType) abstractRing
-							.getValue();
+				Assert.assertTrue(createPolygon.getArea() > 0.0);
 
-					Polygon createPolygon  = (Polygon) GML321_2JTS.toJTS(ringType);
-
-					Assert.assertTrue(createPolygon.getArea() > 0.0);
-
-				}
-
-			}
 		}
 
 	}
+	
+	
+	
+	/**
+	 * Test reading off a file with only updates
+	 * 
+	 * @throws ParseException
+	 * @throws SAXException
+	 * @throws IOException
+	 * @throws ParserConfigurationException
+	 * @throws TransformerFactoryConfigurationError
+	 * @throws TransformerException
+	 * @throws JAXBException
+	 */
+//	@Test
+	public void test_read_file_xxUx_6_ar5() throws ParseException, SAXException, IOException, ParserConfigurationException,
+			TransformerFactoryConfigurationError, TransformerException, JAXBException {
+
+		TransactionCollection unmarshal = changelogfileJaxb2Helper.unmarshal(getClass().getResource("/tmp/file_xxUx_6_ar5.xml").getFile());
+
+		ChangeLogResult result = changelogfileJaxb2Helper.getChangeLogResult(unmarshal, null);
+
+		ArrayList<Object> updateList = result.updateTypeList;
+		
+		Assert.assertEquals("To few rows found for insert ", 1, updateList.size());
+
+
+	}
+	
+	/**
+	 * Test reading off a file with only deletes
+	 * 
+	 * @throws ParseException
+	 * @throws SAXException
+	 * @throws IOException
+	 * @throws ParserConfigurationException
+	 * @throws TransformerFactoryConfigurationError
+	 * @throws TransformerException
+	 * @throws JAXBException
+	 */
+//	@Test
+	public void test_read_file_xxxD_6_ar5() throws ParseException, SAXException, IOException, ParserConfigurationException,
+			TransformerFactoryConfigurationError, TransformerException, JAXBException {
+
+		TransactionCollection unmarshal = changelogfileJaxb2Helper.unmarshal(getClass().getResource("/tmp/file_xxxD_6_ar5.xml").getFile());
+
+		ChangeLogResult result = changelogfileJaxb2Helper.getChangeLogResult(unmarshal, null);
+
+		ArrayList<Object> updateList = result.updateTypeList;
+		
+		Assert.assertEquals("To few rows found for insert ", 1, updateList.size());
+
+
+	}
+
 
 
 }

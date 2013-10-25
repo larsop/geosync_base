@@ -12,6 +12,7 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import junit.framework.Assert;
 import no.geonorge.skjema.changelogfile.util.ChangeLogMarshallerHelper;
 import no.geonorge.skjema.changelogfile.util.ChangeLogResult;
+import no.geonorge.skjema.changelogfile.util.WSFOperation;
 import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ArealressursFlateType;
 import no.geonorge.skjema.util.gml_geos.geoserver.GML321_2JTS;
 import opengis.net_gml_3_2_1.AbstractRingPropertyType;
@@ -61,18 +62,18 @@ public class TestChangelogUnmarshalAr5 {
 		TransactionCollection unmarshal = changelogfileJaxb2Helper.unmarshal(getClass().getResource("/tmp/file_Cxxx_6_ar5.xml").getFile());
 
 		// get all rows
-		Assert.assertEquals("To few rows found for insert ", 4, changelogfileJaxb2Helper.getChangeLogResult(unmarshal, null).insertTypetList.size());
+		Assert.assertEquals("To few rows found for insert ", 4, changelogfileJaxb2Helper.getChangeLogResult(unmarshal, null).wfsOerationList.size());
 
 		// get ar5 rows
 		Class<?>[] rowTypes = {ArealressursFlateType.class};
 		ChangeLogResult result = changelogfileJaxb2Helper.getChangeLogResult(unmarshal, rowTypes );
 
-		ArrayList<Object> insertList = result.insertTypetList;
+		ArrayList<WSFOperation> insertList = result.wfsOerationList;
 		
 		Assert.assertEquals("To few rows found for insert ", 2, insertList.size());
 
-		for (Object object : insertList) {
-				ArealressursFlateType simpleAr5FromXml = (ArealressursFlateType) object;
+		for (WSFOperation object : insertList) {
+				ArealressursFlateType simpleAr5FromXml = (ArealressursFlateType) object.product;
 				System.out.println("Found area:" + simpleAr5FromXml.getOmråde());
 
 				JAXBElement<? extends AbstractSurfaceType> abstractSurface = simpleAr5FromXml.getOmråde().getAbstractSurface();
@@ -112,7 +113,7 @@ public class TestChangelogUnmarshalAr5 {
 
 		ChangeLogResult result = changelogfileJaxb2Helper.getChangeLogResult(unmarshal, null);
 
-		ArrayList<Object> updateList = result.updateTypeList;
+		ArrayList<WSFOperation> updateList = result.wfsOerationList;
 		
 		Assert.assertEquals("To few rows found for insert ", 1, updateList.size());
 
@@ -138,7 +139,7 @@ public class TestChangelogUnmarshalAr5 {
 
 		ChangeLogResult result = changelogfileJaxb2Helper.getChangeLogResult(unmarshal, null);
 
-		ArrayList<Object> updateList = result.updateTypeList;
+		ArrayList<WSFOperation> updateList = result.wfsOerationList;
 		
 		Assert.assertEquals("To few rows found for insert ", 1, updateList.size());
 

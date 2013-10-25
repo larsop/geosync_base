@@ -108,6 +108,17 @@ public class ChangeLogMarshallerHelper {
 		return transactionCollection;
 	}
 
+	/**
+	 * Get the list of insert, update and delete operations that should be executed.    
+	 * 
+	 * @param transactionCollection
+	 * @param typeOfObjectToGet
+	 * @return ChangeLogResult which contains all the changes requested.
+	 * @throws TransformerFactoryConfigurationError
+	 * @throws TransformerException
+	 * @throws XmlMappingException
+	 * @throws IOException
+	 */
 	public ChangeLogResult getChangeLogResult(TransactionCollection transactionCollection, Class<?>[] typeOfObjectToGet)
 			throws TransformerFactoryConfigurationError, TransformerException, XmlMappingException, IOException {
 		if (logger.isDebugEnabled()) {
@@ -124,14 +135,18 @@ public class ChangeLogMarshallerHelper {
 			}
 
 
+			int operationNumber = 0; 
+			
 			for (Transaction transaction : transactions) {
 				List<JAXBElement<? extends Serializable>> abstractTransactionActions = transaction.getAbstractTransactionActions();
 				for (JAXBElement<? extends Serializable> jaxbElement : abstractTransactionActions) {
 					Serializable wfsOperation = jaxbElement.getValue();
 
 					if (logger.isDebugEnabled()) {
-						logger.debug("found object of type " + wfsOperation.getClass());
+						logger.debug("found object of type " + wfsOperation.getClass() + " at row number " + operationNumber);
 					}
+
+					operationNumber++;
 
 					if (wfsOperation instanceof InsertType) {
 						InsertType insertType = (InsertType) wfsOperation;
@@ -139,13 +154,15 @@ public class ChangeLogMarshallerHelper {
 						for (Object object : anies) {
 
 							Object product = getProduct(object);
+							
+							WSFOperation wsfOperation = new WSFOperation(operationNumber, SupportedWFSOperationType.InsertType, product);
 
 							if (typeOfObjectToGet == null) {
-								changeLogResult.insertTypetList.add(product);
+								changeLogResult.wfsOerationList.add(wsfOperation );
 							} else {
 								for (Class<?> cl1 : typeOfObjectToGet) {
 									if (cl1.isInstance(product)) {
-										changeLogResult.insertTypetList.add(product);
+										changeLogResult.wfsOerationList.add(wsfOperation );
 										break;
 									}
 								}

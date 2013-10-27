@@ -15,6 +15,8 @@ import org.junit.Before;
 
 import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ArealressursFlateType;
 import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ArealressursGrenseType;
+import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.IdentifikasjonPropertyType;
+import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.IdentifikasjonType;
 import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ObjectFactory;
 import no.geonorge.skjema.util.gml_geos.inspire.JTS2GML321;
 
@@ -49,6 +51,12 @@ public class InspireWayDaoDummyAr5Classes {
 		// DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 
 		ArealressursFlateType ar5 = ofar5.createArealressursFlateType();
+		
+		IdentifikasjonPropertyType v = new IdentifikasjonPropertyType();
+		IdentifikasjonType v1 = new IdentifikasjonType();
+		v1.setLokalId(System.currentTimeMillis()+"");
+		v.setIdentifikasjon(v1 );
+		ar5.setIdentifikasjon(v );
 
 		AbstractCodeType arealtype = new AbstractCodeType();
 		arealtype.setCodeSpace("codespace");

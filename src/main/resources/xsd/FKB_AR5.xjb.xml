@@ -24,20 +24,23 @@
 
 		<jaxb:bindings node="//xs:complexType[@name='ArealressursFlateType']">
 			<annox:annotate target="class">
+			
 				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement"
 					name="ArealressursFlateType"
 					namespace="http://skjema.geonorge.no/SOSI/produktspesifikasjon/Arealressurs/4.5" />
+
 			</annox:annotate>
 		</jaxb:bindings>
-		
+
 		<jaxb:bindings node="//xs:complexType[@name='ArealressursGrenseType']">
 			<annox:annotate target="class">
+			
 				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement"
 					name="ArealressursGrenseType"
 					namespace="http://skjema.geonorge.no/SOSI/produktspesifikasjon/Arealressurs/4.5" />
 			</annox:annotate>
 		</jaxb:bindings>
-		
+
 	</jaxb:bindings>
 
 

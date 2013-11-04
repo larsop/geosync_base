@@ -25,10 +25,10 @@ import no.skogoglandskap.db.util.SpringHibernateTemplate;
 
 import opengis.net.wfs_2_0.wfs.InsertType;
 import opengis.net.wfs_2_0.wfs.Transaction;
-import opengis.net_gml_3_2_1.AbstractRingPropertyType;
-import opengis.net_gml_3_2_1.AbstractRingType;
-import opengis.net_gml_3_2_1.AbstractSurfaceType;
-import opengis.net_gml_3_2_1.PolygonType;
+import opengis.net.gml_3_2_1.gml.AbstractRingPropertyType;
+import opengis.net.gml_3_2_1.gml.AbstractRingType;
+import opengis.net.gml_3_2_1.gml.AbstractSurfaceType;
+import opengis.net.gml_3_2_1.gml.PolygonType;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -136,7 +136,7 @@ public class TestAbonnentAr5FlateEntity {
 		AbstractRingPropertyType exterior = value.getExterior();
 		JAXBElement<? extends AbstractRingType> abstractRing = exterior.getAbstractRing();
 
-		opengis.net_gml_3_2_1.LinearRingType ringType = (opengis.net_gml_3_2_1.LinearRingType) abstractRing
+		opengis.net.gml_3_2_1.gml.LinearRingType ringType = (opengis.net.gml_3_2_1.gml.LinearRingType) abstractRing
 				.getValue();
 
 		Polygon border = (Polygon) GML321_2JTS.toJTS(ringType);

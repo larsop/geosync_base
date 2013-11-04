@@ -6,24 +6,24 @@ package no.geonorge.skjema.util.gml_geos.inspire;
 
 import javax.xml.bind.JAXBElement;
 
-import opengis.net_gml_3_2_1.AbstractGeometricAggregateType;
-import opengis.net_gml_3_2_1.AbstractGeometryType;
-import opengis.net_gml_3_2_1.AbstractRingPropertyType;
-import opengis.net_gml_3_2_1.CoordinatesType;
-import opengis.net_gml_3_2_1.CurvePropertyType;
-import opengis.net_gml_3_2_1.DirectPositionType;
-import opengis.net_gml_3_2_1.EnvelopeType;
-import opengis.net_gml_3_2_1.LineStringType;
-import opengis.net_gml_3_2_1.MultiCurveType;
-import opengis.net_gml_3_2_1.MultiGeometryType;
-import opengis.net_gml_3_2_1.MultiPointType;
-import opengis.net_gml_3_2_1.MultiSurfaceType;
-import opengis.net_gml_3_2_1.ObjectFactory;
-import opengis.net_gml_3_2_1.PointPropertyType;
-import opengis.net_gml_3_2_1.PointType;
-import opengis.net_gml_3_2_1.PolygonType;
-import opengis.net_gml_3_2_1.RingType;
-import opengis.net_gml_3_2_1.SurfacePropertyType;
+import opengis.net.gml_3_2_1.gml.AbstractGeometricAggregateType;
+import opengis.net.gml_3_2_1.gml.AbstractGeometryType;
+import opengis.net.gml_3_2_1.gml.AbstractRingPropertyType;
+import opengis.net.gml_3_2_1.gml.CoordinatesType;
+import opengis.net.gml_3_2_1.gml.CurvePropertyType;
+import opengis.net.gml_3_2_1.gml.DirectPositionType;
+import opengis.net.gml_3_2_1.gml.EnvelopeType;
+import opengis.net.gml_3_2_1.gml.LineStringType;
+import opengis.net.gml_3_2_1.gml.MultiCurveType;
+import opengis.net.gml_3_2_1.gml.MultiGeometryType;
+import opengis.net.gml_3_2_1.gml.MultiPointType;
+import opengis.net.gml_3_2_1.gml.MultiSurfaceType;
+import opengis.net.gml_3_2_1.gml.ObjectFactory;
+import opengis.net.gml_3_2_1.gml.PointPropertyType;
+import opengis.net.gml_3_2_1.gml.PointType;
+import opengis.net.gml_3_2_1.gml.PolygonType;
+import opengis.net.gml_3_2_1.gml.RingType;
+import opengis.net.gml_3_2_1.gml.SurfacePropertyType;
 
 
 import com.vividsolutions.jts.geom.Coordinate;

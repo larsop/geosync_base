@@ -6,7 +6,7 @@ package no.geonorge.skjema.util.gml_geos.geoserver;
 
 import java.util.List;
 
-import opengis.net_gml_3_2_1.AbstractRingType;
+import opengis.net.gml_3_2_1.gml.AbstractRingType;
 
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -35,8 +35,8 @@ public class GML321_2JTS {
 	 * @return
 	 */
 	public static Geometry toJTS(AbstractRingType geom) {
-		if (geom instanceof opengis.net_gml_3_2_1.LinearRingType)
-			return toJTSImpl((opengis.net_gml_3_2_1.LinearRingType) geom);
+		if (geom instanceof opengis.net.gml_3_2_1.gml.LinearRingType)
+			return toJTSImpl((opengis.net.gml_3_2_1.gml.LinearRingType) geom);
 		else
 			throw new RuntimeException("Not handle conevertion from GML to JTS  " + geom.getClass().getSimpleName());
 	}
@@ -49,7 +49,7 @@ public class GML321_2JTS {
 	 */
 	// TOTO fix this code
 	// TODO handle srid
-	private static Geometry toJTSImpl(opengis.net_gml_3_2_1.LinearRingType geom) {
+	private static Geometry toJTSImpl(opengis.net.gml_3_2_1.gml.LinearRingType geom) {
 
 		if (geom != null) {
 

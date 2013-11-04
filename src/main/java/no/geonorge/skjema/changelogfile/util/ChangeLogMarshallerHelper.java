@@ -19,10 +19,10 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.stream.StreamSource;
 
-import net.opengis.fes._2.BinaryComparisonOpType;
-import net.opengis.fes._2.FilterType;
-import net.opengis.fes._2.LiteralType;
-import net.opengis.fes._2.MatchActionType;
+import opengis.net.filter_2_0.filter.BinaryComparisonOpType;
+import opengis.net.filter_2_0.filter.FilterType;
+import opengis.net.filter_2_0.filter.LiteralType;
+import opengis.net.filter_2_0.filter.MatchActionType;
 import no.geonorge.skjema.changelogfile.TransactionCollection;
 import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ArealressursFlateType;
 import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.FellesegenskaperType;
@@ -36,8 +36,8 @@ import opengis.net.wfs_2_0.wfs.Property;
 import opengis.net.wfs_2_0.wfs.Property.ValueReference;
 import opengis.net.wfs_2_0.wfs.Transaction;
 import opengis.net.wfs_2_0.wfs.UpdateType;
-import opengis.net_gml_3_2_1.AbstractCodeType;
-import opengis.net_gml_3_2_1.SurfacePropertyType;
+import opengis.net.gml_3_2_1.gml.AbstractCodeType;
+import opengis.net.gml_3_2_1.gml.SurfacePropertyType;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -332,11 +332,11 @@ public class ChangeLogMarshallerHelper {
 
 		ObjectFactory wfsObjectFactory = new opengis.net.wfs_2_0.wfs.ObjectFactory();
 
-		net.opengis.fes._2.ObjectFactory fesObjectFactory = new net.opengis.fes._2.ObjectFactory();
+		opengis.net.filter_2_0.filter.ObjectFactory fesObjectFactory = new opengis.net.filter_2_0.filter.ObjectFactory();
 
 		no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ObjectFactory ar5objectFactory = new no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ObjectFactory();
 
-		opengis.net_gml_3_2_1.ObjectFactory gmlFactory = new opengis.net_gml_3_2_1.ObjectFactory();
+		opengis.net.gml_3_2_1.gml.ObjectFactory gmlFactory = new opengis.net.gml_3_2_1.gml.ObjectFactory();
 
 		// will get value at first iteration based on the annotation XmlRootElement
 		QName qname = null;
@@ -483,7 +483,7 @@ public class ChangeLogMarshallerHelper {
 		return transactionCollection;
 	}
 
-	private FilterType createFilter(net.opengis.fes._2.ObjectFactory fesObjectFactory) {
+	private FilterType createFilter(opengis.net.filter_2_0.filter.ObjectFactory fesObjectFactory) {
 		String invoke = "identifikasjon";
 		String createValueReference = "identifikasjon/Identifikasjon/lokalId";
 
@@ -537,7 +537,7 @@ public class ChangeLogMarshallerHelper {
 		return value;
 	}
 
-	private Object getValue(opengis.net_gml_3_2_1.ObjectFactory gmlFactory, Object product, String name) throws IllegalAccessException,
+	private Object getValue(opengis.net.gml_3_2_1.gml.ObjectFactory gmlFactory, Object product, String name) throws IllegalAccessException,
 			InvocationTargetException {
 		Object value = null;
 

@@ -21,8 +21,8 @@ import opengis.net.wfs_2_0.wfs.Property;
 import opengis.net.wfs_2_0.wfs.Transaction;
 import opengis.net.wfs_2_0.wfs.UpdateType;
 import opengis.net.wfs_2_0.wfs.Property.ValueReference;
-import opengis.net_gml_3_2_1.AbstractCodeType;
-import opengis.net_gml_3_2_1.SurfacePropertyType;
+import opengis.net.gml_3_2_1.gml.AbstractCodeType;
+import opengis.net.gml_3_2_1.gml.SurfacePropertyType;
 
 import org.apache.log4j.Logger;
 import org.springframework.oxm.Marshaller;
@@ -31,10 +31,10 @@ import org.springframework.oxm.Unmarshaller;
 import com.sun.xml.internal.bind.marshaller.NamespacePrefixMapper;
 import com.vividsolutions.jts.io.ParseException;
 
-import net.opengis.fes._2.BinaryComparisonOpType;
-import net.opengis.fes._2.FilterType;
-import net.opengis.fes._2.LiteralType;
-import net.opengis.fes._2.MatchActionType;
+import opengis.net.filter_2_0.filter.BinaryComparisonOpType;
+import opengis.net.filter_2_0.filter.FilterType;
+import opengis.net.filter_2_0.filter.LiteralType;
+import opengis.net.filter_2_0.filter.MatchActionType;
 import no.geonorge.skjema.changelogfile.util.SupportedWFSOperationType;
 import no.geonorge.skjema.changelogfile.util.WSFOperation;
 import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ArealressursFlateType;

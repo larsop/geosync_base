@@ -4,12 +4,12 @@ import java.util.Calendar;
 
 import javax.xml.bind.JAXBElement;
 
-import opengis.net_gml_3_2_1.AbstractCodeType;
-import opengis.net_gml_3_2_1.AbstractCurveType;
-import opengis.net_gml_3_2_1.AbstractGeometryType;
-import opengis.net_gml_3_2_1.AbstractSurfaceType;
-import opengis.net_gml_3_2_1.CurvePropertyType;
-import opengis.net_gml_3_2_1.SurfacePropertyType;
+import opengis.net.gml_3_2_1.gml.AbstractCodeType;
+import opengis.net.gml_3_2_1.gml.AbstractCurveType;
+import opengis.net.gml_3_2_1.gml.AbstractGeometryType;
+import opengis.net.gml_3_2_1.gml.AbstractSurfaceType;
+import opengis.net.gml_3_2_1.gml.CurvePropertyType;
+import opengis.net.gml_3_2_1.gml.SurfacePropertyType;
 
 import org.junit.Before;
 
@@ -65,7 +65,7 @@ public class InspireWayDaoDummyAr5Classes {
 
 		Calendar datafangstdato = Calendar.getInstance();
 		ar5.setDatafangstdato(datafangstdato);
-		opengis.net_gml_3_2_1.ObjectFactory of = new opengis.net_gml_3_2_1.ObjectFactory();
+		opengis.net.gml_3_2_1.gml.ObjectFactory of = new opengis.net.gml_3_2_1.gml.ObjectFactory();
 
 		SurfacePropertyType omrade = new SurfacePropertyType();
 		AbstractSurfaceType abstractSurfaceType = (AbstractSurfaceType) JTS2GML321.toGML(borderPolygon);
@@ -86,7 +86,7 @@ public class InspireWayDaoDummyAr5Classes {
 		Calendar datafangstdato = Calendar.getInstance();
 		ar5.setDatafangstdato(datafangstdato);
 
-		opengis.net_gml_3_2_1.ObjectFactory of = new opengis.net_gml_3_2_1.ObjectFactory();
+		opengis.net.gml_3_2_1.gml.ObjectFactory of = new opengis.net.gml_3_2_1.gml.ObjectFactory();
 
 		CurvePropertyType omrade = new CurvePropertyType();
 		AbstractGeometryType abstractSurfaceType = JTS2GML321.toGML(borderLineString);

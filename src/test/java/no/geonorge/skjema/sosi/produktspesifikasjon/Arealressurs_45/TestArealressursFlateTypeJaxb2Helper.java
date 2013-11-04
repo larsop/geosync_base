@@ -20,14 +20,14 @@ import no.geonorge.skjema.changelogfile.util.ChangeLogMarshallerHelper;
 import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.util.InspireWayDaoDummyAr5Classes;
 import no.geonorge.skjema.util.gml_geos.inspire.GML321_2JTS;
 
-import opengis.net_gml_3_2_1.AbstractRingPropertyType;
-import opengis.net_gml_3_2_1.AbstractRingType;
-import opengis.net_gml_3_2_1.AbstractSurfaceType;
-import opengis.net_gml_3_2_1.CoordinatesType;
-import opengis.net_gml_3_2_1.CurvePropertyType;
-import opengis.net_gml_3_2_1.LineStringType;
-import opengis.net_gml_3_2_1.PolygonType;
-import opengis.net_gml_3_2_1.RingType;
+import opengis.net.gml_3_2_1.gml.AbstractRingPropertyType;
+import opengis.net.gml_3_2_1.gml.AbstractRingType;
+import opengis.net.gml_3_2_1.gml.AbstractSurfaceType;
+import opengis.net.gml_3_2_1.gml.CoordinatesType;
+import opengis.net.gml_3_2_1.gml.CurvePropertyType;
+import opengis.net.gml_3_2_1.gml.LineStringType;
+import opengis.net.gml_3_2_1.gml.PolygonType;
+import opengis.net.gml_3_2_1.gml.RingType;
 
 import org.junit.Assert;
 import org.junit.Before;

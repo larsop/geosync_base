@@ -21,6 +21,9 @@ public class TestStaxParsingAndUnmarshal {
     ChangelogReader changelogReader = new ChangelogReader();
     changelogReader.addTransactionConsumer(new TConsumer());
 
+    // TODO: execute consumer events in a Exceutor for concurrent handling of events
+
+
     changelogReader.parse(bis);
   }
 
@@ -37,6 +40,7 @@ public class TestStaxParsingAndUnmarshal {
     @Override
     public void update(UpdateType o) {
       System.err.println("update" + o);
+      InsertType it = new UpdateToInsertConverter(o).convert();
     }
 
     @Override

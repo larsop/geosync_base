@@ -1,0 +1,193 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<chlogf:TransactionCollection timeStamp="2001-12-17T09:30:47Z" numberMatched="4" numberReturned="4" startIndex="25466" endIndex="25469" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://skjema.geonorge.no/standard/geosynkronisering/1.0/endringslogg http://geosynkronisering.no/files/skjema/1.0/changelogfile.xsd http://skjema.geonorge.no/SOSI/produktspesifikasjon/Arealressurs/4.5 http://geosynkronisering.no/files/skjema/Arealressurs/4.5/FKB_AR5.xsd" xmlns:chlogf="http://skjema.geonorge.no/standard/geosynkronisering/1.0/endringslogg" xmlns:app="http://skjema.geonorge.no/SOSI/produktspesifikasjon/Arealressurs/4.5" xmlns:wfs="http://www.opengis.net/wfs/2.0" xmlns:gml="http://www.opengis.net/gml/3.2">
+  <chlogf:transactions service="WFS" version="2.0.0">
+    <wfs:Delete handle="0" typeName="app:ArealressursFlate" inputFormat="application/gml+xml; version=3.2" xmlns:app="http://skjema.geonorge.no/SOSI/produktspesifikasjon/Arealressurs/4.5">
+      <Filter xmlns="http://www.opengis.net/fes/2.0">
+        <PropertyIsEqualTo>
+          <ValueReference>app:identifikasjon/app:Identifikasjon/app:lokalId</ValueReference>
+          <Literal>f54aa975-5d13-44e3-8f0e-590fca1c1df0</Literal>
+        </PropertyIsEqualTo>
+      </Filter>
+    </wfs:Delete>
+    <wfs:Delete handle="1" typeName="app:ArealressursFlate" inputFormat="application/gml+xml; version=3.2" xmlns:app="http://skjema.geonorge.no/SOSI/produktspesifikasjon/Arealressurs/4.5">
+      <Filter xmlns="http://www.opengis.net/fes/2.0">
+        <PropertyIsEqualTo>
+          <ValueReference>app:identifikasjon/app:Identifikasjon/app:lokalId</ValueReference>
+          <Literal>7103441d-c66d-4763-8ad6-d050e6c6d02e</Literal>
+        </PropertyIsEqualTo>
+      </Filter>
+    </wfs:Delete>
+    <wfs:Update typeName="app:ArealressursFlate" handle="2" inputFormat="application/gml+xml; version=3.2" xmlns:app="http://skjema.geonorge.no/SOSI/produktspesifikasjon/Arealressurs/4.5">
+      <wfs:Property>
+        <wfs:ValueReference>app:område</wfs:ValueReference>
+        <wfs:Value>
+          <app:område>
+            <!--Inlined geometry 'no.sk.ar5.arealressursflate.5596_AR5_OMRÅDE'-->
+            <gml:Polygon gml:id="no.sk.ar5.arealressursflate.5596_AR5_OMRÅDE" srsName="urn:ogc:def:crs:EPSG::4258">
+              <gml:exterior>
+                <gml:LinearRing>
+                  <gml:posList>59.765443 9.966805 59.765524 9.966410 59.765524 9.966410 59.765531 9.967674 59.765531 9.967674 59.765492 9.967707 59.765454 9.967730 59.765438 9.967693 59.765428 9.967530 59.765396 9.967386 59.765390 9.967303 59.765378 9.967273 59.765348 9.967230 59.765348 9.967230 59.765443 9.966805</gml:posList>
+                </gml:LinearRing>
+              </gml:exterior>
+            </gml:Polygon>
+          </app:område>
+        </wfs:Value>
+      </wfs:Property>
+      <wfs:Property>
+        <wfs:ValueReference>app:arealtype</wfs:ValueReference>
+        <wfs:Value>
+          <app:arealtype codeSpace="http://www.geosynkronisering.no/files/skjema/Arealressurs/4.5/ArealressursArealtype.xml">50</app:arealtype>
+        </wfs:Value>
+      </wfs:Property>
+      <wfs:Property>
+        <wfs:ValueReference>app:skogbonitet</wfs:ValueReference>
+        <wfs:Value>
+          <app:skogbonitet codeSpace="http://www.geosynkronisering.no/files/skjema/Arealressurs/4.5/ArealressursSkogbonitet.xml">11</app:skogbonitet>
+        </wfs:Value>
+      </wfs:Property>
+      <wfs:Property>
+        <wfs:ValueReference>app:treslag</wfs:ValueReference>
+        <wfs:Value>
+          <app:treslag codeSpace="http://www.geosynkronisering.no/files/skjema/Arealressurs/4.5/ArealressursTreslag.xml">39</app:treslag>
+        </wfs:Value>
+      </wfs:Property>
+      <wfs:Property>
+        <wfs:ValueReference>app:grunnforhold</wfs:ValueReference>
+        <wfs:Value>
+          <app:grunnforhold codeSpace="http://www.geosynkronisering.no/files/skjema/Arealressurs/4.5/ArealressursGrunnforhold.xml">44</app:grunnforhold>
+        </wfs:Value>
+      </wfs:Property>
+      <wfs:Property>
+        <wfs:ValueReference>app:kartstandard</wfs:ValueReference>
+        <wfs:Value>
+          <app:kartstandard codeSpace="http://www.geosynkronisering.no/files/skjema/Arealressurs/4.5/ArealressursKartstandard.xml">AR5</app:kartstandard>
+        </wfs:Value>
+      </wfs:Property>
+      <wfs:Property>
+        <wfs:ValueReference>app:datafangstdato</wfs:ValueReference>
+        <wfs:Value>
+          <app:datafangstdato>1995-12-18T00:00:00</app:datafangstdato>
+        </wfs:Value>
+      </wfs:Property>
+      <wfs:Property>
+        <wfs:ValueReference>app:kvalitet</wfs:ValueReference>
+        <wfs:Value>
+          <app:kvalitet>
+            <app:Posisjonskvalitet>
+              <app:målemetode codeSpace="http://www.geosynkronisering.no/files/skjema/Arealressurs/4.5/Målemetode.xml">82</app:målemetode>
+              <app:synbarhet codeSpace="http://www.geosynkronisering.no/files/skjema/Arealressurs/4.5/Synbarhet.xml" />
+            </app:Posisjonskvalitet>
+          </app:kvalitet>
+        </wfs:Value>
+      </wfs:Property>
+      <wfs:Property>
+        <wfs:ValueReference>app:verifiseringsdato</wfs:ValueReference>
+        <wfs:Value>
+          <app:verifiseringsdato>1995-12-18T00:00:00</app:verifiseringsdato>
+        </wfs:Value>
+      </wfs:Property>
+      <wfs:Property>
+        <wfs:ValueReference>app:identifikasjon</wfs:ValueReference>
+        <wfs:Value>
+          <app:identifikasjon>
+            <app:Identifikasjon>
+              <app:lokalId>b76d4326-529d-474e-b4a7-23f3fdb4d41e</app:lokalId>
+            </app:Identifikasjon>
+          </app:identifikasjon>
+        </wfs:Value>
+      </wfs:Property>
+      <Filter xmlns="http://www.opengis.net/fes/2.0">
+        <PropertyIsEqualTo>
+          <ValueReference>app:identifikasjon/app:Identifikasjon/app:lokalId</ValueReference>
+          <Literal>b76d4326-529d-474e-b4a7-23f3fdb4d41e</Literal>
+        </PropertyIsEqualTo>
+      </Filter>
+    </wfs:Update>
+    <wfs:Update typeName="app:ArealressursFlate" handle="3" inputFormat="application/gml+xml; version=3.2" xmlns:app="http://skjema.geonorge.no/SOSI/produktspesifikasjon/Arealressurs/4.5">
+      <wfs:Property>
+        <wfs:ValueReference>app:område</wfs:ValueReference>
+        <wfs:Value>
+          <app:område>
+            <!--Inlined geometry 'no.sk.ar5.arealressursflate.5597_AR5_OMRÅDE'-->
+            <gml:Polygon gml:id="no.sk.ar5.arealressursflate.5597_AR5_OMRÅDE" srsName="urn:ogc:def:crs:EPSG::4258">
+              <gml:exterior>
+                <gml:LinearRing>
+                  <gml:posList>59.734587 10.007181 59.734654 10.007153 59.734692 10.007193 59.734749 10.007249 59.734787 10.007280 59.734844 10.007332 59.734886 10.007354 59.734958 10.007411 59.735008 10.007467 59.735044 10.007498 59.735085 10.007524 59.735121 10.007564 59.735188 10.007660 59.735249 10.007709 59.735310 10.007775 59.735362 10.007872 59.735414 10.007986 59.735448 10.008101 59.735489 10.008204 59.735521 10.008309 59.735563 10.008424 59.735582 10.008468 59.735620 10.008645 59.735648 10.008769 59.735675 10.008880 59.735702 10.009022 59.735728 10.009164 59.735758 10.009311 59.735790 10.009429 59.735821 10.009544 59.735862 10.009655 59.735897 10.009767 59.735931 10.009890 59.735949 10.009997 59.735956 10.010125 59.735959 10.010254 59.735943 10.010409 59.735916 10.010428 59.735861 10.010434 59.735811 10.010416 59.735746 10.010390 59.735700 10.010347 59.735667 10.010285 59.735629 10.010215 59.735585 10.010148 59.735545 10.010091 59.735502 10.010043 59.735448 10.009968 59.735401 10.009907 59.735335 10.009850 59.735266 10.009771 59.735228 10.009731 59.735189 10.009696 59.734967 10.009610 59.734967 10.009610 59.734961 10.009349 59.734890 10.009061 59.734868 10.008928 59.734860 10.008834 59.734838 10.008697 59.734812 10.008583 59.734805 10.008497 59.734782 10.008356 59.734768 10.008267 59.734752 10.008169 59.734725 10.008049 59.734704 10.007921 59.734693 10.007815 59.734672 10.007712 59.734643 10.007597 59.734609 10.007460 59.734611 10.007353 59.734616 10.007266 59.734587 10.007181</gml:posList>
+                </gml:LinearRing>
+              </gml:exterior>
+            </gml:Polygon>
+          </app:område>
+        </wfs:Value>
+      </wfs:Property>
+      <wfs:Property>
+        <wfs:ValueReference>app:arealtype</wfs:ValueReference>
+        <wfs:Value>
+          <app:arealtype codeSpace="http://www.geosynkronisering.no/files/skjema/Arealressurs/4.5/ArealressursArealtype.xml">60</app:arealtype>
+        </wfs:Value>
+      </wfs:Property>
+      <wfs:Property>
+        <wfs:ValueReference>app:skogbonitet</wfs:ValueReference>
+        <wfs:Value>
+          <app:skogbonitet codeSpace="http://www.geosynkronisering.no/files/skjema/Arealressurs/4.5/ArealressursSkogbonitet.xml">11</app:skogbonitet>
+        </wfs:Value>
+      </wfs:Property>
+      <wfs:Property>
+        <wfs:ValueReference>app:treslag</wfs:ValueReference>
+        <wfs:Value>
+          <app:treslag codeSpace="http://www.geosynkronisering.no/files/skjema/Arealressurs/4.5/ArealressursTreslag.xml">31</app:treslag>
+        </wfs:Value>
+      </wfs:Property>
+      <wfs:Property>
+        <wfs:ValueReference>app:grunnforhold</wfs:ValueReference>
+        <wfs:Value>
+          <app:grunnforhold codeSpace="http://www.geosynkronisering.no/files/skjema/Arealressurs/4.5/ArealressursGrunnforhold.xml">45</app:grunnforhold>
+        </wfs:Value>
+      </wfs:Property>
+      <wfs:Property>
+        <wfs:ValueReference>app:kartstandard</wfs:ValueReference>
+        <wfs:Value>
+          <app:kartstandard codeSpace="http://www.geosynkronisering.no/files/skjema/Arealressurs/4.5/ArealressursKartstandard.xml">AR5</app:kartstandard>
+        </wfs:Value>
+      </wfs:Property>
+      <wfs:Property>
+        <wfs:ValueReference>app:datafangstdato</wfs:ValueReference>
+        <wfs:Value>
+          <app:datafangstdato>1995-12-18T00:00:00</app:datafangstdato>
+        </wfs:Value>
+      </wfs:Property>
+      <wfs:Property>
+        <wfs:ValueReference>app:kvalitet</wfs:ValueReference>
+        <wfs:Value>
+          <app:kvalitet>
+            <app:Posisjonskvalitet>
+              <app:målemetode codeSpace="http://www.geosynkronisering.no/files/skjema/Arealressurs/4.5/Målemetode.xml">82</app:målemetode>
+              <app:synbarhet codeSpace="http://www.geosynkronisering.no/files/skjema/Arealressurs/4.5/Synbarhet.xml" />
+            </app:Posisjonskvalitet>
+          </app:kvalitet>
+        </wfs:Value>
+      </wfs:Property>
+      <wfs:Property>
+        <wfs:ValueReference>app:verifiseringsdato</wfs:ValueReference>
+        <wfs:Value>
+          <app:verifiseringsdato>1995-12-18T00:00:00</app:verifiseringsdato>
+        </wfs:Value>
+      </wfs:Property>
+      <wfs:Property>
+        <wfs:ValueReference>app:identifikasjon</wfs:ValueReference>
+        <wfs:Value>
+          <app:identifikasjon>
+            <app:Identifikasjon>
+              <app:lokalId>f612da1f-6115-4139-81fd-5c604ffd0686</app:lokalId>
+            </app:Identifikasjon>
+          </app:identifikasjon>
+        </wfs:Value>
+      </wfs:Property>
+      <Filter xmlns="http://www.opengis.net/fes/2.0">
+        <PropertyIsEqualTo>
+          <ValueReference>app:identifikasjon/app:Identifikasjon/app:lokalId</ValueReference>
+          <Literal>f612da1f-6115-4139-81fd-5c604ffd0686</Literal>
+        </PropertyIsEqualTo>
+      </Filter>
+    </wfs:Update>
+  </chlogf:transactions>
+</chlogf:TransactionCollection>

@@ -121,7 +121,10 @@ public class TestArealressursFlateTypeJaxb2Helper {
 	private void testSimpleAr5_unmarshalArealressursFlateType_marshal(String FILE_NAME) throws IOException {
 		FileInputStream is = new FileInputStream(FILE_NAME);
 
-		ArealressursFlateType  simpleAr5  = (ArealressursFlateType ) arealressursFlateTypeJaxb2Helper.getUnmarshaller().unmarshal(new StreamSource(is));
+		javax.xml.bind.JAXBElement unmarshal = (JAXBElement) arealressursFlateTypeJaxb2Helper.getUnmarshaller().unmarshal(new StreamSource(is));
+		
+		
+		ArealressursFlateType  simpleAr5  = (ArealressursFlateType ) unmarshal.getValue();
 		
 		
 		Assert.assertNotNull("Object should not be null", simpleAr5);

@@ -3,7 +3,6 @@
  */
 package no.geonorge.skjema.util.gml_geos.inspire;
 
-
 import javax.xml.bind.JAXBElement;
 
 import opengis.net.gml_3_2_1.gml.AbstractGeometricAggregateType;
@@ -22,9 +21,9 @@ import opengis.net.gml_3_2_1.gml.ObjectFactory;
 import opengis.net.gml_3_2_1.gml.PointPropertyType;
 import opengis.net.gml_3_2_1.gml.PointType;
 import opengis.net.gml_3_2_1.gml.PolygonType;
+import opengis.net.gml_3_2_1.gml.PosListElement;
 import opengis.net.gml_3_2_1.gml.RingType;
 import opengis.net.gml_3_2_1.gml.SurfacePropertyType;
-
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
@@ -50,27 +49,53 @@ public class JTS2GML321 {
 	private static final ObjectFactory ofGML = new ObjectFactory();
 
 	public static AbstractGeometryType toGML(Geometry geom) {
-		return toGML(geom, null);
-	}
+		// not used, we used srid from geom
+		String srsName = null;
 
-	public static AbstractGeometryType toGML(Geometry geom, String srsName) {
-		if (geom instanceof Point)
-			return toGML((Point) geom, srsName);
-		else if (geom instanceof LinearRing)
-			return toGML((LineString) geom, srsName);
+		// a hack to set coorect srid
+		if (geom != null) {
+			int srid = geom.getSRID();
+			srsName = "urn:ogc:def:crs:EPSG::" + srid;
+		}
+
+		AbstractGeometryType gml = null;
+		if (geom instanceof Point) {
+			gml = toGML((Point) geom, srsName);
+		} else if (geom instanceof LinearRing)
+			gml = toGML((LineString) geom, srsName);
 		else if (geom instanceof LineString)
-			return toGML((LineString) geom, srsName);
+			gml = toGML((LineString) geom, srsName);
 		else if (geom instanceof Polygon)
-			return toGML((Polygon) geom, srsName);
+			gml = toGML((Polygon) geom, srsName);
 		else if (geom instanceof MultiPoint)
-			return toGML((MultiPoint) geom, srsName);
+			gml = toGML((MultiPoint) geom, srsName);
 		else if (geom instanceof MultiLineString)
-			return toGML((MultiLineString) geom, srsName);
+			gml = toGML((MultiLineString) geom, srsName);
 		else if (geom instanceof MultiPolygon)
-			return toGML((MultiPolygon) geom, srsName);
+			gml = toGML((MultiPolygon) geom, srsName);
 		else if (geom instanceof GeometryCollection)
-			return toGML((GeometryCollection) geom, srsName);
-		throw new RuntimeException("Failed to to convert from GML to JTS + " + geom.getClass().getSimpleName());
+			gml = toGML((GeometryCollection) geom, srsName);
+		else
+			throw new RuntimeException("Failed to to convert from GML to JTS + " + geom.getClass().getSimpleName());
+
+		if (gml != null) {
+
+			StringBuffer id = new StringBuffer("");
+			// add a empty or else snowflake is noe working
+
+			if (geom != null) {
+
+				if (geom.getUserData() != null) {
+					id.append(geom.getUserData());
+				}
+				id.append(geom.hashCode());
+			}
+
+			gml.setId(id.toString());
+
+		}
+		return gml;
+
 	}
 
 	private static DirectPositionType toGML(Coordinate c, String srsName) {
@@ -92,23 +117,50 @@ public class JTS2GML321 {
 		return ptOut;
 	}
 
+	// private static LineStringType toGML(LineString line, String srsName) {
+	// LineStringType ls = ofGML.createLineStringType();
+	// CoordinatesType cst = ofGML.createCoordinatesType();
+	// StringBuffer st = new StringBuffer();
+	// for (int i = 0; i < line.getCoordinateSequence().size(); i++) {
+	// Coordinate c = line.getCoordinateSequence().getCoordinate(i);
+	// if (i != 0)
+	// st.append(" ");
+	// st.append(c.x).append(",").append(c.y);
+	// if (!Double.isNaN(c.z))
+	// st.append(",").append(c.z);
+	// }
+	// // <gml:coordinates>-71.16028,42.258729 -71.160837,42.259112 -71.161143,42.25932</gml:coordinates>
+	// cst.setValue(st.toString());
+	// ls.setCoordinates(cst);
+	//
+	// if (srsName != null)
+	// ls.setSrsName(srsName);
+	// return ls;
+	// }
+
+	/**
+	 * Use postlist
+	 * 
+	 * @param line
+	 * @param srsName
+	 * @return
+	 */
 	private static LineStringType toGML(LineString line, String srsName) {
 		LineStringType ls = ofGML.createLineStringType();
-		CoordinatesType cst = ofGML.createCoordinatesType();
+		PosListElement posListElement = ofGML.createPosListElement();
 		StringBuffer st = new StringBuffer();
 		for (int i = 0; i < line.getCoordinateSequence().size(); i++) {
 			Coordinate c = line.getCoordinateSequence().getCoordinate(i);
-			if (i != 0)
-				st.append(" ");
-			st.append(c.x).append(",").append(c.y);
-			if (!Double.isNaN(c.z))
-				st.append(",").append(c.z);
+			posListElement.getValues().add(c.x);
+			posListElement.getValues().add(c.y);
+			// TODO check on srid and chek on that when addeing
+			// if (!Double.isNaN(c.z))
+			// posListElement.getValues().add(c.z);
 		}
-		// <gml:coordinates>-71.16028,42.258729 -71.160837,42.259112 -71.161143,42.25932</gml:coordinates>
-		cst.setValue(st.toString());
-		ls.setCoordinates(cst);
 		if (srsName != null)
 			ls.setSrsName(srsName);
+
+		ls.setPosList(posListElement);
 		return ls;
 	}
 
@@ -204,30 +256,6 @@ public class JTS2GML321 {
 		envt.setUpperCorner(toGML(new Coordinate(env.getMaxX(), env.getMaxY()), null));
 		envt.setSrsName(srsName);
 		return envt;
-	}
-
-	public static JAXBElement<? extends AbstractGeometryType> toJAXBGML(Geometry geom) {
-		return toJAXBGML(geom, null);
-	}
-
-	public static JAXBElement<? extends AbstractGeometryType> toJAXBGML(Geometry geom, String srsName) {
-		if (geom instanceof Point) {
-			return ofGML.createPoint((PointType) JTS2GML321.toGML(geom, srsName));
-		} else if (geom instanceof LineString) {
-			return ofGML.createLineString((LineStringType) JTS2GML321.toGML(geom, srsName));
-		} else if (geom instanceof Polygon) {
-			return ofGML.createPolygon((PolygonType) JTS2GML321.toGML(geom, srsName));
-		} else if (geom instanceof MultiPoint) {
-			return ofGML.createMultiPoint((MultiPointType) JTS2GML321.toGML(geom, srsName));
-		} else if (geom instanceof MultiLineString) {
-			return ofGML.createMultiCurve((MultiCurveType) JTS2GML321.toGML(geom, srsName));
-		} else if (geom instanceof MultiPolygon) {
-			return ofGML.createMultiSurface((MultiSurfaceType) JTS2GML321.toGML(geom, srsName));
-		} else if (geom instanceof GeometryCollection) {
-			return ofGML.createMultiGeometry((MultiGeometryType) JTS2GML321.toGML(geom, srsName));
-		} else
-			System.out.println("JTS geometry type not treated: " + geom.getClass().getSimpleName());
-		return null;
 	}
 
 }

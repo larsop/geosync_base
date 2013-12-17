@@ -85,6 +85,8 @@ public class TestChangelogUnmarshalAr5 {
 				opengis.net.gml_3_2_1.gml.LinearRingType ringType = (opengis.net.gml_3_2_1.gml.LinearRingType) abstractRing.getValue();
 
 				Polygon createPolygon = (Polygon) GML321_2JTS.toJTS(ringType);
+				
+				// System.out.println(createPolygon.toText());
 
 				Assert.assertTrue(createPolygon.getArea() > 0.0);
 

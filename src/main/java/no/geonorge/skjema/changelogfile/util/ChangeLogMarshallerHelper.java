@@ -19,15 +19,16 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.stream.StreamSource;
 
+import no.geonorge.skjema.changelogfile.TransactionCollection;
+import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.FellesegenskaperType;
+import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.IdentifikasjonPropertyType;
+import no.geonorge.skjema.sosi.produktspesifikasjon.util.SosiProduktMarshallerHelper;
 import opengis.net.filter_2_0.filter.BinaryComparisonOpType;
 import opengis.net.filter_2_0.filter.FilterType;
 import opengis.net.filter_2_0.filter.LiteralType;
 import opengis.net.filter_2_0.filter.MatchActionType;
-import no.geonorge.skjema.changelogfile.TransactionCollection;
-import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ArealressursFlateType;
-import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.FellesegenskaperType;
-import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.IdentifikasjonPropertyType;
-import no.geonorge.skjema.sosi.produktspesifikasjon.util.SosiProduktMarshallerHelper;
+import opengis.net.gml_3_2_1.gml.AbstractCodeType;
+import opengis.net.gml_3_2_1.gml.SurfacePropertyType;
 import opengis.net.wfs_2_0.wfs.AbstractTransactionActionType;
 import opengis.net.wfs_2_0.wfs.DeleteType;
 import opengis.net.wfs_2_0.wfs.InsertType;
@@ -36,8 +37,6 @@ import opengis.net.wfs_2_0.wfs.Property;
 import opengis.net.wfs_2_0.wfs.Property.ValueReference;
 import opengis.net.wfs_2_0.wfs.Transaction;
 import opengis.net.wfs_2_0.wfs.UpdateType;
-import opengis.net.gml_3_2_1.gml.AbstractCodeType;
-import opengis.net.gml_3_2_1.gml.SurfacePropertyType;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -334,7 +333,7 @@ public class ChangeLogMarshallerHelper {
 
 		opengis.net.filter_2_0.filter.ObjectFactory fesObjectFactory = new opengis.net.filter_2_0.filter.ObjectFactory();
 
-		no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ObjectFactory ar5objectFactory = new no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ObjectFactory();
+		// no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ObjectFactory ar5objectFactory = new no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ObjectFactory();
 
 		opengis.net.gml_3_2_1.gml.ObjectFactory gmlFactory = new opengis.net.gml_3_2_1.gml.ObjectFactory();
 
@@ -345,7 +344,7 @@ public class ChangeLogMarshallerHelper {
 		ArrayList<String> propOrder = new ArrayList<>();
 
 		for (WSFOperation wsfOperation : wfsOperationList) {
-			Object product = (ArealressursFlateType) wsfOperation.product;
+			Object product = wsfOperation.product;
 
 			if (qname == null) {
 				{

@@ -27,6 +27,7 @@ import opengis.net.gml_3_2_1.gml.CoordinatesType;
 import opengis.net.gml_3_2_1.gml.CurvePropertyType;
 import opengis.net.gml_3_2_1.gml.LineStringType;
 import opengis.net.gml_3_2_1.gml.PolygonType;
+import opengis.net.gml_3_2_1.gml.PosListElement;
 import opengis.net.gml_3_2_1.gml.RingType;
 
 import org.junit.Assert;
@@ -96,12 +97,13 @@ public class TestArealressursFlateTypeJaxb2Helper {
 	 * Test marshal
 	 */
 	@Test
-	public void testSimpleAr5_marshal() throws ParseException, SAXException, IOException, ParserConfigurationException {
+	public void testSimpleArealressursFlateType_marshal() throws ParseException, SAXException, IOException, ParserConfigurationException {
 
 
-	    File temp = File.createTempFile("InspireWayDaoDummyAr5Classes", ".tmp"); 
+	    File temp = File.createTempFile("ArealressursFlateType", ".tmp"); 
 	    
 		ArealressursFlateType simpleAr5 = daoDummyAr5Classes.simpleAr5Flate();
+		
 		OutputStream os = new FileOutputStream(temp);
 		
 		arealressursFlateTypeJaxb2Helper.getMarshaller().marshal(simpleAr5, new StreamResult(os) );
@@ -110,12 +112,36 @@ public class TestArealressursFlateTypeJaxb2Helper {
 		
 		
 		System.out.println(temp.getAbsolutePath());
-		testSimpleAr5_unmarshal(temp.getAbsolutePath());
+		testSimpleAr5_unmarshalArealressursFlateType_marshal(temp.getAbsolutePath());
 
 	}
 
 	
-	private void testSimpleAr5_unmarshal(String FILE_NAME) throws IOException {
+	/**
+	 * Test marshal
+	 */
+	@Test
+	public void testSimpleArealressursGrenseType_marshal() throws ParseException, SAXException, IOException, ParserConfigurationException {
+
+
+	    File temp = File.createTempFile("ArealressursGrenseType", ".tmp"); 
+	    
+		ArealressursGrenseType simpleAr5 = daoDummyAr5Classes.simpleAr5Grense();
+		
+		OutputStream os = new FileOutputStream(temp);
+		
+		arealressursFlateTypeJaxb2Helper.getMarshaller().marshal(simpleAr5, new StreamResult(os) );
+		
+		os.close();
+		
+		
+		System.out.println(temp.getAbsolutePath());
+
+	}
+
+
+	
+	private void testSimpleAr5_unmarshalArealressursFlateType_marshal(String FILE_NAME) throws IOException {
 		FileInputStream is = new FileInputStream(FILE_NAME);
 
 		ArealressursFlateType  simpleAr5  = (ArealressursFlateType ) arealressursFlateTypeJaxb2Helper.getUnmarshaller().unmarshal(new StreamSource(is));
@@ -139,16 +165,14 @@ public class TestArealressursFlateTypeJaxb2Helper {
 		List<CurvePropertyType> curveMembers = ringType.getCurveMembers();
 		for (CurvePropertyType ct : curveMembers) {
 			LineStringType value2 = (LineStringType) ct.getAbstractCurve().getValue();
-			CoordinatesType value3 = value2.getCoordinates();
-			String value4 = value3.getValue();
-			String[] split = value4.split(" ");
-			Coordinate[] coordinates = new Coordinate[split.length];
+			PosListElement value3 = value2.getPosList();
+			List<Double> values = value3.getValues();
+			
+			Coordinate[] coordinates = new Coordinate[values.size()/2];
 
+			int coordinatei = 0; 
 			for (int i = 0; i < coordinates.length; i++) {
-				String string = split[i];
-				String[] split2 = string.split(",");
-				coordinates[i] = new Coordinate(new Double(split2[0]), new Double(split2[1]));
-
+				coordinates[i] = new Coordinate(values.get(coordinatei++), new Double(values.get(coordinatei++)));
 			}
 
 			LineString g1 = new GeometryFactory().createLineString(coordinates);

@@ -4,6 +4,7 @@ package no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45;
 
 
 
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -19,11 +20,9 @@ import javax.xml.transform.stream.StreamSource;
 import no.geonorge.skjema.changelogfile.util.ChangeLogMarshallerHelper;
 import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.util.InspireWayDaoDummyAr5Classes;
 import no.geonorge.skjema.util.gml_geos.inspire.GML321_2JTS;
-
 import opengis.net.gml_3_2_1.gml.AbstractRingPropertyType;
 import opengis.net.gml_3_2_1.gml.AbstractRingType;
 import opengis.net.gml_3_2_1.gml.AbstractSurfaceType;
-import opengis.net.gml_3_2_1.gml.CoordinatesType;
 import opengis.net.gml_3_2_1.gml.CurvePropertyType;
 import opengis.net.gml_3_2_1.gml.LineStringType;
 import opengis.net.gml_3_2_1.gml.PolygonType;
@@ -38,7 +37,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.xml.sax.SAXException;
-
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -117,27 +115,6 @@ public class TestArealressursFlateTypeJaxb2Helper {
 	}
 
 	
-	/**
-	 * Test marshal
-	 */
-	@Test
-	public void testSimpleArealressursGrenseType_marshal() throws ParseException, SAXException, IOException, ParserConfigurationException {
-
-
-	    File temp = File.createTempFile("ArealressursGrenseType", ".tmp"); 
-	    
-		ArealressursGrenseType simpleAr5 = daoDummyAr5Classes.simpleAr5Grense();
-		
-		OutputStream os = new FileOutputStream(temp);
-		
-		arealressursFlateTypeJaxb2Helper.getMarshaller().marshal(simpleAr5, new StreamResult(os) );
-		
-		os.close();
-		
-		
-		System.out.println(temp.getAbsolutePath());
-
-	}
 
 
 	
@@ -185,5 +162,27 @@ public class TestArealressursFlateTypeJaxb2Helper {
 		}
 
 	}
+
+//	/**
+//	 * Test marshal
+//	 */
+//	@Test
+//	public void testSimpleArealressursGrenseType_marshal() throws ParseException, SAXException, IOException, ParserConfigurationException {
+//
+//
+//	    File temp = File.createTempFile("ArealressursGrenseType", ".tmp"); 
+//	    
+//		ArealressursGrenseType simpleAr5 = daoDummyAr5Classes.simpleAr5Grense();
+//		
+//		OutputStream os = new FileOutputStream(temp);
+//		
+//		arealressursFlateTypeJaxb2Helper.getMarshaller().marshal(simpleAr5, new StreamResult(os) );
+//		
+//		os.close();
+//		
+//		
+//		System.out.println(temp.getAbsolutePath());
+//
+//	}
 
 }

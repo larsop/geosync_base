@@ -26,7 +26,7 @@
 			<annox:annotate target="class">
 			
 				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement"
-					name="ArealressursFlateType"
+					name="ArealressursFlate"
 					namespace="http://skjema.geonorge.no/SOSI/produktspesifikasjon/Arealressurs/4.5" />
 
 			</annox:annotate>
@@ -36,7 +36,7 @@
 			<annox:annotate target="class">
 			
 				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement"
-					name="ArealressursGrenseType"
+					name="ArealressursGrense"
 					namespace="http://skjema.geonorge.no/SOSI/produktspesifikasjon/Arealressurs/4.5" />
 			</annox:annotate>
 		</jaxb:bindings>

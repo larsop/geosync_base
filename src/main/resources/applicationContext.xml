@@ -15,21 +15,16 @@
     <!-- Create JAXB marshaller bean with the OXM framework -->
 
     <oxm:jaxb2-marshaller id="jaxb2Marshaller">
-        <oxm:class-to-be-bound
-                name="no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ArealressursFlateType"/>
+        <oxm:class-to-be-bound name="no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ArealressursFlateType"/>
     </oxm:jaxb2-marshaller>
 
-    <!--
-        <bean id="jaxb2Marshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
-            <property name="classesToBeBound">
-                <list>
-                    <value>no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ArealressursFlateType
-                    </value>
-                </list>
-            </property>
-            <property name="schema" value="classpath:/FKB_AR5.xsd"/>
-        </bean>
-    -->
+<!-- 	<bean id="jaxb2Marshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller"> -->
+<!-- 		<property name="packagesToScan"> -->
+<!-- 			<list> -->
+<!-- 				<value>no.geonorge.skjema.sosi.produktspesifikasjon.*</value> -->
+<!-- 			</list> -->
+<!-- 		</property> -->
+<!-- 	</bean> -->
 
 
 

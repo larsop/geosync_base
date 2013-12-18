@@ -15,7 +15,8 @@ a continuous area which has been assigned the same attribute values in accordanc
     <complexContent>
       <extension base="ar5:FellesegenskaperType">
         <sequence>
-          <element name="område" type="gml:SurfacePropertyType">
+<!--           <element name="område" type="gml:SurfaceType"> -->
+ 		<element name="område" type="gml:SurfacePropertyType">
             <annotation>
               <documentation>objektets utstrekning
 

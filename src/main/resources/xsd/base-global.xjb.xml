@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <jaxb:bindings
+		xmlns:annox="http://annox.dev.java.net"
         xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
         xmlns:namespace="http://jaxb2-commons.dev.java.net/namespace-prefix"
         xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
@@ -10,13 +11,37 @@
         jaxb:extensionBindingPrefixes="xjc annox"
         jaxb:version="2.1">
 
-    <jaxb:globalBindings>
+	<!-- 
+	 mapSimpleTypeDef="true" 
+	 typesafeEnumMemberName="generateName"
+	-->
+
+    <jaxb:globalBindings generateElementProperty="false">
         <xjc:simple/>
         <xjc:serializable uid="-1"/>
         <jaxb:javaType name="java.util.Calendar" xmlType="xs:dateTime"
                        parseMethod="javax.xml.bind.DatatypeConverter.parseDateTime"
                        printMethod="javax.xml.bind.DatatypeConverter.printDateTime"/>
     </jaxb:globalBindings>
+
+<!-- Test -->
+<!-- 	<jaxb:bindings schemaLocation="gml-3.2.1/geometryBasic2d.xsd" node="//xs:complexType[@name='SurfacePropertyType']"> -->
+<!-- 			<annox:annotate target="class"> -->
+<!-- 			<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" -->
+<!-- 				name="Surface" -->
+<!-- 				namespace="http://www.opengis.net/gml/3.2" /> -->
+<!-- 			</annox:annotate> -->
+<!--     </jaxb:bindings> -->
+
+<!-- test     -->
+<!-- 	<jaxb:bindings schemaLocation="gml-3.2.1/geometryBasic2d.xsd" node="//xs:complexType[@name='SurfacePropertyType']/xs:attribute[@name='abstractSurface']"> -->
+<!--         <annox:annotate target="field"> -->
+<!--             <annox:annotate annox:class="javax.xml.bind.annotation.XmlElementRef" name="Surface"/> -->
+<!--         </annox:annotate> -->
+<!--     </jaxb:bindings> -->
+
+
+
 
     <jaxb:bindings
             schemaLocation="gml-3.2.1/gml.xsd"

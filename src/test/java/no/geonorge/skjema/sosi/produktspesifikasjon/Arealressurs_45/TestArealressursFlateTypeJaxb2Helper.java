@@ -10,7 +10,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.bind.JAXBElement;
 import javax.xml.parsers.ParserConfigurationException;
@@ -34,6 +36,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.oxm.Marshaller;
+import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.xml.sax.SAXException;
@@ -104,7 +108,23 @@ public class TestArealressursFlateTypeJaxb2Helper {
 		
 		OutputStream os = new FileOutputStream(temp);
 		
-		arealressursFlateTypeJaxb2Helper.getMarshaller().marshal(simpleAr5, new StreamResult(os) );
+		org.springframework.oxm.jaxb.Jaxb2Marshaller marshaller = (Jaxb2Marshaller) arealressursFlateTypeJaxb2Helper.getMarshaller();
+		
+		Class<?>[] classesToBeBound = marshaller.getClassesToBeBound();
+		
+		for (Class<?> class1 : classesToBeBound) {
+			System.out.println(class1.getName());
+			
+		}
+
+		Map<String, Object> properties = new HashMap<String, Object>();
+		properties.put(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+		((org.springframework.oxm.jaxb.Jaxb2Marshaller) marshaller).setMarshallerProperties(properties);
+
+		marshaller.marshal(simpleAr5, new StreamResult(os) );
+		
+		
+		//setProperty("jaxb.xsi.type", Boolean.FALSE);
 		
 		os.close();
 		

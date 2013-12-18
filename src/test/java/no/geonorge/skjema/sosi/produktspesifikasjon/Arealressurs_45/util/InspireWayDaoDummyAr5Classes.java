@@ -8,11 +8,17 @@ import javax.xml.bind.JAXBElement;
 import opengis.net.gml_3_2_1.gml.AbstractCodeType;
 import opengis.net.gml_3_2_1.gml.AbstractCurveType;
 import opengis.net.gml_3_2_1.gml.AbstractGeometryType;
+import opengis.net.gml_3_2_1.gml.AbstractSurfacePatchType;
 import opengis.net.gml_3_2_1.gml.AbstractSurfaceType;
 import opengis.net.gml_3_2_1.gml.CurvePropertyType;
+import opengis.net.gml_3_2_1.gml.PolygonType;
+import opengis.net.gml_3_2_1.gml.SurfacePatchArrayPropertyType;
 import opengis.net.gml_3_2_1.gml.SurfacePropertyType;
+import opengis.net.gml_3_2_1.gml.SurfaceType;
 
 import org.junit.Before;
+import org.w3._1999.xlink.ActuateType;
+import org.w3._1999.xlink.TypeType;
 
 import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ArealressursFlateType;
 import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ArealressursGrenseType;
@@ -109,10 +115,16 @@ public class InspireWayDaoDummyAr5Classes {
 		ar5.setDatafangstdato(datafangstdato);
 		opengis.net.gml_3_2_1.gml.ObjectFactory of = new opengis.net.gml_3_2_1.gml.ObjectFactory();
 
+		// with SurfacePropertyType
 		SurfacePropertyType omrade = new SurfacePropertyType();
 		AbstractSurfaceType abstractSurfaceType = (AbstractSurfaceType) JTS2GML321.toGML(borderPolygon);
 		JAXBElement<AbstractSurfaceType> createAbstractSurface = of.createAbstractSurface(abstractSurfaceType);
 		omrade.setAbstractSurface(createAbstractSurface);
+
+
+		
+
+		
 		ar5.setOmråde(omrade);
 
 		return ar5;

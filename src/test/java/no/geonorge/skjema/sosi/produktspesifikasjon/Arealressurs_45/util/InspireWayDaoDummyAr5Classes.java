@@ -8,6 +8,7 @@ import javax.xml.bind.JAXBElement;
 import opengis.net.gml_3_2_1.gml.AbstractCodeType;
 import opengis.net.gml_3_2_1.gml.AbstractCurveType;
 import opengis.net.gml_3_2_1.gml.AbstractGeometryType;
+import opengis.net.gml_3_2_1.gml.AbstractRingPropertyType;
 import opengis.net.gml_3_2_1.gml.AbstractSurfacePatchType;
 import opengis.net.gml_3_2_1.gml.AbstractSurfaceType;
 import opengis.net.gml_3_2_1.gml.CurvePropertyType;
@@ -30,7 +31,9 @@ import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.Posisjonskva
 import no.geonorge.skjema.util.gml_geos.inspire.JTS2GML321;
 
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.LinearRing;
 import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.io.WKTReader;
@@ -115,17 +118,22 @@ public class InspireWayDaoDummyAr5Classes {
 		ar5.setDatafangstdato(datafangstdato);
 		opengis.net.gml_3_2_1.gml.ObjectFactory of = new opengis.net.gml_3_2_1.gml.ObjectFactory();
 
-		// with SurfacePropertyType
-		SurfacePropertyType omrade = new SurfacePropertyType();
-		AbstractSurfaceType abstractSurfaceType = (AbstractSurfaceType) JTS2GML321.toGML(borderPolygon);
-		JAXBElement<AbstractSurfaceType> createAbstractSurface = of.createAbstractSurface(abstractSurfaceType);
-		omrade.setAbstractSurface(createAbstractSurface);
-
-
-		
+//		// with SurfacePropertyType
+//		SurfacePropertyType omrade = new SurfacePropertyType();
+//		AbstractSurfaceType abstractSurfaceType = (AbstractSurfaceType) JTS2GML321.toGML(borderPolygon);
+//		JAXBElement<AbstractSurfaceType> createAbstractSurface = of.createAbstractSurface(abstractSurfaceType);
+//		omrade.setAbstractSurface(createAbstractSurface);
 
 		
-		ar5.setOmråde(omrade);
+		
+		PolygonType polygonType = (PolygonType) JTS2GML321.toGML(borderPolygon);
+		SurfacePropertyType surfacePropertyType = new SurfacePropertyType();
+		JAXBElement<PolygonType> jaxbElement = of.createPolygon(polygonType );
+		surfacePropertyType.setAbstractSurface(jaxbElement);
+		
+		
+		
+		ar5.setOmråde(surfacePropertyType);
 
 		return ar5;
 	}

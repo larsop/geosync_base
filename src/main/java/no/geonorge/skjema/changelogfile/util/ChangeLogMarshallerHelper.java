@@ -284,7 +284,6 @@ public class ChangeLogMarshallerHelper {
 
 	}
 
-	
 	private Object getProduct(Object object) throws TransformerConfigurationException, TransformerFactoryConfigurationError, TransformerException, IOException {
 		if (logger.isDebugEnabled()) {
 			logger.debug("enter");
@@ -303,7 +302,8 @@ public class ChangeLogMarshallerHelper {
 	// TODO fix update and delete, only insert is correct
 	// TODO and java doc
 	/**
-	 * This class creates a TransactionCollection  list based the internal structure ArrayList<WSFOperation> wfsOperationList  
+	 * This class creates a TransactionCollection list based the internal structure ArrayList<WSFOperation> wfsOperationList
+	 * 
 	 * @param wfsOperationList
 	 * @return
 	 * @throws ParseException
@@ -313,6 +313,11 @@ public class ChangeLogMarshallerHelper {
 	 */
 	public TransactionCollection getTransactionCollection(ArrayList<WSFOperation> wfsOperationList) throws ParseException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException {
+
+		if (logger.isDebugEnabled()) {
+			logger.debug("enter");
+		}
+
 		int handle = 0;
 
 		InsertType insertType = null;
@@ -320,7 +325,6 @@ public class ChangeLogMarshallerHelper {
 		DeleteType deleteType = null;
 		AbstractTransactionActionType lastType = null;
 		AbstractTransactionActionType newType = null;
-		AbstractTransactionActionType currentType = null;
 		SupportedWFSOperationType currentWfsType = null;
 
 		no.geonorge.skjema.changelogfile.TransactionCollection transactionCollection = new no.geonorge.skjema.changelogfile.TransactionCollection();
@@ -333,8 +337,6 @@ public class ChangeLogMarshallerHelper {
 
 		opengis.net.filter_2_0.filter.ObjectFactory fesObjectFactory = new opengis.net.filter_2_0.filter.ObjectFactory();
 
-		// no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ObjectFactory ar5objectFactory = new no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ObjectFactory();
-
 		opengis.net.gml_3_2_1.gml.ObjectFactory gmlFactory = new opengis.net.gml_3_2_1.gml.ObjectFactory();
 
 		// will get value at first iteration based on the annotation XmlRootElement
@@ -343,45 +345,17 @@ public class ChangeLogMarshallerHelper {
 		// will get value at first iteration based on the annotation XmlRootElement
 		ArrayList<String> propOrder = new ArrayList<>();
 
-		for (WSFOperation wsfOperation : wfsOperationList) {
+		for (int i = 0; i < wfsOperationList.size(); i++) {
+			WSFOperation wsfOperation = wfsOperationList.get(i);
 			Object product = wsfOperation.product;
 
+			if (logger.isDebugEnabled()) {
+				logger.debug("handle wsfOperation.wfsOperationType " + wsfOperation.wfsOperationType + " for feature nr. " + i);
+			}
+
+			// get in first interation
 			if (qname == null) {
-				{
-					Class aClass = product.getClass();
-					Annotation[] annotations = aClass.getAnnotations();
-					for (Annotation annotation : annotations) {
-						if (annotation instanceof XmlRootElement) {
-							XmlRootElement myAnnotation = (XmlRootElement) annotation;
-							qname = new QName(myAnnotation.namespace(), myAnnotation.name());
-						} else if (annotation instanceof XmlType) {
-							XmlType myAnnotation = (XmlType) annotation;
-							for (String p : myAnnotation.propOrder()) {
-								propOrder.add(p);
-							}
-						}
-					}
-				}
-				{
-					// get from felles komponenter
-
-					Class aClass = FellesegenskaperType.class;
-					Annotation[] annotations = aClass.getAnnotations();
-					for (Annotation annotation : annotations) {
-						if (annotation instanceof XmlType) {
-							XmlType myAnnotation = (XmlType) annotation;
-							for (String p : myAnnotation.propOrder()) {
-								propOrder.add(p);
-							}
-						}
-					}
-				}
-
-				// MZ: Find the correct method
-
-				String name = "Skogbonitet";
-
-				getValue(gmlFactory, product, name);
+				qname = getQName(gmlFactory, qname, propOrder, product);
 
 			}
 
@@ -397,8 +371,8 @@ public class ChangeLogMarshallerHelper {
 					currentWfsType = wsfOperation.wfsOperationType;
 				}
 				insertType.getAnies().add(product);
-			}
 				break;
+			}
 
 			case UpdateType: {
 
@@ -441,10 +415,10 @@ public class ChangeLogMarshallerHelper {
 				// set filter
 				FilterType filterType = createFilter(fesObjectFactory);
 				updateType.setFilter(filterType);
+				break;
 
 			}
 
-				break;
 			case DeleleType: {
 				// TODO fix this bad written code
 				if (currentWfsType == null || !currentWfsType.equals(wsfOperation.wfsOperationType)) {
@@ -456,30 +430,102 @@ public class ChangeLogMarshallerHelper {
 					currentWfsType = wsfOperation.wfsOperationType;
 				}
 
+				// set filter
 				FilterType filterType = createFilter(fesObjectFactory);
 				deleteType.setFilter(filterType);
-
-			}
-
-			default:
 				break;
 
 			}
 
-			if (aswitchHappend && lastType != null) {
-				JAXBElement<? extends Serializable> abstractTransactionActions = wfsObjectFactory.createAbstractTransactionAction(lastType);
-				transaction.getAbstractTransactionActions().add(abstractTransactionActions);
+			default:
+				logger.error("Not handled wsfOperation " + wsfOperation);
+				break;
+			}
+
+			// save if a switch or last row
+			if ((aswitchHappend && lastType != null) || i == wfsOperationList.size()) {
+				if (logger.isDebugEnabled()) {
+					logger.debug("aswitchHappend has happend for handle wsfOperation.wfsOperationType " + wsfOperation.wfsOperationType + " for feature nr. "
+							+ i + " last type is " + lastType);
+				}
+
+				addChangelogFeature(lastType, transaction, wfsObjectFactory, wsfOperation);
 			}
 
 			lastType = newType;
 
 		}
 
-		if (lastType != null) {
-			JAXBElement<? extends Serializable> abstractTransactionActions = wfsObjectFactory.createAbstractTransactionAction(lastType);
+		if (logger.isDebugEnabled()) {
+			logger.debug("leave");
+		}
+
+		return transactionCollection;
+	}
+
+	private QName getQName(opengis.net.gml_3_2_1.gml.ObjectFactory gmlFactory, QName qname, ArrayList<String> propOrder, Object product)
+			throws IllegalAccessException, InvocationTargetException {
+		if (logger.isDebugEnabled()) {
+			logger.debug("enter");
+		}
+
+		{
+			Class aClass = product.getClass();
+			Annotation[] annotations = aClass.getAnnotations();
+			for (Annotation annotation : annotations) {
+				if (annotation instanceof XmlRootElement) {
+					XmlRootElement myAnnotation = (XmlRootElement) annotation;
+					qname = new QName(myAnnotation.namespace(), myAnnotation.name());
+				} else if (annotation instanceof XmlType) {
+					XmlType myAnnotation = (XmlType) annotation;
+					for (String p : myAnnotation.propOrder()) {
+						propOrder.add(p);
+					}
+				}
+			}
+		}
+		{
+			// get from felles komponenter
+
+			Class aClass = FellesegenskaperType.class;
+			Annotation[] annotations = aClass.getAnnotations();
+			for (Annotation annotation : annotations) {
+				if (annotation instanceof XmlType) {
+					XmlType myAnnotation = (XmlType) annotation;
+					for (String p : myAnnotation.propOrder()) {
+						propOrder.add(p);
+					}
+				}
+			}
+		}
+
+		// MZ: Find the correct method
+
+		// WHY is thi called ????
+		String name = "Skogbonitet";
+		getValue(gmlFactory, product, name);
+		return qname;
+	}
+
+	private void addChangelogFeature(AbstractTransactionActionType lastType, Transaction transaction, ObjectFactory wfsObjectFactory,
+			WSFOperation wsfOperation) {
+
+		JAXBElement<? extends Serializable> abstractTransactionActions = null;
+
+		if (lastType instanceof InsertType) {
+			abstractTransactionActions = wfsObjectFactory.createInsert((InsertType) lastType);
+		} else if (lastType instanceof DeleteType) {
+			abstractTransactionActions = wfsObjectFactory.createDelete((DeleteType) lastType);
+		} else if (lastType instanceof UpdateType) {
+			abstractTransactionActions = wfsObjectFactory.createUpdate((UpdateType) lastType);
+		}
+
+		if (abstractTransactionActions == null) {
+			logger.error("Not handled wsfOperation " + wsfOperation);
+		} else {
 			transaction.getAbstractTransactionActions().add(abstractTransactionActions);
 		}
-		return transactionCollection;
+
 	}
 
 	private FilterType createFilter(opengis.net.filter_2_0.filter.ObjectFactory fesObjectFactory) {

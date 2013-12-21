@@ -6,17 +6,23 @@ import java.util.Calendar;
 import javax.xml.bind.JAXBElement;
 
 import opengis.net.gml_3_2_1.gml.AbstractCodeType;
+import opengis.net.gml_3_2_1.gml.AbstractCurveSegmentType;
 import opengis.net.gml_3_2_1.gml.AbstractCurveType;
 import opengis.net.gml_3_2_1.gml.AbstractGeometryType;
 import opengis.net.gml_3_2_1.gml.AbstractRingPropertyType;
 import opengis.net.gml_3_2_1.gml.AbstractSurfacePatchType;
 import opengis.net.gml_3_2_1.gml.AbstractSurfaceType;
 import opengis.net.gml_3_2_1.gml.CurvePropertyType;
+import opengis.net.gml_3_2_1.gml.CurveType;
+import opengis.net.gml_3_2_1.gml.LineStringSegmentType;
+import opengis.net.gml_3_2_1.gml.LineStringType;
 import opengis.net.gml_3_2_1.gml.PolygonType;
+import opengis.net.gml_3_2_1.gml.SegmentsElement;
 import opengis.net.gml_3_2_1.gml.SurfacePatchArrayPropertyType;
 import opengis.net.gml_3_2_1.gml.SurfacePropertyType;
 import opengis.net.gml_3_2_1.gml.SurfaceType;
 
+import org.hibernate.jdbc.BorrowedConnectionProxy;
 import org.junit.Before;
 import org.w3._1999.xlink.ActuateType;
 import org.w3._1999.xlink.TypeType;
@@ -127,9 +133,9 @@ public class InspireWayDaoDummyAr5Classes {
 		
 		
 		PolygonType polygonType = (PolygonType) JTS2GML321.toGML(borderPolygon);
+		JAXBElement<PolygonType> jaxbElementPolygonType = of.createPolygon(polygonType );
 		SurfacePropertyType surfacePropertyType = new SurfacePropertyType();
-		JAXBElement<PolygonType> jaxbElement = of.createPolygon(polygonType );
-		surfacePropertyType.setAbstractSurface(jaxbElement);
+		surfacePropertyType.setAbstractSurface(jaxbElementPolygonType);
 		
 		
 		
@@ -157,13 +163,43 @@ public class InspireWayDaoDummyAr5Classes {
 
 		opengis.net.gml_3_2_1.gml.ObjectFactory of = new opengis.net.gml_3_2_1.gml.ObjectFactory();
 
-		CurvePropertyType omrade = new CurvePropertyType();
-		AbstractGeometryType abstractSurfaceType = JTS2GML321.toGML(borderLineString);
-		AbstractCurveType sddd = (AbstractCurveType) abstractSurfaceType;
-		JAXBElement<? extends AbstractCurveType> value = of.createAbstractCurve(sddd);
-		omrade.setAbstractCurve(value);
-		ar5.setGrense(omrade);
+		
 
+//		// does not work in snowflake
+//		LineStringType polygonType = (LineStringType) JTS2GML321.toGML(borderLineString);
+//		CurvePropertyType curvePropertyType = of.createCurvePropertyType();
+//		JAXBElement<LineStringType> abstractCurve = of.createLineString(polygonType);
+//		curvePropertyType.setAbstractCurve(abstractCurve);
+//		ar5.setGrense(curvePropertyType );
+		
+		LineStringType lineStringType = (LineStringType) JTS2GML321.toGML(borderLineString);
+		
+		LineStringSegmentType lineStringSegmentType = of.createLineStringSegmentType();
+		lineStringSegmentType.setPosList(lineStringType.getPosList());
+		JAXBElement<LineStringSegmentType> e = of.createLineStringSegment(lineStringSegmentType);
+		SegmentsElement segments = of.createSegmentsElement();
+		segments.getAbstractCurveSegments().add(e);
+		CurveType createCurveType = of.createCurveType();
+		createCurveType.setSegments(segments );
+		
+		// a hack to set id
+		createCurveType.setId("");
+		String srsName = "urn:ogc:def:crs:EPSG::" + borderLineString.getSRID();
+		createCurveType.setSrsName(srsName);
+
+		
+		
+		JAXBElement<CurveType> abstractCurve = of.createCurve(createCurveType);
+		
+		
+		CurvePropertyType curvePropertyType = of.createCurvePropertyType();
+		curvePropertyType.setAbstractCurve(abstractCurve);
+		
+		ar5.setGrense(curvePropertyType );
+
+		
+		
+		
 		AbstractCodeType avgrensingarealtype = new AbstractCodeType();
 		avgrensingarealtype.setCodeSpace("codespace");
 		avgrensingarealtype.setValue("valueforcodespace");

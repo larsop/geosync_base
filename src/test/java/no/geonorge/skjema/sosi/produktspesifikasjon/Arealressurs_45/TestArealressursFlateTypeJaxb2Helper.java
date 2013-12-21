@@ -109,13 +109,6 @@ public class TestArealressursFlateTypeJaxb2Helper {
 		OutputStream os = new FileOutputStream(temp);
 		
 		org.springframework.oxm.jaxb.Jaxb2Marshaller marshaller = (Jaxb2Marshaller) arealressursFlateTypeJaxb2Helper.getMarshaller();
-		
-		Class<?>[] classesToBeBound = marshaller.getClassesToBeBound();
-		
-		for (Class<?> class1 : classesToBeBound) {
-			System.out.println(class1.getName());
-			
-		}
 
 		Map<String, Object> properties = new HashMap<String, Object>();
 		properties.put(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
@@ -186,26 +179,25 @@ public class TestArealressursFlateTypeJaxb2Helper {
 
 	}
 
-//	/**
-//	 * Test marshal
-//	 */
-//	@Test
-//	public void testSimpleArealressursGrenseType_marshal() throws ParseException, SAXException, IOException, ParserConfigurationException {
-//
-//
-//	    File temp = File.createTempFile("ArealressursGrenseType", ".tmp"); 
-//	    
-//		ArealressursGrenseType simpleAr5 = daoDummyAr5Classes.simpleAr5Grense();
-//		
-//		OutputStream os = new FileOutputStream(temp);
-//		
-//		arealressursFlateTypeJaxb2Helper.getMarshaller().marshal(simpleAr5, new StreamResult(os) );
-//		
-//		os.close();
-//		
-//		
-//		System.out.println(temp.getAbsolutePath());
-//
-//	}
+	/**
+	 * Test marshal
+	 */
+	@Test
+	public void testSimpleArealressursGrenseType_marshal() throws Exception {
+
+
+	    File temp = File.createTempFile("ArealressursGrenseType", ".tmp"); 
+	    
+		ArealressursGrenseType simpleAr5 = daoDummyAr5Classes.simpleAr5Grense();
+		
+		OutputStream os = new FileOutputStream(temp);
+		
+		arealressursFlateTypeJaxb2Helper.getMarshaller().marshal(simpleAr5, new StreamResult(os) );
+		
+		os.close();
+		
+		System.out.println(temp.getAbsolutePath());
+
+	}
 
 }

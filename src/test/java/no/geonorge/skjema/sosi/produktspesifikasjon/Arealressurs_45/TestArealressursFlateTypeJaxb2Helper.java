@@ -102,7 +102,7 @@ public class TestArealressursFlateTypeJaxb2Helper {
 	public void testSimpleArealressursFlateType_marshal() throws ParseException, SAXException, IOException, ParserConfigurationException {
 
 
-	    File temp = File.createTempFile("ArealressursFlateType", ".tmp"); 
+	    File temp = File.createTempFile("ArealressursFlateType", ".gml"); 
 	    
 		ArealressursFlateType simpleAr5 = daoDummyAr5Classes.simpleAr5Flate();
 		
@@ -186,7 +186,7 @@ public class TestArealressursFlateTypeJaxb2Helper {
 	public void testSimpleArealressursGrenseType_marshal() throws Exception {
 
 
-	    File temp = File.createTempFile("ArealressursGrenseType", ".tmp"); 
+	    File temp = File.createTempFile("ArealressursGrenseType", ".gml"); 
 	    
 		ArealressursGrenseType simpleAr5 = daoDummyAr5Classes.simpleAr5Grense();
 		

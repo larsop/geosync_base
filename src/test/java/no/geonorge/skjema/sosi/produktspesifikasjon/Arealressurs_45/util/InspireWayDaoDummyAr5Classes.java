@@ -12,6 +12,7 @@ import opengis.net.gml_3_2_1.gml.AbstractGeometryType;
 import opengis.net.gml_3_2_1.gml.AbstractRingPropertyType;
 import opengis.net.gml_3_2_1.gml.AbstractSurfacePatchType;
 import opengis.net.gml_3_2_1.gml.AbstractSurfaceType;
+import opengis.net.gml_3_2_1.gml.CompositeCurveType;
 import opengis.net.gml_3_2_1.gml.CurvePropertyType;
 import opengis.net.gml_3_2_1.gml.CurveType;
 import opengis.net.gml_3_2_1.gml.LineStringSegmentType;
@@ -64,6 +65,11 @@ public class InspireWayDaoDummyAr5Classes {
 		borderPolygon.setSRID(4258);
 		borderPolygon.setUserData("NO.SK.AR5:");
 
+		if (!borderPolygon.isValid() ) {
+			throw new RuntimeException("not valid " + borderPolygon);
+			
+		}
+
 				
 //		Coordinate[] coordinates = borderPolygon.getCoordinates();
 //		for (Coordinate coordinate : coordinates) {
@@ -75,6 +81,11 @@ public class InspireWayDaoDummyAr5Classes {
 				.read("LINESTRING ("  + p1 + ","+  bs + ")");
 		borderLineString.setSRID(4258);
 		borderLineString.setUserData("NO.SK.AR5:");
+		
+		if (!borderLineString.isValid() ) {
+			throw new RuntimeException("not valid " + borderLineString);
+			
+		}
 
 //		
 //		coordinates = borderPolygon.getCoordinates();
@@ -165,15 +176,18 @@ public class InspireWayDaoDummyAr5Classes {
 
 		
 
-//		// does not work in snowflake
-//		LineStringType polygonType = (LineStringType) JTS2GML321.toGML(borderLineString);
+//		// does not work in snowflake, qgis
+//		// <ar5:grense><gml:LineString srsName="urn:ogc:def:crs:EPSG::4258" gml:id="NO.SK.AR5:-488458468"><gml:posList>5...
+//		LineStringType lineStringType = (LineStringType) JTS2GML321.toGML(borderLineString);
 //		CurvePropertyType curvePropertyType = of.createCurvePropertyType();
-//		JAXBElement<LineStringType> abstractCurve = of.createLineString(polygonType);
+//		JAXBElement<LineStringType> abstractCurve = of.createLineString(lineStringType);
 //		curvePropertyType.setAbstractCurve(abstractCurve);
 //		ar5.setGrense(curvePropertyType );
 		
+
+// use curve snowflake, qgis
+// <ar5:grense><gml:Curve srsName="urn:ogc:def:crs:EPSG::4258" gml:id=""><gml:segments><gml:LineStringSegment><gml:posList>59.7		
 		LineStringType lineStringType = (LineStringType) JTS2GML321.toGML(borderLineString);
-		
 		LineStringSegmentType lineStringSegmentType = of.createLineStringSegmentType();
 		lineStringSegmentType.setPosList(lineStringType.getPosList());
 		JAXBElement<LineStringSegmentType> e = of.createLineStringSegment(lineStringSegmentType);
@@ -186,20 +200,45 @@ public class InspireWayDaoDummyAr5Classes {
 		createCurveType.setId("");
 		String srsName = "urn:ogc:def:crs:EPSG::" + borderLineString.getSRID();
 		createCurveType.setSrsName(srsName);
-
-		
-		
 		JAXBElement<CurveType> abstractCurve = of.createCurve(createCurveType);
-		
-		
 		CurvePropertyType curvePropertyType = of.createCurvePropertyType();
 		curvePropertyType.setAbstractCurve(abstractCurve);
-		
 		ar5.setGrense(curvePropertyType );
 
+
+
+//			// work with qis snowflake
+//			AbstractCurveType compositeCurveType = of.createCompositeCurveType();
+//			compositeCurveType.getCurveMembers().add(curvePropertyType);
+//			
+//			ar5.setGrense(compositeCurveType);
 		
 		
 		
+		
+		/*
+		<gml:CompositeCurveType xmlns:gml="http://www.opengis.net/gml/3.2" srsName="EPSG:4269" gml:id="l185">
+		   <gml:curveMember>
+		      <gml:Curve xmlns:gml="http://www.opengis.net/gml/3.2" gml:id="l185_1">
+		         <gml:segments>
+		            <gml:LineStringSegment>
+		               <gml:posList srsDimension="2">-91.1716151689462 46.8441439939094 -91.1709825689471 46.8442585272425 -91.1703163689482 46.8442359272426 -91.1680853689517 46.8445793939087</gml:posList>
+		            </gml:LineStringSegment>
+		         </gml:segments>
+		      </gml:Curve>
+		   </gml:curveMember>
+		   <gml:curveMember>
+		      <gml:Curve xmlns:gml="http://www.opengis.net/gml/3.2" gml:id="l185_2">
+		         <gml:segments>
+		           <gml:LineStringSegment>
+		              <gml:posList srsDimension="2">-91.1727139689444 46.843937927243 -91.1716151689462 46.8441439939094</gml:posList>
+		           </gml:LineStringSegment>
+		         </gml:segments>
+		      </gml:Curve>
+		   </gml:curveMember>
+		</gml:CompositeCurveType>
+
+*/
 		AbstractCodeType avgrensingarealtype = new AbstractCodeType();
 		avgrensingarealtype.setCodeSpace("codespace");
 		avgrensingarealtype.setValue("valueforcodespace");

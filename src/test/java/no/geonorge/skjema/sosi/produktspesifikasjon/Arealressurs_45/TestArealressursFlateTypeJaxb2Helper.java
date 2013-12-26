@@ -99,7 +99,7 @@ public class TestArealressursFlateTypeJaxb2Helper {
 	 * Test marshal
 	 */
 	@Test
-	public void testSimpleArealressursFlateType_marshal() throws ParseException, SAXException, IOException, ParserConfigurationException {
+	public void testSimpleArealressursFlateType_marshal() throws Exception {
 
 
 	    File temp = File.createTempFile("ArealressursFlateType", ".gml"); 
@@ -110,9 +110,10 @@ public class TestArealressursFlateTypeJaxb2Helper {
 		
 		org.springframework.oxm.jaxb.Jaxb2Marshaller marshaller = (Jaxb2Marshaller) arealressursFlateTypeJaxb2Helper.getMarshaller();
 
-		Map<String, Object> properties = new HashMap<String, Object>();
-		properties.put(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-		((org.springframework.oxm.jaxb.Jaxb2Marshaller) marshaller).setMarshallerProperties(properties);
+//		Map<String, Object> properties = new HashMap<String, Object>() ;
+//		properties.put(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+//		properties.put(javax.xml.bind.Marshaller.JAXB_SCHEMA_LOCATION, "http://skjema.geonorge.no/SOSI/produktspesifikasjon/Arealressurs/4.5 http://geosynkronisering.no/files/skjema/Arealressurs/4.5/FKB_AR5.xsd http://skjema.geonorge.no/standard/geosynkronisering/1.0/endringslogg http://www.geosynkronisering.no/files/skjema/1.0/changelogfile.xsd http://skjema.geonorge.no/SOSI/produktspesifikasjon/PrimaerdataKystkontur/1.0 http://www.geosynkronisering.no/files/skjema/Kyst/PrimaerdataKystkontur.xsd");
+//		((org.springframework.oxm.jaxb.Jaxb2Marshaller) marshaller).setMarshallerProperties(properties);
 
 		marshaller.marshal(simpleAr5, new StreamResult(os) );
 		

@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:oxm="http://www.springframework.org/schema/oxm"
+	xmlns:util="http://www.springframework.org/schema/util"
 	xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-       http://www.springframework.org/schema/oxm http://www.springframework.org/schema/oxm/spring-oxm-3.0.xsd">
+       http://www.springframework.org/schema/oxm http://www.springframework.org/schema/oxm/spring-oxm-3.0.xsd
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd">
 
 	<bean id="changeLogMarshallerHelper"
 		class="no.geonorge.skjema.changelogfile.util.ChangeLogMarshallerHelper">
@@ -19,6 +21,34 @@
 				<value>no.geonorge.skjema.changelogfile</value>
 			</list>
 		</property>
+
+		<property name="marshallerProperties">
+			<map>
+
+				<entry>
+					<key>
+						<util:constant static-field="javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT" />
+					</key>
+					<value type="java.lang.Boolean">true</value>
+				</entry>
+
+				<entry>
+					<key>
+						<util:constant static-field="javax.xml.bind.Marshaller.JAXB_ENCODING" />
+					</key>
+					<value type="java.lang.String">utf-8</value>
+				</entry>
+
+				<entry>
+					<key>
+						<util:constant static-field="javax.xml.bind.Marshaller.JAXB_SCHEMA_LOCATION" />
+					</key>
+					<value type="java.lang.String">http://skjema.geonorge.no/standard/geosynkronisering/1.0/endringslogg http://www.geosynkronisering.no/files/skjema/1.0/changelogfile.xsd  http://skjema.geonorge.no/SOSI/produktspesifikasjon/Arealressurs/4.5 http://geosynkronisering.no/files/skjema/Arealressurs/4.5/FKB_AR5.xsd http://skjema.geonorge.no/SOSI/produktspesifikasjon/PrimaerdataKystkontur/1.0 http://www.geosynkronisering.no/files/skjema/Kyst/PrimaerdataKystkontur.xsd</value>
+				</entry>
+
+			</map>
+		</property>
+
 	</bean>
 
 
@@ -37,6 +67,33 @@
 				<value>net.opengis.*</value>
 			</list>
 		</property>
+
+		<property name="marshallerProperties">
+			<map>
+				<entry>
+					<key>
+						<util:constant static-field="javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT" />
+					</key>
+					<value type="java.lang.Boolean">true</value>
+				</entry>
+				<entry>
+					<key>
+						<util:constant static-field="javax.xml.bind.Marshaller.JAXB_ENCODING" />
+					</key>
+					<value type="java.lang.String">utf-8</value>
+				</entry>
+
+				<entry>
+					<key>
+						<util:constant static-field="javax.xml.bind.Marshaller.JAXB_SCHEMA_LOCATION" />
+					</key>
+					<value type="java.lang.String">http://skjema.geonorge.no/SOSI/produktspesifikasjon/Arealressurs/4.5 http://geosynkronisering.no/files/skjema/Arealressurs/4.5/FKB_AR5.xsd http://skjema.geonorge.no/SOSI/produktspesifikasjon/PrimaerdataKystkontur/1.0 http://www.geosynkronisering.no/files/skjema/Kyst/PrimaerdataKystkontur.xsd</value>
+				</entry>
+
+			</map>
+		</property>
+
+
 	</bean>
 
 </beans>

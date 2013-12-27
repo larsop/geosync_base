@@ -186,35 +186,9 @@ public class InspireWayDaoDummyAr5Classes {
 		
 
 // use curve snowflake, qgis
-// <ar5:grense><gml:Curve srsName="urn:ogc:def:crs:EPSG::4258" gml:id=""><gml:segments><gml:LineStringSegment><gml:posList>59.7		
-		LineStringType lineStringType = (LineStringType) JTS2GML321.toGML(borderLineString);
-		LineStringSegmentType lineStringSegmentType = of.createLineStringSegmentType();
-		lineStringSegmentType.setPosList(lineStringType.getPosList());
-		JAXBElement<LineStringSegmentType> e = of.createLineStringSegment(lineStringSegmentType);
-		SegmentsElement segments = of.createSegmentsElement();
-		segments.getAbstractCurveSegments().add(e);
-		CurveType createCurveType = of.createCurveType();
-		createCurveType.setSegments(segments );
+		//CurvePropertyType curvePropertyType2 = createCompositeCurveType(of,borderLineString);
+		CurvePropertyType curvePropertyType2 = creatCurveType(of,borderLineString);
 		
-		// a hack to set id
-		createCurveType.setId(""+ borderLineString.getUserData() + borderLineString.hashCode());
-		String srsName = "urn:ogc:def:crs:EPSG::" + borderLineString.getSRID();
-		createCurveType.setSrsName(srsName);
-		JAXBElement<CurveType> abstractCurve = of.createCurve(createCurveType);
-		CurvePropertyType curvePropertyType = of.createCurvePropertyType();
-		curvePropertyType.setAbstractCurve(abstractCurve);
-
-
-
-			// work with qis snowflake
-			CompositeCurveType compositeCurveType = of.createCompositeCurveType();
-			compositeCurveType.getCurveMembers().add(curvePropertyType);
-
-			CurvePropertyType curvePropertyType2 = of.createCurvePropertyType();
-			
-			AbstractCurveType act = compositeCurveType;
-			JAXBElement<CompositeCurveType> createCompositeCurve = of.createCompositeCurve(compositeCurveType);
-			curvePropertyType2.setAbstractCurve(createCompositeCurve );
 
 			ar5.setGrense(curvePropertyType2);
 		
@@ -264,6 +238,82 @@ public class InspireWayDaoDummyAr5Classes {
 
 
 		return ar5;
+	}
+
+/*	
+	<gml:Curve srsName="urn:ogc:def:crs:EPSG::4258" gml:id="NO.SK.PKYST.KURVEMEDLEM333333">
+    <gml:segments>
+       <gml:LineStringSegment interpolation="linear">
+          <gml:posList>60.5 10.5 60.2 10.2 60.8 10.2 60.8 10.5</gml:posList>
+       </gml:LineStringSegment>
+    </gml:segments>
+ </gml:Curve>
+*/
+	
+	private static CurvePropertyType creatCurveType(opengis.net.gml_3_2_1.gml.ObjectFactory of, LineString borderLineString) {
+		
+		LineStringType lineStringType = (LineStringType) JTS2GML321.toGML(borderLineString);
+		LineStringSegmentType lineStringSegmentType = of.createLineStringSegmentType();
+		lineStringSegmentType.setPosList(lineStringType.getPosList());
+		JAXBElement<LineStringSegmentType> e = of.createLineStringSegment(lineStringSegmentType);
+		SegmentsElement segments = of.createSegmentsElement();
+		segments.getAbstractCurveSegments().add(e);
+		CurveType createCurveType = of.createCurveType();
+		createCurveType.setSegments(segments );
+		
+		// a hack to set id
+		createCurveType.setId(""+ borderLineString.getUserData() + borderLineString.hashCode());
+		String srsName = "urn:ogc:def:crs:EPSG::" + borderLineString.getSRID();
+		createCurveType.setSrsName(srsName);
+		JAXBElement<CurveType> abstractCurve = of.createCurve(createCurveType);
+		CurvePropertyType curvePropertyType = of.createCurvePropertyType();
+		curvePropertyType.setAbstractCurve(abstractCurve);
+
+		return curvePropertyType;
+	}
+
+ 
+	/*
+	<ar5:grense>
+    <gml:CompositeCurve>
+        <gml:curveMember>
+            <gml:Curve srsName="urn:ogc:def:crs:EPSG::4258" gml:id="NO.SK.AR5:-488458468">
+                <gml:segments>
+                    <gml:LineStringSegment>
+                        <gml:posList>59.766215682960826 
+
+                        */
+	private static CurvePropertyType createCompositeCurveType(opengis.net.gml_3_2_1.gml.ObjectFactory of, LineString borderLineString) {
+		
+		LineStringType lineStringType = (LineStringType) JTS2GML321.toGML(borderLineString);
+		LineStringSegmentType lineStringSegmentType = of.createLineStringSegmentType();
+		lineStringSegmentType.setPosList(lineStringType.getPosList());
+		JAXBElement<LineStringSegmentType> e = of.createLineStringSegment(lineStringSegmentType);
+		SegmentsElement segments = of.createSegmentsElement();
+		segments.getAbstractCurveSegments().add(e);
+		CurveType createCurveType = of.createCurveType();
+		createCurveType.setSegments(segments );
+		
+		// a hack to set id
+		createCurveType.setId(""+ borderLineString.getUserData() + borderLineString.hashCode());
+		String srsName = "urn:ogc:def:crs:EPSG::" + borderLineString.getSRID();
+		createCurveType.setSrsName(srsName);
+		JAXBElement<CurveType> abstractCurve = of.createCurve(createCurveType);
+		CurvePropertyType curvePropertyType = of.createCurvePropertyType();
+		curvePropertyType.setAbstractCurve(abstractCurve);
+
+
+
+			// work with qis snowflake
+			CompositeCurveType compositeCurveType = of.createCompositeCurveType();
+			compositeCurveType.getCurveMembers().add(curvePropertyType);
+
+			CurvePropertyType curvePropertyType2 = of.createCurvePropertyType();
+			
+			AbstractCurveType act = compositeCurveType;
+			JAXBElement<CompositeCurveType> createCompositeCurve = of.createCompositeCurve(compositeCurveType);
+			curvePropertyType2.setAbstractCurve(createCompositeCurve );
+		return curvePropertyType2;
 	}
 
 }

@@ -59,7 +59,7 @@ public class TestChangelogMarshalAr5 {
 		ArrayList<WSFOperation> wfsOperationList = new ArrayList<>();
 		ArrayList<Object> arrayList = new ArrayList<>();
 		arrayList.add(daoDummyAr5Classes.simpleAr5Flate());
-		//arrayList.add(daoDummyAr5Classes.simpleAr5Grense());
+		arrayList.add(daoDummyAr5Classes.simpleAr5Grense());
 
 		int operationNumber = 0;
 		for (Object object : arrayList) {

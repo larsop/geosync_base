@@ -197,21 +197,26 @@ public class InspireWayDaoDummyAr5Classes {
 		createCurveType.setSegments(segments );
 		
 		// a hack to set id
-		createCurveType.setId("");
+		createCurveType.setId(""+ borderLineString.getUserData() + borderLineString.hashCode());
 		String srsName = "urn:ogc:def:crs:EPSG::" + borderLineString.getSRID();
 		createCurveType.setSrsName(srsName);
 		JAXBElement<CurveType> abstractCurve = of.createCurve(createCurveType);
 		CurvePropertyType curvePropertyType = of.createCurvePropertyType();
 		curvePropertyType.setAbstractCurve(abstractCurve);
-		ar5.setGrense(curvePropertyType );
 
 
 
-//			// work with qis snowflake
-//			AbstractCurveType compositeCurveType = of.createCompositeCurveType();
-//			compositeCurveType.getCurveMembers().add(curvePropertyType);
-//			
-//			ar5.setGrense(compositeCurveType);
+			// work with qis snowflake
+			CompositeCurveType compositeCurveType = of.createCompositeCurveType();
+			compositeCurveType.getCurveMembers().add(curvePropertyType);
+
+			CurvePropertyType curvePropertyType2 = of.createCurvePropertyType();
+			
+			AbstractCurveType act = compositeCurveType;
+			JAXBElement<CompositeCurveType> createCompositeCurve = of.createCompositeCurve(compositeCurveType);
+			curvePropertyType2.setAbstractCurve(createCompositeCurve );
+
+			ar5.setGrense(curvePropertyType2);
 		
 		
 		
@@ -243,6 +248,20 @@ public class InspireWayDaoDummyAr5Classes {
 		avgrensingarealtype.setCodeSpace("codespace");
 		avgrensingarealtype.setValue("valueforcodespace");
 		ar5.setAvgrensingType(avgrensingarealtype);
+		
+		{
+			PosisjonskvalitetPropertyType kvalitet = new PosisjonskvalitetPropertyType();
+			PosisjonskvalitetType value = new PosisjonskvalitetType();
+			value.setNøyaktighet(new BigInteger("10"));
+
+			value.setSynbarhet(makeAbstractType("10"));
+
+			kvalitet.setPosisjonskvalitet(value);
+			ar5.setKvalitet(kvalitet);
+
+		}
+
+
 
 		return ar5;
 	}

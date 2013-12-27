@@ -4,8 +4,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.stream.StreamResult;
@@ -91,12 +89,7 @@ public class TestChangelogMarshalAr5 {
 
 		FileOutputStream os = null;
 		try {
-			Map<String, Object> properties = new HashMap<String, Object>();
-			properties.put(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-			((org.springframework.oxm.jaxb.Jaxb2Marshaller) marshaller).setMarshallerProperties(properties);
-
-			os = new FileOutputStream("/tmp/log.xml");
-			// marshaller.marshal(simpleAr5, (Result) System.out);
+				os = new FileOutputStream("/tmp/log.xml");
 			marshaller.marshal(transactionCollection, new StreamResult(os));
 
 		} catch (Exception e1) {
@@ -145,12 +138,7 @@ public class TestChangelogMarshalAr5 {
 
 		FileOutputStream os = null;
 		try {
-			Map<String, Object> properties = new HashMap<String, Object>();
-			properties.put(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-			((org.springframework.oxm.jaxb.Jaxb2Marshaller) marshaller).setMarshallerProperties(properties);
-
 			os = new FileOutputStream("/tmp/insert.xml");
-			// marshaller.marshal(simpleAr5, (Result) System.out);
 			marshaller.marshal(transactionCollection, new StreamResult(os));
 
 		} catch (Exception e1) {

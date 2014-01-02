@@ -5,13 +5,15 @@ import java.util.Calendar;
 
 import javax.xml.bind.JAXBElement;
 
+import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ArealressursFlateType;
+import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ArealressursGrenseType;
+import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.IdentifikasjonPropertyType;
+import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.IdentifikasjonType;
+import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.PosisjonskvalitetPropertyType;
+import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.PosisjonskvalitetType;
+import no.geonorge.skjema.util.gml_geos.inspire.JTS2GML321;
 import opengis.net.gml_3_2_1.gml.AbstractCodeType;
-import opengis.net.gml_3_2_1.gml.AbstractCurveSegmentType;
 import opengis.net.gml_3_2_1.gml.AbstractCurveType;
-import opengis.net.gml_3_2_1.gml.AbstractGeometryType;
-import opengis.net.gml_3_2_1.gml.AbstractRingPropertyType;
-import opengis.net.gml_3_2_1.gml.AbstractSurfacePatchType;
-import opengis.net.gml_3_2_1.gml.AbstractSurfaceType;
 import opengis.net.gml_3_2_1.gml.CompositeCurveType;
 import opengis.net.gml_3_2_1.gml.CurvePropertyType;
 import opengis.net.gml_3_2_1.gml.CurveType;
@@ -19,28 +21,9 @@ import opengis.net.gml_3_2_1.gml.LineStringSegmentType;
 import opengis.net.gml_3_2_1.gml.LineStringType;
 import opengis.net.gml_3_2_1.gml.PolygonType;
 import opengis.net.gml_3_2_1.gml.SegmentsElement;
-import opengis.net.gml_3_2_1.gml.SurfacePatchArrayPropertyType;
 import opengis.net.gml_3_2_1.gml.SurfacePropertyType;
-import opengis.net.gml_3_2_1.gml.SurfaceType;
 
-import org.hibernate.jdbc.BorrowedConnectionProxy;
-import org.junit.Before;
-import org.w3._1999.xlink.ActuateType;
-import org.w3._1999.xlink.TypeType;
-
-import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ArealressursFlateType;
-import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ArealressursGrenseType;
-import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.IdentifikasjonPropertyType;
-import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.IdentifikasjonType;
-import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ObjectFactory;
-import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.PosisjonskvalitetPropertyType;
-import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.PosisjonskvalitetType;
-import no.geonorge.skjema.util.gml_geos.inspire.JTS2GML321;
-
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.LinearRing;
 import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.io.WKTReader;
@@ -128,6 +111,7 @@ public class InspireWayDaoDummyAr5Classes {
 
 			kvalitet.setPosisjonskvalitet(value);
 			ar5.setKvalitet(kvalitet);
+			value.setMålemetode(makeAbstractType("12"));
 
 		}
 
@@ -157,7 +141,7 @@ public class InspireWayDaoDummyAr5Classes {
 
 	private AbstractCodeType makeAbstractType(String xv) {
 		AbstractCodeType abstractCodeType = new AbstractCodeType();
-		// abstractCodeType.setCodeSpace("codespace");
+		abstractCodeType.setCodeSpace("codespace?????");
 		abstractCodeType.setValue(xv);
 		return abstractCodeType;
 	}
@@ -218,10 +202,7 @@ public class InspireWayDaoDummyAr5Classes {
 		</gml:CompositeCurveType>
 
 */
-		AbstractCodeType avgrensingarealtype = new AbstractCodeType();
-		avgrensingarealtype.setCodeSpace("codespace");
-		avgrensingarealtype.setValue("valueforcodespace");
-		ar5.setAvgrensingType(avgrensingarealtype);
+		ar5.setAvgrensingType(makeAbstractType("12"));
 		
 		{
 			PosisjonskvalitetPropertyType kvalitet = new PosisjonskvalitetPropertyType();
@@ -232,6 +213,9 @@ public class InspireWayDaoDummyAr5Classes {
 
 			kvalitet.setPosisjonskvalitet(value);
 			ar5.setKvalitet(kvalitet);
+			
+			
+			value.setMålemetode(makeAbstractType("12"));
 
 		}
 

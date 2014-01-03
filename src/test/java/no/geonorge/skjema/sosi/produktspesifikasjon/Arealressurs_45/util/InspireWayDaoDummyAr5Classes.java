@@ -92,26 +92,27 @@ public class InspireWayDaoDummyAr5Classes {
 		v.setIdentifikasjon(v1);
 		ar5.setIdentifikasjon(v);
 
-		ar5.setArealtype(makeAbstractType("12"));
+		ar5.setArealtype(makeAbstractType("12", "ArealressursArealtype"));
 
-		ar5.setSkogbonitet(makeAbstractType("98"));
+		ar5.setSkogbonitet(makeAbstractType("98", "ArealressursSkogbonitet"));
 
-		ar5.setTreslag(makeAbstractType("98"));
+		ar5.setTreslag(makeAbstractType("98", "ArealressursTreslag"));
 
-		ar5.setGrunnforhold(makeAbstractType("98"));
+		ar5.setGrunnforhold(makeAbstractType("98", "ArealressursGrunnforhold"));
 
-		ar5.setKartstandard(makeAbstractType("98"));
+		ar5.setKartstandard(makeAbstractType("AR5", "ArealressursKartstandard"));
 
 		{
-			PosisjonskvalitetPropertyType kvalitet = new PosisjonskvalitetPropertyType();
-			PosisjonskvalitetType value = new PosisjonskvalitetType();
-			value.setNøyaktighet(new BigInteger("10"));
+			PosisjonskvalitetPropertyType posisjonskvalitetPropertyType = new PosisjonskvalitetPropertyType();
+			PosisjonskvalitetType posisjonskvalitetType = new PosisjonskvalitetType();
+			posisjonskvalitetPropertyType.setPosisjonskvalitet(posisjonskvalitetType);
+			ar5.setKvalitet(posisjonskvalitetPropertyType);
 
-			value.setSynbarhet(makeAbstractType("10"));
-
-			kvalitet.setPosisjonskvalitet(value);
-			ar5.setKvalitet(kvalitet);
-			value.setMålemetode(makeAbstractType("12"));
+			posisjonskvalitetType.setNøyaktighet(new BigInteger("10"));
+			posisjonskvalitetType.setSynbarhet(makeAbstractType("10", "Synbarhet"));
+			posisjonskvalitetType.setMålemetode(makeAbstractType("12","Målemetode"));
+			
+			
 
 		}
 
@@ -139,10 +140,23 @@ public class InspireWayDaoDummyAr5Classes {
 		return ar5;
 	}
 
-	private AbstractCodeType makeAbstractType(String xv) {
+	/*
+	    <ar5:arealtype codeSpace="http://www.geosynkronisering.no/files/skjema/Arealressurs/4.5/ArealressursArealtype.xml">12</ar5:arealtype>
+        <ar5:skogbonitet codeSpace="http://www.geosynkronisering.no/files/skjema/Arealressurs/4.5/ArealressursSkogbonitet.xml">98</ar5:skogbonitet>
+        <ar5:treslag codeSpace="http://www.geosynkronisering.no/files/skjema/Arealressurs/4.5/ArealressursTreslag.xml">98</ar5:treslag>
+        <ar5:grunnforhold codeSpace="http://www.geosynkronisering.no/files/skjema/Arealressurs/4.5/ArealressursGrunnforhold.xml">98</ar5:grunnforhold>
+        <ar5:kartstandard codeSpace="http://www.geosynkronisering.no/files/skjema/Arealressurs/4.5/ArealressursKartstandard.xml">AR5</ar5:kartstandard>
+
+	 */
+	private AbstractCodeType makeAbstractType(String value, String codeSpaceType) {
 		AbstractCodeType abstractCodeType = new AbstractCodeType();
-		abstractCodeType.setCodeSpace("codespace?????");
-		abstractCodeType.setValue(xv);
+		
+		//String codeSpaceTypeNew = codeSpaceType.substring(0, 1).toUpperCase() + codeSpaceType.substring(1).toLowerCase();
+		
+		String codeSpace = "http://www.geosynkronisering.no/files/skjema/Arealressurs/4.5/" + codeSpaceType +".xml";
+				
+		abstractCodeType.setCodeSpace(codeSpace);
+		abstractCodeType.setValue(value);
 		return abstractCodeType;
 	}
 
@@ -202,20 +216,17 @@ public class InspireWayDaoDummyAr5Classes {
 		</gml:CompositeCurveType>
 
 */
-		ar5.setAvgrensingType(makeAbstractType("12"));
+		ar5.setAvgrensingType(makeAbstractType("12","ArealressursAvgrensingType"));
 		
 		{
-			PosisjonskvalitetPropertyType kvalitet = new PosisjonskvalitetPropertyType();
-			PosisjonskvalitetType value = new PosisjonskvalitetType();
-			value.setNøyaktighet(new BigInteger("10"));
+			PosisjonskvalitetPropertyType posisjonskvalitetPropertyType = new PosisjonskvalitetPropertyType();
+			PosisjonskvalitetType posisjonskvalitetType = new PosisjonskvalitetType();
+			posisjonskvalitetPropertyType.setPosisjonskvalitet(posisjonskvalitetType);
+			ar5.setKvalitet(posisjonskvalitetPropertyType);
 
-			value.setSynbarhet(makeAbstractType("10"));
-
-			kvalitet.setPosisjonskvalitet(value);
-			ar5.setKvalitet(kvalitet);
-			
-			
-			value.setMålemetode(makeAbstractType("12"));
+			posisjonskvalitetType.setNøyaktighet(new BigInteger("10"));
+			posisjonskvalitetType.setSynbarhet(makeAbstractType("10", "Synbarhet"));
+			posisjonskvalitetType.setMålemetode(makeAbstractType("12","Målemetode"));
 
 		}
 

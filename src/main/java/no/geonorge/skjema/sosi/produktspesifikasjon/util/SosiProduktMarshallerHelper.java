@@ -60,38 +60,6 @@ public class SosiProduktMarshallerHelper {
 	private Marshaller marshaller;
 	private Unmarshaller unmarshaller;
 
-	/**
-	 * A helper methid to set name spaces
-	 * 
-	 * @param marshaller
-	 */
-	private void setMarshaller(Marshaller marshaller) {
-		this.marshaller = marshaller;
-
-//		final NamespacePrefixMapper mapper = new NamespacePrefixMapper() {
-//			@Override
-//			public String getPreferredPrefix(String s, String s2, boolean b) {
-//				if ("http://www.opengis.net/gml/3.2".equals(s)) {
-//					return "gml";
-//				} else if ("http://skjema.geonorge.no/standard/geosynkronisering/1.0/produkt".equals(s)) {
-//					return "chlogf";
-//				} else if ("http://www.opengis.net/fes/2.0".equals(s)) {
-//					return "fes";
-//				} else if ("http://www.opengis.net/wfs/2.0".equals(s)) {
-//					return "wfs";
-//				} else if ("http://skjema.geonorge.no/SOSI/produktspesifikasjon/Arealressurs/4.5".equals(s)) {
-//					return "ar5";
-//				} else {
-//					return s2;
-//				}
-//			}
-//		};
-//		((Jaxb2Marshaller) marshaller).setMarshallerProperties(new HashMap<String, Object>() {
-//			{
-//				put("com.sun.xml.internal.bind.namespacePrefixMapper", mapper);
-//			}
-//		});
-	}
 
 	/**
 	 * 
@@ -102,7 +70,7 @@ public class SosiProduktMarshallerHelper {
 		if (logger.isDebugEnabled()) {
 			logger.debug("enter");
 		}
-		setMarshaller(m);
+		this.marshaller = m;
 		this.unmarshaller = (Unmarshaller) m;
 
 		if (logger.isDebugEnabled()) {

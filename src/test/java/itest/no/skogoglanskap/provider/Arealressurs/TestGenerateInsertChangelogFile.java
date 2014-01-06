@@ -11,7 +11,9 @@ import java.math.BigInteger;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Iterator;
 
 import javax.xml.bind.JAXBElement;
 
@@ -39,7 +41,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.MultiLineString;
 import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.io.WKTReader;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -60,12 +68,97 @@ public class TestGenerateInsertChangelogFile {
 	@Test
 	public void testMappingOfAr5FlateProvSimpleFeatureEntity() throws Exception {
 
+		// add 2 polygons with a commmon border
 		ArrayList<Ar5FlateProvSimpleFeatureEntity> providerData = new ArrayList<>();
+		providerData.add(addPolygonOne());
+		providerData.add(addPolygonTwo());
 
+
+		// this the list of surface objects
+		ArrayList<ArealressursFlateType> subscriberSurfcaeData = new ArrayList<>();
+		// this the list of common border objects
+		ArrayList<ArealressursGrenseType> subscriberBorderData = new ArrayList<>();
+		ArrayList<LineString> lineStrings = new ArrayList<LineString>();
+
+
+		Assert.assertTrue("To few rows created " + providerData.size(), providerData.size() > 0);
+
+		TestConver testConver = new TestConver();
+
+		GeometryFactory gf = new GeometryFactory();
+
+		// convert from local provider format to the format used by the changelog files
+		for (Ar5FlateProvSimpleFeatureEntity aa : providerData) {
+			
+			// convert the surface object
+			ArealressursFlateType ar5 = testConver.convert2ArealressursFlateType(aa);
+			subscriberSurfcaeData.add(ar5);
+			
+			Assert.assertNotNull("new object should not be null", ar5);
+
+			Assert.assertEquals(aa.getArkartstd(), ar5.getKartstandard().getValue());
+			
+			Assert.assertEquals(""+aa.getArtype(), ar5.getArealtype().getValue());
+			
+			//Assert.assertEquals(aa.getGeo().getArea(), borderPolygon.getArea(),0);
+			
+			// the border object from the simple feature object
+			
+			Polygon p = (Polygon) aa.getGeo();
+
+			
+			LineString exteriorRing = p.getExteriorRing();
+			
+			LineString lineString = getLineString(exteriorRing, gf);
+			
+			lineStrings.add(lineString);
+//			lineStrings.add(lineString);
+//			lineStrings.add(lineString);
+			
+
+		}
+		
+		// find common border 
+		// convert from local provider format to the format used by the changelog files
+		
+		
+		LineString[] lineStringsTable = lineStrings.toArray(new LineString[lineStrings.size()]);
+		
+		MultiLineString createMultiLineString = gf.createMultiLineString(lineStringsTable);
+		
+		Geometry union = createMultiLineString.union();
+		
+		;
+		
+		for (int i = 0; i < union.getNumGeometries(); i++) {
+			Geometry g = union.getGeometryN(i);
+			System.out.println(g.getGeometryType() + ":" + g.toText());
+			
+			
+		}
+		
+		
+		
+		
+		
+		
+
+	}
+
+	private LineString getLineString(LineString exteriorRing, GeometryFactory gf) {
+		Coordinate[] coordinates = exteriorRing.getCoordinates();
+		Coordinate[] coordinatesRemovedFirstPoint = Arrays.copyOfRange(coordinates, 1, coordinates.length);
+		LineString createLineString = gf.createLineString(coordinatesRemovedFirstPoint);
+		Assert.assertTrue("Linstring is not valid ", createLineString.isValid());
+		
+		return createLineString;
+	}
+
+	private Ar5FlateProvSimpleFeatureEntity addPolygonOne() throws ParseException, java.text.ParseException {
 		WKTReader reader = new WKTReader();
 
 		Polygon borderPolygon = (Polygon) reader
-				.read("POLYGON ((59.310381 4.905230,59.310370 4.905192,59.310560 4.905556,59.310572 4.905556,59.310572 4.905582,59.310381 4.905582,59.310381 4.905230, 59.310381 4.905230))");
+				.read("POLYGON ((59.310381 4.905230,59.310560 4.905556,59.310572 4.905556,59.310572 4.905582,59.310381 4.905582,59.310381 4.905230, 59.310381 4.905230))");
 		borderPolygon.setSRID(4258);
 		borderPolygon.setUserData("NO.SK.AR5:");
 
@@ -81,13 +174,11 @@ public class TestGenerateInsertChangelogFile {
 		java.text.SimpleDateFormat formatter = new java.text.SimpleDateFormat("yyyyMMdd");
 		ar5f.setDatafangstdato(formatter.parse("20040801"));
 		ar5f.setVerifiseringsdato(formatter.parse("20120502"));
-
-//		missing valus from Fysak
-		ar5f.setKartblad("k");
-		ar5f.setKjoringsident(new Date(System.currentTimeMillis()));
+		
+		// Nøyaktighet is not used on flate in Ar5
+		
+		// missing from gml sosi file 
 		ar5f.setMaalemetode(new Byte("01"));
-		ar5f.setNoyaktighet(1);
-		ar5f.setObjtype("objtyp");
 		ar5f.setSynbarhet(new Byte("01"));
 
 		// not handle from gml
@@ -96,36 +187,66 @@ public class TestGenerateInsertChangelogFile {
 		// <sgm:REGISTRERINGSVERSJON>FKB-AR5 "4.5 20140101"</sgm:REGISTRERINGSVERSJON>
 
 		// todo handle grense
-		ArealressursGrenseType ar5g = new ArealressursGrenseType();
+		// ArealressursGrenseType ar5g = new ArealressursGrenseType();
+		return ar5f;
+	}
+	
+	private Ar5FlateProvSimpleFeatureEntity addPolygonTwo() throws ParseException, java.text.ParseException {
+		WKTReader reader = new WKTReader();
+
+		Polygon borderPolygon = (Polygon) reader
+				.read("POLYGON ((59.310381 4.905230,59.310560 4.905556,59.310572 4.905556,59.310572 4.905582,59.310381 4.905582,59.310381 4.905230, 59.310381 4.905230))");
 		
 		
+		borderPolygon.setSRID(4258);
+		borderPolygon.setUserData("NO.SK.AR5:");
+
+		Assert.assertTrue("Boder not valid", borderPolygon.isValid());
+
+		Ar5FlateProvSimpleFeatureEntity ar5f = new Ar5FlateProvSimpleFeatureEntity();
+		ar5f.setGeo(borderPolygon);
+		ar5f.setArtype(new Byte("31"));
+		ar5f.setArtreslag(new Byte("33"));
+		ar5f.setArskogbon(new Byte("15"));
+		ar5f.setArgrunnf(new Byte("45"));
+		ar5f.setArkartstd("AR5");
+		java.text.SimpleDateFormat formatter = new java.text.SimpleDateFormat("yyyyMMdd");
+		ar5f.setDatafangstdato(formatter.parse("20040801"));
+		ar5f.setVerifiseringsdato(formatter.parse("20120502"));
 		
+		// Nøyaktighet is not used on flate in Ar5
 		
-		providerData.add(ar5f);
+		// missing from gml sosi file 
+		ar5f.setMaalemetode(new Byte("01"));
+		ar5f.setSynbarhet(new Byte("01"));
 
-		Assert.assertTrue("To few rows created " + providerData.size(), providerData.size() > 0);
+		// not handle from gml
+		// <sgm:KVALITET>82</sgm:KVALITET>
+		// <sgm:OPPHAV>Skogoglandskap</sgm:OPPHAV>
+		// <sgm:REGISTRERINGSVERSJON>FKB-AR5 "4.5 20140101"</sgm:REGISTRERINGSVERSJON>
 
-		TestConver testConver = new TestConver();
-
-		for (Ar5FlateProvSimpleFeatureEntity aa : providerData) {
-
-			ArealressursFlateType ar5 = testConver.convert2ArealressursFlateType(aa);
-			Assert.assertNotNull("new object should not be null", ar5);
-
-			Assert.assertEquals(aa.getArkartstd(), ar5.getKartstandard().getValue());
-
-		}
-
+		// todo handle grense
+		// ArealressursGrenseType ar5g = new ArealressursGrenseType();
+		return ar5f;
 	}
 
+
+	/**
+	 * This is a simple class that converts data from a internal ar5format used at Skogoglandskap and the format used
+	 *  
+	 * @author lop
+	 *
+	 */
 	private class TestConver implements IConvert2ArealressursFlateType {
+
+		opengis.net.gml_3_2_1.gml.ObjectFactory of = new opengis.net.gml_3_2_1.gml.ObjectFactory();
+		no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ObjectFactory ofar5 = new no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ObjectFactory();
 
 		@Override
 		public ArealressursFlateType convert2ArealressursFlateType(Object input) {
 			
 			Ar5FlateProvSimpleFeatureEntity a = (Ar5FlateProvSimpleFeatureEntity) input;
 			
-			no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ObjectFactory ofar5 = new no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ObjectFactory();
 
 			ArealressursFlateType ar5 = ofar5.createArealressursFlateType();
 
@@ -151,17 +272,19 @@ public class TestGenerateInsertChangelogFile {
 				posisjonskvalitetPropertyType.setPosisjonskvalitet(posisjonskvalitetType);
 				ar5.setKvalitet(posisjonskvalitetPropertyType);
 
-				posisjonskvalitetType.setNøyaktighet(new BigInteger("10"));
-				posisjonskvalitetType.setSynbarhet(makeAbstractType("10", "Synbarhet"));
-				posisjonskvalitetType.setMålemetode(makeAbstractType("12","Målemetode"));
+				// posisjonskvalitetType.setNøyaktighet(new BigInteger("10"));
+				// not used on flate
+				posisjonskvalitetType.setSynbarhet(makeAbstractType(""+a.getSynbarhet(), "Synbarhet"));
+				posisjonskvalitetType.setMålemetode(makeAbstractType(""+a.getMaalemetode(),"Målemetode"));
 				
 				
 
 			}
 
 			Calendar datafangstdato = Calendar.getInstance();
+			datafangstdato.setTime(a.getDatafangstdato());
+			
 			ar5.setDatafangstdato(datafangstdato);
-			opengis.net.gml_3_2_1.gml.ObjectFactory of = new opengis.net.gml_3_2_1.gml.ObjectFactory();
 			
 			
 			PolygonType polygonType = (PolygonType) JTS2GML321.toGML(a.getGeo());

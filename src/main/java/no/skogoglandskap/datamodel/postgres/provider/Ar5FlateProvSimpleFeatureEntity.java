@@ -52,9 +52,6 @@ public class Ar5FlateProvSimpleFeatureEntity implements java.io.Serializable {
 	@Column(name = "sl_sdeid", unique = true, nullable = false)
 	private Integer sl_sdeid;
 
-	@Column()
-	private String objtype;
-
 	// surface type
 	@Column()
 	private Byte artype;
@@ -78,9 +75,6 @@ public class Ar5FlateProvSimpleFeatureEntity implements java.io.Serializable {
 	private Byte maalemetode;
 
 	@Column()
-	private Integer noyaktighet;
-
-	@Column()
 	private Byte synbarhet;
 
 	@Column()
@@ -91,9 +85,6 @@ public class Ar5FlateProvSimpleFeatureEntity implements java.io.Serializable {
 
 	@Column()
 	private String kartid;
-
-	@Column()
-	private Date kjoringsident;
 
 	// the border of this area type
 	@Column(name = "geo")
@@ -106,9 +97,6 @@ public class Ar5FlateProvSimpleFeatureEntity implements java.io.Serializable {
 	@Column()
 	private String opphav;
 
-	// administrative unit
-	@Column()
-	private String kartblad;
 
 	public Ar5FlateProvSimpleFeatureEntity() {
 	}
@@ -121,18 +109,10 @@ public class Ar5FlateProvSimpleFeatureEntity implements java.io.Serializable {
 	@Override
 	public String toString() {
 		return "MarkslagFlateEntity [areal=" + areal + ", argrunnf=" + argrunnf + ", arkartstd=" + arkartstd + ", arskogbon=" + arskogbon + ", artreslag="
-				+ artreslag + ", artype=" + artype + ", datafangstdato=" + datafangstdato + ",  kartblad=" + kartblad
-				+ ", kartid=" + kartid + ", kjoringsident=" + kjoringsident + ", maalemetode=" + maalemetode + ", noyaktighet=" + noyaktighet + ", objtype="
-				+ objtype + ", opphav=" + opphav + ", sl_sdeid=" + getId() + ", synbarhet=" + synbarhet + ", verifiseringsdato=" + verifiseringsdato + "]";
+				+ artreslag + ", artype=" + artype + ", datafangstdato=" + datafangstdato   
+				+ ", kartid=" + kartid +" , maalemetode=" + maalemetode + ", opphav=" + opphav + ", sl_sdeid=" + getId() + ", synbarhet=" + synbarhet + ", verifiseringsdato=" + verifiseringsdato + "]";
 	}
 
-	public String getObjtype() {
-		return this.objtype;
-	}
-
-	public void setObjtype(String objtype) {
-		this.objtype = objtype;
-	}
 
 	public Byte getArtype() {
 		return this.artype;
@@ -190,13 +170,6 @@ public class Ar5FlateProvSimpleFeatureEntity implements java.io.Serializable {
 		this.maalemetode = maalemetode;
 	}
 
-	public Integer getNoyaktighet() {
-		return this.noyaktighet;
-	}
-
-	public void setNoyaktighet(Integer noyaktighet) {
-		this.noyaktighet = noyaktighet;
-	}
 
 	public Byte getSynbarhet() {
 		return this.synbarhet;
@@ -230,13 +203,6 @@ public class Ar5FlateProvSimpleFeatureEntity implements java.io.Serializable {
 		this.kartid = kartid;
 	}
 
-	public Date getKjoringsident() {
-		return this.kjoringsident;
-	}
-
-	public void setKjoringsident(Date kjoringsident) {
-		this.kjoringsident = kjoringsident;
-	}
 
 	public Geometry getGeo() {
 		return this.geo;
@@ -262,14 +228,6 @@ public class Ar5FlateProvSimpleFeatureEntity implements java.io.Serializable {
 		this.opphav = opphav;
 	}
 
-	public String getKartblad() {
-		return this.kartblad;
-	}
-
-	public void setKartblad(String kartblad) {
-		this.kartblad = kartblad;
-	}
-
 
 	@Override
 	public boolean equals(Object o) {
@@ -280,12 +238,11 @@ public class Ar5FlateProvSimpleFeatureEntity implements java.io.Serializable {
 		Ar5FlateProvSimpleFeatureEntity rhs = (Ar5FlateProvSimpleFeatureEntity) o;
 		return new EqualsBuilder()
 				// .append(sl_sdeid, rhs.sl_sdeid)
-				.append(objtype, rhs.objtype).append(artype, rhs.artype).append(arskogbon, rhs.arskogbon).append(artreslag, rhs.artreslag)
-				.append(argrunnf, rhs.argrunnf).append(areal, rhs.areal).append(maalemetode, rhs.maalemetode).append(noyaktighet, rhs.noyaktighet)
+				.append(artype, rhs.artype).append(arskogbon, rhs.arskogbon).append(artreslag, rhs.artreslag)
+				.append(argrunnf, rhs.argrunnf).append(areal, rhs.areal).append(maalemetode, rhs.maalemetode)
 				.append(synbarhet, rhs.synbarhet).append(verifiseringsdato, rhs.verifiseringsdato).append(datafangstdato, rhs.datafangstdato)
-				.append(kartid, rhs.kartid).append(kjoringsident, rhs.kjoringsident)
+				.append(kartid, rhs.kartid)
 				.append(((geo == null && rhs.geo == null) || geo.equalsExact(rhs.geo)), true).append(arkartstd, rhs.arkartstd).append(opphav, rhs.opphav)
-				.append(kartblad, rhs.kartblad)
 				.isEquals();
 	}
 

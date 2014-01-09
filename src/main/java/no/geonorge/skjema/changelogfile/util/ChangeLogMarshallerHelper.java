@@ -70,7 +70,6 @@ public class ChangeLogMarshallerHelper {
 	private Marshaller marshaller;
 	private Unmarshaller unmarshaller;
 
-	
 	/**
 	 * A Marshaller that handles
 	 * 
@@ -294,7 +293,7 @@ public class ChangeLogMarshallerHelper {
 		DeleteType deleteType = null;
 		AbstractTransactionActionType lastType = null;
 		AbstractTransactionActionType newType = null;
-		SupportedWFSOperationType currentWfsType = null;
+		SupportedWFSOperationType currentWfsOprType = null;
 
 		no.geonorge.skjema.changelogfile.TransactionCollection transactionCollection = new no.geonorge.skjema.changelogfile.TransactionCollection();
 
@@ -315,57 +314,60 @@ public class ChangeLogMarshallerHelper {
 		ArrayList<String> propOrder = new ArrayList<>();
 
 		// used for debug
-		int i = 0; 
-		
+		int i = 0;
+
+		Object lastProduct = null;
+
 		Iterator<WSFOperation> wfsOprListItr = wfsOperationList.iterator();
 		for (Iterator iterator = wfsOprListItr; iterator.hasNext();) {
-			WSFOperation wsfOperation =  (WSFOperation) iterator.next();
-			Object product = wsfOperation.product;
+			WSFOperation wsfOperation = (WSFOperation) iterator.next();
+			Object currentProduct = wsfOperation.product;
 
+			SupportedWFSOperationType wfsOprType = wsfOperation.wfsOperationType;
 			if (logger.isDebugEnabled()) {
-				logger.debug("handle wsfOperation.wfsOperationType " + wsfOperation.wfsOperationType + " for feature nr. " + i);
+				logger.debug("handle wsfOperation.wfsOperationType " + wfsOprType + " for feature nr. " + i);
 			}
 
 			// get in first interation
 			if (qname == null) {
-				qname = getQName(gmlFactory, qname, propOrder, product);
-
+				qname = getQName(gmlFactory, qname, propOrder, currentProduct);
 			}
 
 			boolean aswitchHappend = false;
 
-			switch (wsfOperation.wfsOperationType) {
+			switch (wfsOprType) {
 			case InsertType: {
-				if (currentWfsType == null || !currentWfsType.equals(wsfOperation.wfsOperationType)) {
+
+				if (currentWfsOprType == null || !currentWfsOprType.equals(wfsOprType)) {
 					insertType = new InsertType();
 					insertType.setHandle("" + handle++);
 					aswitchHappend = true;
 					newType = insertType;
-					currentWfsType = wsfOperation.wfsOperationType;
+					currentWfsOprType = wfsOprType;
 				}
-				insertType.getAnies().add(product);
+				insertType.getAnies().add(currentProduct);
 				break;
 			}
 
 			case UpdateType: {
 
-				if (currentWfsType == null || !currentWfsType.equals(wsfOperation.wfsOperationType)) {
+				if (currentWfsOprType == null || !currentWfsOprType.equals(wfsOprType)) {
 					updateType = new UpdateType();
 					updateType.setHandle("" + handle++);
 					aswitchHappend = true;
 					newType = updateType;
-					currentWfsType = wsfOperation.wfsOperationType;
+					currentWfsOprType = wfsOprType;
 				}
 
 				// ar5objectFactory.createIdentifikasjon(value)
 
-				for (Method method : product.getClass().getMethods()) {
+				for (Method method : currentProduct.getClass().getMethods()) {
 					String methodName = method.getName();
 					if (methodName.startsWith("get")) {
 						String valueReferanseValue = methodName.substring(3).toLowerCase();
 
 						if (propOrder.contains(valueReferanseValue)) {
-							Object invoke = method.invoke(product);
+							Object invoke = method.invoke(currentProduct);
 							Object value = getValue(invoke);
 
 							if (value != null) {
@@ -394,13 +396,13 @@ public class ChangeLogMarshallerHelper {
 
 			case DeleleType: {
 				// TODO fix this bad written code
-				if (currentWfsType == null || !currentWfsType.equals(wsfOperation.wfsOperationType)) {
+				if (currentWfsOprType == null || !currentWfsOprType.equals(wfsOprType)) {
 					deleteType = new DeleteType();
 					deleteType.setHandle("" + handle++);
 					deleteType.setTypeName(qname);
 					aswitchHappend = true;
 					newType = deleteType;
-					currentWfsType = wsfOperation.wfsOperationType;
+					currentWfsOprType = wfsOprType;
 				}
 
 				// set filter
@@ -415,18 +417,26 @@ public class ChangeLogMarshallerHelper {
 				break;
 			}
 
+//			// split different objects in different inserts we may need to use this if only one type objects in each insert
+//			if (!aswitchHappend && lastProduct != null && !lastProduct.getClass().getName().equals(currentProduct.getClass().getName())) {
+//				aswitchHappend = true;
+//				currentWfsOprType = null;
+//
+//			}
+
 			// save if a switch or last row or a change in type
 			if ((aswitchHappend && lastType != null) || !wfsOprListItr.hasNext()) {
 				if (logger.isDebugEnabled()) {
-					logger.debug("aswitchHappend has happend for handle wsfOperation.wfsOperationType " + wsfOperation.wfsOperationType + " for feature nr. "
-							+ i + " last type is " + lastType);
+					logger.debug("aswitchHappend has happend for handle wsfOperation.wfsOperationType " + wfsOprType + " for feature nr. " + i
+							+ " last type is " + lastType);
 				}
 
 				addChangelogFeature(lastType, transaction, wfsObjectFactory, wsfOperation);
 			}
 
 			lastType = newType;
-			
+			lastProduct = currentProduct;
+
 			i++;
 
 		}
@@ -482,8 +492,7 @@ public class ChangeLogMarshallerHelper {
 		return qname;
 	}
 
-	private void addChangelogFeature(AbstractTransactionActionType lastType, Transaction transaction, ObjectFactory wfsObjectFactory,
-			WSFOperation wsfOperation) {
+	private void addChangelogFeature(AbstractTransactionActionType lastType, Transaction transaction, ObjectFactory wfsObjectFactory, WSFOperation wsfOperation) {
 
 		JAXBElement<? extends Serializable> abstractTransactionActions = null;
 

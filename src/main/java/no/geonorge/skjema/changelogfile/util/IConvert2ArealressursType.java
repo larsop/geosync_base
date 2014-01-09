@@ -1,5 +1,7 @@
 package no.geonorge.skjema.changelogfile.util;
 
+import java.util.UUID;
+
 import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ArealressursFlateType;
 import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ArealressursGrenseType;
 
@@ -19,7 +21,7 @@ public interface IConvert2ArealressursType {
 	 * @param input
 	 * @return 
 	 */
-	public ArealressursFlateType convert2FlateFromProv(Object input);
+	public ArealressursFlateType convert2FlateFromProv(UUID LokalId, Object input);
 	
 	/**
 	 * Convert the input object to a ArealressursGrenseType. The format of the input object is know by the supplier.
@@ -28,7 +30,7 @@ public interface IConvert2ArealressursType {
 	 * @param input
 	 * @return 
 	 */
-	public ArealressursGrenseType convert2GrenseType(Object input);
+	public ArealressursGrenseType convert2GrenseType(UUID LokalId, Object input);
 	
 	
 	

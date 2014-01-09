@@ -7,70 +7,72 @@ package itest.no.skogoglanskap.provider.Arealressurs;
  *  
  */
 
-
 // 
+import java.io.FileOutputStream;
 import java.math.BigInteger;
-import java.sql.Date;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collection;
-import java.util.Iterator;
+import java.util.UUID;
 
 import javax.xml.bind.JAXBElement;
+import javax.xml.transform.stream.StreamResult;
 
+import no.geonorge.skjema.changelogfile.TransactionCollection;
 import no.geonorge.skjema.changelogfile.util.ChangeLogMarshallerHelper;
 import no.geonorge.skjema.changelogfile.util.IConvert2ArealressursType;
+import no.geonorge.skjema.changelogfile.util.SupportedWFSOperationType;
+import no.geonorge.skjema.changelogfile.util.WSFOperation;
 import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ArealressursFlateType;
 import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ArealressursGrenseType;
 import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.IdentifikasjonPropertyType;
 import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.IdentifikasjonType;
 import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.PosisjonskvalitetPropertyType;
 import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.PosisjonskvalitetType;
-import no.geonorge.skjema.sosi.produktspesifikasjon.util.SosiProduktMarshallerHelper;
+import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.util.InspireWayDaoDummyAr5Classes;
 import no.geonorge.skjema.util.gml_geos.inspire.JTS2GML321;
-import no.geonorge.subscriber.Arealressurs.Ar5FlateEntity;
 import no.skogoglandskap.datamodel.postgres.provider.Ar5FlateProvSimpleFeatureEntity;
-
 import opengis.net.gml_3_2_1.gml.AbstractCodeType;
+import opengis.net.gml_3_2_1.gml.BoundingShapeType;
+import opengis.net.gml_3_2_1.gml.CurvePropertyType;
+import opengis.net.gml_3_2_1.gml.CurveType;
+import opengis.net.gml_3_2_1.gml.EnvelopeType;
+import opengis.net.gml_3_2_1.gml.LineStringSegmentType;
+import opengis.net.gml_3_2_1.gml.LineStringType;
 import opengis.net.gml_3_2_1.gml.PolygonType;
+import opengis.net.gml_3_2_1.gml.SegmentsElement;
 import opengis.net.gml_3_2_1.gml.SurfacePropertyType;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.oxm.Marshaller;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.sun.imageio.plugins.common.BogusColorSpace;
 import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.CoordinateArrays;
 import com.vividsolutions.jts.geom.CoordinateList;
-import com.vividsolutions.jts.geom.CoordinateSequence;
-import com.vividsolutions.jts.geom.CoordinateSequenceFactory;
+import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryCollection;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.LinearRing;
 import com.vividsolutions.jts.geom.MultiLineString;
 import com.vividsolutions.jts.geom.Polygon;
-import com.vividsolutions.jts.geom.impl.CoordinateArraySequence;
 import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.io.WKTReader;
-import com.vividsolutions.jts.operation.linemerge.LineMerger;
 import com.vividsolutions.jts.operation.overlay.snap.GeometrySnapper;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "/geosyncBaseMarshallerAppContext.xml" })
+@ContextConfiguration(locations = { "/testSetup.xml", "/geosyncBaseMarshallerAppContext.xml" })
 public class TestGenerateInsertChangelogFile {
 
 	@Autowired
 	private ChangeLogMarshallerHelper changelogfileJaxb2Helper;
-
-	@Autowired
-	private SosiProduktMarshallerHelper genericMarshaller;
+	
+	
+	
 
 	/**
 	 * Test transfomation of Ar5FlateProvSimpleFeatureEntity ArealressursFlateType used the changelog file
@@ -80,64 +82,61 @@ public class TestGenerateInsertChangelogFile {
 	@Test
 	public void testMappingOfAr5FlateProvSimpleFeatureEntity() throws Exception {
 
-		
-		
 		// add 2 polygons with a commmon border
 		ArrayList<Ar5FlateProvSimpleFeatureEntity> providerData = new ArrayList<>();
 		providerData.add(addPolygonOne());
 		providerData.add(addPolygonTwo());
 
-		// this the list of surface objects
-		ArrayList<ArealressursFlateType> subscriberSurfcaeData = new ArrayList<>();
-		// this the list of common border objects
-		ArrayList<ArealressursGrenseType> subscriberBorderData = new ArrayList<>();
-
 		Assert.assertTrue("To few rows created " + providerData.size(), providerData.size() > 0);
 
-		TestConver testConver = new TestConver();
+		SimpleConverImpl testConver = new SimpleConverImpl();
 
 		GeometryFactory gf = new GeometryFactory();
 
-
 		GeometrySnapper geometrySnapper = null;
-		
+
 		double computeOverlaySnapTolerance = 0.00001;
 
-
-		//LineMerger lm = new LineMerger();
+		// LineMerger lm = new LineMerger();
 		ArrayList<LineString> lineStringsOrg = new ArrayList<LineString>();
 		// find all line strings in all geometries
+		
+
+		Integer srid = null;
+
 		for (Ar5FlateProvSimpleFeatureEntity aa : providerData) {
 
 			Polygon p = (Polygon) aa.getGeo();
+			
+			// not good coding
+			if (srid == null ) {
+				srid = p.getSRID();
+			}
 
 			LineString lineString = getLineString(p.getExteriorRing(), gf);
 			
-//			// test add single linestrings
-//			Coordinate[] coordinates = lineString.getCoordinates();
-//			for (int i = 0; i < coordinates.length - 1; i++) {
-//	
-//				Coordinate[] cp = { coordinates[i], coordinates[i + 1] };
-//				LineString createLineString = gf.createLineString(cp);
-//				lineStringsOrg.add(createLineString);
-//				
-//			}
 
+			// // test add single linestrings
+			// Coordinate[] coordinates = lineString.getCoordinates();
+			// for (int i = 0; i < coordinates.length - 1; i++) {
+			//
+			// Coordinate[] cp = { coordinates[i], coordinates[i + 1] };
+			// LineString createLineString = gf.createLineString(cp);
+			// lineStringsOrg.add(createLineString);
+			//
+			// }
 
 			lineStringsOrg.add(lineString);
 
-			
+			for (int i = 0; i < p.getNumInteriorRing(); i++) {
+				LineString ls = getLineString(p.getInteriorRingN(i), gf);
 
-//			for (int i = 0; i < p.getNumInteriorRing(); i++) {
-//				LineString ls = getLineString(p.getInteriorRingN(i), gf);
-//				Geometry[] snap = geometrySnapper.snap(geometryCollectionOrgMultiLineString, ls, computeOverlaySnapTolerance);
-//				geometryCollectionOrgMultiLineString = snap[0].union(snap[1]);
-//				
-//			}
+				lineStringsOrg.add(ls);
+
+			}
 
 		}
 
-		
 		for (int i = 0; i < lineStringsOrg.size(); i++) {
 			Geometry g = lineStringsOrg.get(i);
 			if (g instanceof LineString) {
@@ -147,214 +146,264 @@ public class TestGenerateInsertChangelogFile {
 			}
 		}
 
-
 		// find common line string
 		// Create a collection of org linestrings
 		MultiLineString geometryCollectionOrgMultiLineString = gf.createMultiLineString(lineStringsOrg.toArray(new LineString[lineStringsOrg.size()]));
-//		
-//		// Get a union of all of the line strings  
-		Geometry newLinstringGeo = geometryCollectionOrgMultiLineString.union();
 
+		// // Get a union of all of the line strings
+		Geometry newLinstringGeo = geometryCollectionOrgMultiLineString.union();
+		
 
 		// hold the list of linstrings after union
 		ArrayList<LineString> lineStringsNew = new ArrayList<LineString>();
+
 		// make a collection of only line strings, remove points and other geos
 		for (int i = 0; i < newLinstringGeo.getNumGeometries(); i++) {
 			Geometry g = newLinstringGeo.getGeometryN(i);
 			if (g instanceof LineString) {
 				g.setUserData(g.hashCode());
 				lineStringsNew.add((LineString) g);
+				g.setSRID(srid);
+				
 				System.out.println("Used " + g.getUserData() + ":" + g.toText());
 			} else {
 				System.out.println("Not used " + g.getUserData() + ":" + g.toText());
 			}
 		}
-		
-//		Collection mergedLineStrings = lm.getMergedLineStrings();
-//		for (Object a : mergedLineStrings) {
-//			Geometry g = (Geometry) a;
-//			if (g instanceof LineString) {
-//				g.setUserData(g.hashCode());
-//				lineStringsNew.add((LineString) g);
-//				System.out.println("Used " + g.getUserData() + ":" + g.toText());
-//			} else {
-//				System.out.println("Not used " + g.getUserData() + ":" + g.toText());
-//			}
-//			
-//		}
-		
-		
+
+		// Collection mergedLineStrings = lm.getMergedLineStrings();
+		// for (Object a : mergedLineStrings) {
+		// Geometry g = (Geometry) a;
+		// if (g instanceof LineString) {
+		// g.setUserData(g.hashCode());
+		// lineStringsNew.add((LineString) g);
+		// System.out.println("Used " + g.getUserData() + ":" + g.toText());
+		// } else {
+		// System.out.println("Not used " + g.getUserData() + ":" + g.toText());
+		// }
+		//
+		// }
+
 		// craete a collection of new linsetrings
-		MultiLineString geometryCollectionNewMultiLineString = gf.createMultiLineString(lineStringsNew.toArray(new LineString[lineStringsNew.size()]));
+		// MultiLineString geometryCollectionNewMultiLineString = gf.createMultiLineString(lineStringsNew.toArray(new LineString[lineStringsNew.size()]));
 
+		// GeometrySnapper geometrySnapper = new GeometrySnapper(commonLinsStringList);
 
-
-		//GeometrySnapper geometrySnapper = new GeometrySnapper(commonLinsStringList);
-
-		// replace the borders with the new linstrings
+		// replace the borders with the new linstrings that are common for all polygons
 		for (Ar5FlateProvSimpleFeatureEntity aa : providerData) {
 
-
-			
 			Polygon p = (Polygon) aa.getGeo();
 
 			// get exterior ring
-			LineString thisLineString = getLineString(p.getExteriorRing(), gf);
+			LineString exteriorLineString = getLineString(p.getExteriorRing(), gf);
 
-			// hold the list linstrings that is of interest for this polygon 
-			ArrayList<LineString> lineStringstmp = new ArrayList<LineString>();
+			ArrayList<LineString> exteriorLineStringtmp = getLineStringsThatIntersects(lineStringsNew, exteriorLineString);
 
-			// get all that touch touches this polygon
-			for (LineString ls : lineStringsNew) {
-				if (thisLineString.intersects(ls) && thisLineString.intersection(ls).getLength() > 0.00000)  {
-					lineStringstmp.add(ls);
-				}
-			}
-			
-			
-			
+			LinearRing shell = findCommonLineString(gf, exteriorLineStringtmp, exteriorLineString);
 
-			
-			LinearRing shell = findCommonLineString(gf, lineStringstmp, thisLineString);
-			
 			LinearRing[] holes = new LinearRing[p.getNumInteriorRing()];
-			
-//			for (int i = 0; i < p.getNumInteriorRing(); i++) {
-//				LineString ls = getLineString(p.getInteriorRingN(i), gf);
-//				LinearRing h = findCommonLineString(gf, commonLinsStringGeometry, ls);
-//				holes[i] = h;
-//			}
+
+			for (int i = 0; i < p.getNumInteriorRing(); i++) {
+				LineString holeLineString = getLineString(p.getInteriorRingN(i), gf);
+				ArrayList<LineString> holeLineStringTmp = getLineStringsThatIntersects(lineStringsNew, holeLineString);
+				LinearRing h = findCommonLineString(gf, holeLineStringTmp, holeLineString);
+				holes[i] = h;
+			}
 
 			Geometry newtopoGeometry = gf.createPolygon(shell, holes);
-			
+			newtopoGeometry.setSRID(srid);
+
 			aa.setGeo(newtopoGeometry);
 			System.out.println(newtopoGeometry.toText());
 		}
+
+		// all geometries now use the same geomtries so we are ready to Flate and Border polygons for the changelog
+
+		// this the list of surface objects
 		
-		// we a list common linstrings and they are used  
+		
+		ArrayList<ArealressursFlateType> subscriberSurfcaeData = new ArrayList<>();
+
+		// convert the Flate object from local provider format to the format used by the changelog files
+		for (Ar5FlateProvSimpleFeatureEntity aa : providerData) {
+
+			// convert the surface object
+			ArealressursFlateType ar5Surface = testConver.convert2FlateFromProv(UUID.randomUUID(),aa);
+			subscriberSurfcaeData.add(ar5Surface);
+
+		}
+
+		// this the list of common border objects
+		ArrayList<ArealressursGrenseType> subscriberBorderData = new ArrayList<>();
+
+		// create the grense objects
+		for (LineString ls : lineStringsNew) {
+			// convert the border object
+			ArealressursGrenseType ar5Border = testConver.convert2GrenseType(UUID.randomUUID(),ls);
+			subscriberBorderData.add(ar5Border);
+
+		}
+
+		// prepare data for change log
+
+		ArrayList<WSFOperation> wfsOperationList = new ArrayList<>();
+		int operationNumber = 0;
+
+		for (Object object : subscriberBorderData) {
+			WSFOperation wfs = new WSFOperation(operationNumber++, SupportedWFSOperationType.InsertType, object);
+			wfsOperationList.add(wfs);
+		}
+
+		for (Object object : subscriberSurfcaeData) {
+			WSFOperation wfs = new WSFOperation(operationNumber++, SupportedWFSOperationType.InsertType, object);
+			wfsOperationList.add(wfs);
+		}
+
+		TransactionCollection transactionCollection = changelogfileJaxb2Helper.getTransactionCollection(wfsOperationList);
+
+		Marshaller marshaller = changelogfileJaxb2Helper.getMarshaller();
+
+		FileOutputStream os = null;
+		try {
+			os = new FileOutputStream("/tmp/log2.xml");
+			marshaller.marshal(transactionCollection, new StreamResult(os));
+
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} finally {
+			if (os != null) {
+				os.close();
+			}
+		}
 
 	}
 
-	@Test
+	private ArrayList<LineString> getLineStringsThatIntersects(ArrayList<LineString> lineStringsNew, LineString thisLineString) {
+		// hold the list linstrings that is of interest for this polygon
+		ArrayList<LineString> lineStringstmp = new ArrayList<LineString>();
+
+		// get all that touch touches this polygon
+		for (LineString ls : lineStringsNew) {
+			if (thisLineString.intersects(ls) && thisLineString.intersection(ls).getLength() > 0.00000) {
+				lineStringstmp.add(ls);
+			}
+		}
+		return lineStringstmp;
+	}
+
+	// @Test
 	public void testSimpleLinestringUnion() throws Exception {
 
-		// two overlapping lines 
+		// two overlapping lines
 		WKTReader reader = new WKTReader();
 
+		// LINESTRING (59.310381 4.90523, 59.310381 4.905582)
+		// LINESTRING (59.310381 4.905582, 59.310381533333334 4.905355308333333, 59.310381 4.90523)
+		// LineString l1 = (LineString) reader.read("LINESTRING (59.310381 4.90523, 59.310381 4.905582)");
+		// LineString l2 = (LineString) reader.read("LINESTRING (59.310381 4.905582, 59.310381533333334 4.905355308333333, 59.310381 4.90523)");
 
-//		LINESTRING (59.310381 4.90523, 59.310381 4.905582)
-//		LINESTRING (59.310381 4.905582, 59.310381533333334 4.905355308333333, 59.310381 4.90523)
-//		LineString l1 = (LineString) reader.read("LINESTRING (59.310381 4.90523, 59.310381 4.905582)");
-//		LineString l2  = (LineString) reader.read("LINESTRING (59.310381 4.905582, 59.310381533333334 4.905355308333333, 59.310381 4.90523)");
-
-		
 		LineString l1 = (LineString) reader.read("LINESTRING (59.310381 4.90523, 59.310381 4.905582)");
-		LineString l2  = (LineString) reader.read("LINESTRING (59.310381 4.90523, 59.310381533333334 4.905355308333333, 59.310381 4.905582)");
+		LineString l2 = (LineString) reader.read("LINESTRING (59.310381 4.90523, 59.310381533333334 4.905355308333333, 59.310381 4.905582)");
 
 		System.out.println("Hashcode before :" + l1.hashCode() + ":" + l2.hashCode());
 
 		GeometrySnapper geometrySnapper = new GeometrySnapper(l1);
-		
-//		double computeOverlaySnapTolerance = 0.000001;
-//		gir 
-//		1.0E-6:LINESTRING (59.310381 4.90523, 59.310381 4.905582)
-//		1.0E-6:LINESTRING (59.310381 4.90523, 59.310381 4.905582, 59.310381 4.905583)
 
-//		double computeOverlaySnapTolerance = 0.00001;
-//		gir 
-//		1.0E-5:LINESTRING (59.310381 4.90523, 59.310381 4.905583)
-//		1.0E-5:LINESTRING (59.310381 4.90523, 59.310381 4.905583)
-		
+		// double computeOverlaySnapTolerance = 0.000001;
+		// gir
+		// 1.0E-6:LINESTRING (59.310381 4.90523, 59.310381 4.905582)
+		// 1.0E-6:LINESTRING (59.310381 4.90523, 59.310381 4.905582, 59.310381 4.905583)
+
+		// double computeOverlaySnapTolerance = 0.00001;
+		// gir
+		// 1.0E-5:LINESTRING (59.310381 4.90523, 59.310381 4.905583)
+		// 1.0E-5:LINESTRING (59.310381 4.90523, 59.310381 4.905583)
+
 		double computeOverlaySnapTolerance = 0.00001;
-		
+
 		Geometry[] snap = geometrySnapper.snap(l1, l2, computeOverlaySnapTolerance);
 		for (Geometry geometry : snap) {
 			System.out.println(computeOverlaySnapTolerance + ":" + geometry.toText());
 		}
-		
+
 		l1 = (LineString) snap[0];
 		l2 = (LineString) snap[1];
-		
+
 		System.out.println("Hashcode after :" + l1.hashCode() + ":" + l2.hashCode());
-		
-		
-		
+
 		System.out.println(l1.union(l2));
 
-
-		
-		
-		
 		System.out.println(l1.equalsTopo(l2));
 
-		
-
 	}
-	/** 
+
+	/**
 	 * Replace the linerstring with linerstring from commonLinsStringList
+	 * 
 	 * @param gf
 	 * @param lineStringsListToUse
 	 * @param lineString
 	 * @return
 	 */
 	private LinearRing findCommonLineString(GeometryFactory gf, ArrayList<LineString> lineStringsListToUse, LineString lineString) {
-		
-//		ArrayList<LineString> resultLinsStringList = new ArrayList<>();
-//
-//		Coordinate[] coordinates = lineString.getCoordinates();
-//		Coordinate lastOkPoint = coordinates[0];
-//
-//		for (int i = 0; i < coordinates.length - 1; i++) {
-//
-//			Coordinate[] cp = { lastOkPoint, coordinates[i + 1] };
-//			LineString createLineString = gf.createLineString(cp);
-//			
-//			
-//			for (LineString orgLs : lineStringsListToUse) {
-//				
-//			}
-//
-//
-//			// TODO fins a better way to this
-//			// get the intersection from the list of common ponts
-//			Geometry intersection = lineStringsListToUse.intersection(createLineString);
-//			//if (commonLinsStringList.contains(createLineString)) {
-//			if (intersection.getLength() == createLineString.getLength()) {
-//			//if (intersection.equalsTopo(createLineString)) {
-//				coordinatesNewList.add(lastOkPoint);
-//				lastOkPoint = coordinates[i + 1];
-//				
-//			}
-//
-//		}
-//		
-//		for (int zi = 0; zi < coordinates.length - 1; zi++) {
-//
-//			Coordinate[] cp = { lastOkPoint, coordinates[zi + 1] };
-//			LineString createLineString = gf.createLineString(cp);
-//
-//			// TODO fins a better way to this
-//			// get the intersection from the list of common ponts
-//			Geometry intersection = lineStringsListToUse.intersection(createLineString);
-//			//if (commonLinsStringList.contains(createLineString)) {
-//			if (intersection.getLength() == createLineString.getLength()) {
-//			//if (intersection.equalsTopo(createLineString)) {
-//				coordinatesNewList.add(lastOkPoint);
-//				lastOkPoint = coordinates[zi + 1];
-//				
-//			}
-//
-//		}
-//
-//
-//		// add first point to close polygon
-//		coordinatesNewList.add(coordinatesNewList.get(0));
-//		Coordinate[] coordinatesNewListArray = coordinatesNewList.toArray(new Coordinate[coordinatesNewList.size()]);
+
+		// ArrayList<LineString> resultLinsStringList = new ArrayList<>();
+		//
+		// Coordinate[] coordinates = lineString.getCoordinates();
+		// Coordinate lastOkPoint = coordinates[0];
+		//
+		// for (int i = 0; i < coordinates.length - 1; i++) {
+		//
+		// Coordinate[] cp = { lastOkPoint, coordinates[i + 1] };
+		// LineString createLineString = gf.createLineString(cp);
+		//
+		//
+		// for (LineString orgLs : lineStringsListToUse) {
+		//
+		// }
+		//
+		//
+		// // TODO fins a better way to this
+		// // get the intersection from the list of common ponts
+		// Geometry intersection = lineStringsListToUse.intersection(createLineString);
+		// //if (commonLinsStringList.contains(createLineString)) {
+		// if (intersection.getLength() == createLineString.getLength()) {
+		// //if (intersection.equalsTopo(createLineString)) {
+		// coordinatesNewList.add(lastOkPoint);
+		// lastOkPoint = coordinates[i + 1];
+		//
+		// }
+		//
+		// }
+		//
+		// for (int zi = 0; zi < coordinates.length - 1; zi++) {
+		//
+		// Coordinate[] cp = { lastOkPoint, coordinates[zi + 1] };
+		// LineString createLineString = gf.createLineString(cp);
+		//
+		// // TODO fins a better way to this
+		// // get the intersection from the list of common ponts
+		// Geometry intersection = lineStringsListToUse.intersection(createLineString);
+		// //if (commonLinsStringList.contains(createLineString)) {
+		// if (intersection.getLength() == createLineString.getLength()) {
+		// //if (intersection.equalsTopo(createLineString)) {
+		// coordinatesNewList.add(lastOkPoint);
+		// lastOkPoint = coordinates[zi + 1];
+		//
+		// }
+		//
+		// }
+		//
+		//
+		// // add first point to close polygon
+		// coordinatesNewList.add(coordinatesNewList.get(0));
+		// Coordinate[] coordinatesNewListArray = coordinatesNewList.toArray(new Coordinate[coordinatesNewList.size()]);
 
 		MultiLineString newLis = gf.createMultiLineString(lineStringsListToUse.toArray(new LineString[lineStringsListToUse.size()]));
 		System.out.println(newLis);
-		CoordinateList ls = new CoordinateList(newLis.getCoordinates()) ;
-		ls.closeRing(); 
+		CoordinateList ls = new CoordinateList(newLis.getCoordinates());
+		ls.closeRing();
 		LinearRing ring = gf.createLinearRing(ls.toCoordinateArray());
 		return ring;
 	}
@@ -370,6 +419,7 @@ public class TestGenerateInsertChangelogFile {
 
 	/**
 	 * The left polygon
+	 * 
 	 * @return
 	 * @throws ParseException
 	 * @throws java.text.ParseException
@@ -377,18 +427,22 @@ public class TestGenerateInsertChangelogFile {
 	private Ar5FlateProvSimpleFeatureEntity addPolygonOne() throws ParseException, java.text.ParseException {
 		WKTReader reader = new WKTReader();
 
-		// with a extra point on shared line
-		//Polygon borderPolygon = (Polygon) reader.read("POLYGON((59.31038099999999957 4.90558199999999989,59.31026539166666822 4.90555743333333449,59.31024421666666768 4.90523724166666675,59.31038099999999957 4.90523000000000042,59.3103815333333344 4.90535530833333322,59.3103815333333344 4.90535530833333322,59.31038099999999957 4.90558199999999989))");
 
-		 Polygon borderPolygon = (Polygon) reader.read("POLYGON((59.31038099999999957 4.90558199999999989,59.31026539166666822 4.90555743333333449,59.31024421666666768 4.90523724166666675,59.31038099999999957 4.90523000000000042,59.31038099999999957 4.90558199999999989))");
-		
-		
+		// with a extra point on shared line
+		// Polygon borderPolygon = (Polygon)
+		// reader.read("POLYGON((59.31038099999999957 4.90558199999999989,59.31026539166666822 4.90555743333333449,59.31024421666666768 4.90523724166666675,59.31038099999999957 4.90523000000000042,59.3103815333333344 4.90535530833333322,59.3103815333333344 4.90535530833333322,59.31038099999999957 4.90558199999999989))");
+
+		Polygon borderPolygon = (Polygon) reader
+				.read("POLYGON((59.31038099999999957 4.90558199999999989,59.31026539166666822 4.90555743333333449,59.31024421666666768 4.90523724166666675,59.31038099999999957 4.90523000000000042,59.31038099999999957 4.90558199999999989))");
+
 		borderPolygon.setSRID(4258);
 		borderPolygon.setUserData("NO.SK.AR5:");
 
 		Assert.assertTrue("Boder not valid", borderPolygon.isValid());
 
 		Ar5FlateProvSimpleFeatureEntity ar5f = new Ar5FlateProvSimpleFeatureEntity();
+		// what should we use this id for		
+		ar5f.setId(1);
 		ar5f.setGeo(borderPolygon);
 		ar5f.setArtype(new Byte("30"));
 		ar5f.setArtreslag(new Byte("33"));
@@ -417,6 +471,7 @@ public class TestGenerateInsertChangelogFile {
 
 	/**
 	 * The right polygon
+	 * 
 	 * @return
 	 * @throws ParseException
 	 * @throws java.text.ParseException
@@ -425,16 +480,20 @@ public class TestGenerateInsertChangelogFile {
 		WKTReader reader = new WKTReader();
 
 		// with a extra point on shared line
-		//Polygon borderPolygon = (Polygon) reader.read("POLYGON((59.31038099999999957 4.90523000000000042,59.31056000000000239 4.90555599999999981,59.31057200000000051 4.90555599999999981,59.31057200000000051 4.90558199999999989,59.31038099999999957 4.90558199999999989,59.3103815333333344 4.90535530833333322,59.31038099999999957 4.90523000000000042,59.31038099999999957 4.90523000000000042))");
+		// Polygon borderPolygon = (Polygon)
+		// reader.read("POLYGON((59.31038099999999957 4.90523000000000042,59.31056000000000239 4.90555599999999981,59.31057200000000051 4.90555599999999981,59.31057200000000051 4.90558199999999989,59.31038099999999957 4.90558199999999989,59.3103815333333344 4.90535530833333322,59.31038099999999957 4.90523000000000042,59.31038099999999957 4.90523000000000042))");
 
-		Polygon borderPolygon = (Polygon) reader.read("POLYGON((59.31038099999999957 4.90523000000000042,59.31056000000000239 4.90555599999999981,59.31057200000000051 4.90555599999999981,59.31057200000000051 4.90558199999999989,59.31038099999999957 4.90558199999999989,59.31038099999999957 4.90523000000000042,59.31038099999999957 4.90523000000000042))");
-		
+		Polygon borderPolygon = (Polygon) reader
+				.read("POLYGON((59.31038099999999957 4.90523000000000042,59.31056000000000239 4.90555599999999981,59.31057200000000051 4.90555599999999981,59.31057200000000051 4.90558199999999989,59.31038099999999957 4.90558199999999989,59.31038099999999957 4.90523000000000042,59.31038099999999957 4.90523000000000042))");
+
 		borderPolygon.setSRID(4258);
 		borderPolygon.setUserData("NO.SK.AR5:");
 
 		Assert.assertTrue("Boder not valid", borderPolygon.isValid());
 
 		Ar5FlateProvSimpleFeatureEntity ar5f = new Ar5FlateProvSimpleFeatureEntity();
+		// what should we use this id for		
+		ar5f.setId(2);
 		ar5f.setGeo(borderPolygon);
 		ar5f.setArtype(new Byte("31"));
 		ar5f.setArtreslag(new Byte("33"));
@@ -467,13 +526,13 @@ public class TestGenerateInsertChangelogFile {
 	 * @author lop
 	 * 
 	 */
-	private class TestConver implements IConvert2ArealressursType {
+	private class SimpleConverImpl implements IConvert2ArealressursType {
 
 		opengis.net.gml_3_2_1.gml.ObjectFactory of = new opengis.net.gml_3_2_1.gml.ObjectFactory();
 		no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ObjectFactory ofar5 = new no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ObjectFactory();
 
 		@Override
-		public ArealressursFlateType convert2FlateFromProv(Object input) {
+		public ArealressursFlateType convert2FlateFromProv(UUID lokalId, Object input) {
 
 			Ar5FlateProvSimpleFeatureEntity a = (Ar5FlateProvSimpleFeatureEntity) input;
 
@@ -481,7 +540,7 @@ public class TestGenerateInsertChangelogFile {
 
 			IdentifikasjonPropertyType v = new IdentifikasjonPropertyType();
 			IdentifikasjonType v1 = new IdentifikasjonType();
-			v1.setLokalId(System.currentTimeMillis() + "");
+			v1.setLokalId(lokalId.toString());
 			v.setIdentifikasjon(v1);
 			ar5.setIdentifikasjon(v);
 
@@ -519,11 +578,28 @@ public class TestGenerateInsertChangelogFile {
 			surfacePropertyType.setAbstractSurface(jaxbElementPolygonType);
 
 			ar5.setOmråde(surfacePropertyType);
+			
+			String srsName = "urn:ogc:def:crs:EPSG::" + a.getGeo().getSRID();
+
+			Envelope env = a.getGeo().getEnvelopeInternal();
+			EnvelopeType v2 = JTS2GML321.toGML(env, srsName);
+			JAXBElement<EnvelopeType> createEnvelope = of.createEnvelope(v2);
+			BoundingShapeType value = new BoundingShapeType();
+			value.setEnvelope(createEnvelope);
+			ar5.setBoundedBy(value);
+			
 
 			return ar5;
 
 		}
 
+		/**
+		 * The is helper method to set code space. Will be removed when this info is added to annotations in ths xsd
+		 * 
+		 * @param value
+		 * @param codeSpaceType
+		 * @return
+		 */
 		private AbstractCodeType makeAbstractType(String value, String codeSpaceType) {
 			AbstractCodeType abstractCodeType = new AbstractCodeType();
 
@@ -537,81 +613,79 @@ public class TestGenerateInsertChangelogFile {
 		}
 
 		@Override
-		public ArealressursGrenseType convert2GrenseType(Object input) {
-			// TODO Auto-generated method stub
-			return null;
-		}
+		public ArealressursGrenseType convert2GrenseType(UUID lokalId, Object input) {
 
-	}
+			LineString borderLineString = (LineString) input;
 
-	/**
-	 * Test transfomation of Ar5FlateProvSimpleFeatureEntity ArealressursFlateType used the changelog file
-	 * 
-	 * @throws Exception
-	 */
-	// @Test
-	public void tmptestMappingOfAr5FlateProvSimpleFeatureEntity() throws Exception {
+			ArealressursGrenseType ar5Border = ofar5.createArealressursGrenseType();
 
-		// add 2 polygons with a commmon border
-		ArrayList<Ar5FlateProvSimpleFeatureEntity> providerData = new ArrayList<>();
-		providerData.add(addPolygonOne());
-		providerData.add(addPolygonTwo());
+			IdentifikasjonPropertyType v = new IdentifikasjonPropertyType();
+			IdentifikasjonType v1 = new IdentifikasjonType();
+			v1.setLokalId(lokalId.toString());
+			v.setIdentifikasjon(v1);
+			ar5Border.setIdentifikasjon(v);
 
-		// this the list of surface objects
-		ArrayList<ArealressursFlateType> subscriberSurfcaeData = new ArrayList<>();
-		// this the list of common border objects
-		ArrayList<ArealressursGrenseType> subscriberBorderData = new ArrayList<>();
-		ArrayList<LineString> lineStrings = new ArrayList<LineString>();
+			// ar5.setArealtype(arealtype);
 
-		Assert.assertTrue("To few rows created " + providerData.size(), providerData.size() > 0);
+			Calendar datafangstdato = Calendar.getInstance();
+			ar5Border.setDatafangstdato(datafangstdato);
 
-		TestConver testConver = new TestConver();
+			opengis.net.gml_3_2_1.gml.ObjectFactory of = new opengis.net.gml_3_2_1.gml.ObjectFactory();
 
-		GeometryFactory gf = new GeometryFactory();
+			CurvePropertyType curvePropertyType2 = creatCurveType(of, borderLineString);
 
-		// convert from local provider format to the format used by the changelog files
-		for (Ar5FlateProvSimpleFeatureEntity aa : providerData) {
+			ar5Border.setGrense(curvePropertyType2);
 
-			// convert the surface object
-			ArealressursFlateType ar5 = testConver.convert2FlateFromProv(aa);
-			subscriberSurfcaeData.add(ar5);
+			ar5Border.setAvgrensingType(makeAbstractType("12", "ArealressursAvgrensingType"));
 
-			Assert.assertNotNull("new object should not be null", ar5);
+			{
+				PosisjonskvalitetPropertyType posisjonskvalitetPropertyType = new PosisjonskvalitetPropertyType();
+				PosisjonskvalitetType posisjonskvalitetType = new PosisjonskvalitetType();
+				posisjonskvalitetPropertyType.setPosisjonskvalitet(posisjonskvalitetType);
+				ar5Border.setKvalitet(posisjonskvalitetPropertyType);
 
-			Assert.assertEquals(aa.getArkartstd(), ar5.getKartstandard().getValue());
+				posisjonskvalitetType.setNøyaktighet(new BigInteger("10"));
+				posisjonskvalitetType.setSynbarhet(makeAbstractType("10", "Synbarhet"));
+				posisjonskvalitetType.setMålemetode(makeAbstractType("12", "Målemetode"));
 
-			Assert.assertEquals("" + aa.getArtype(), ar5.getArealtype().getValue());
-
-			// Assert.assertEquals(aa.getGeo().getArea(), borderPolygon.getArea(),0);
-
-			// the border object from the simple feature object
-
-			Polygon p = (Polygon) aa.getGeo();
-
-			LineString lineString = getLineString(p.getExteriorRing(), gf);
-			lineStrings.add(lineString);
-
-			for (int i = 0; i < p.getNumInteriorRing(); i++) {
-				LineString ls = getLineString(p.getInteriorRingN(i), gf);
-				lineStrings.add(ls);
 			}
 
+			String srsName = "urn:ogc:def:crs:EPSG::" + borderLineString .getSRID();
+
+			Envelope env = borderLineString .getEnvelopeInternal();
+			EnvelopeType v2 = JTS2GML321.toGML(env, srsName);
+			JAXBElement<EnvelopeType> createEnvelope = of.createEnvelope(v2);
+			BoundingShapeType value = new BoundingShapeType();
+			value.setEnvelope(createEnvelope);
+			ar5Border.setBoundedBy(value);
+
+			return ar5Border;
+
 		}
 
-		// find common border
-		// convert from local provider format to the format used by the changelog files
+		private CurvePropertyType creatCurveType(opengis.net.gml_3_2_1.gml.ObjectFactory of, LineString borderLineString) {
 
-		LineString[] lineStringsTable = lineStrings.toArray(new LineString[lineStrings.size()]);
+			LineStringType lineStringType = (LineStringType) JTS2GML321.toGML(borderLineString);
+			LineStringSegmentType lineStringSegmentType = of.createLineStringSegmentType();
+			lineStringSegmentType.setPosList(lineStringType.getPosList());
+			JAXBElement<LineStringSegmentType> e = of.createLineStringSegment(lineStringSegmentType);
+			SegmentsElement segments = of.createSegmentsElement();
+			segments.getAbstractCurveSegments().add(e);
+			CurveType createCurveType = of.createCurveType();
+			createCurveType.setSegments(segments);
 
-		MultiLineString createMultiLineString = gf.createMultiLineString(lineStringsTable);
+			// a hack to set id
+			createCurveType.setId("" + borderLineString.getUserData() + borderLineString.hashCode());
+			String srsName = "urn:ogc:def:crs:EPSG::" + borderLineString.getSRID();
+			createCurveType.setSrsName(srsName);
+			JAXBElement<CurveType> abstractCurve = of.createCurve(createCurveType);
+			CurvePropertyType curvePropertyType = of.createCurvePropertyType();
+			curvePropertyType.setAbstractCurve(abstractCurve);
 
-		Geometry union = createMultiLineString.union();
-
-		for (int i = 0; i < union.getNumGeometries(); i++) {
-			Geometry g = union.getGeometryN(i);
-			System.out.println(g.getUserData() + ":" + g.toText());
+			return curvePropertyType;
 		}
 
 	}
+
 
 }

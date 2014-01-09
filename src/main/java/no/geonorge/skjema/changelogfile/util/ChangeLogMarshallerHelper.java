@@ -8,6 +8,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.xml.bind.JAXBElement;
@@ -313,8 +314,12 @@ public class ChangeLogMarshallerHelper {
 		// will get value at first iteration based on the annotation XmlRootElement
 		ArrayList<String> propOrder = new ArrayList<>();
 
-		for (int i = 0; i < wfsOperationList.size(); i++) {
-			WSFOperation wsfOperation = wfsOperationList.get(i);
+		// used for debug
+		int i = 0; 
+		
+		Iterator<WSFOperation> wfsOprListItr = wfsOperationList.iterator();
+		for (Iterator iterator = wfsOprListItr; iterator.hasNext();) {
+			WSFOperation wsfOperation =  (WSFOperation) iterator.next();
 			Object product = wsfOperation.product;
 
 			if (logger.isDebugEnabled()) {
@@ -410,8 +415,8 @@ public class ChangeLogMarshallerHelper {
 				break;
 			}
 
-			// save if a switch or last row
-			if ((aswitchHappend && lastType != null) || i == wfsOperationList.size()) {
+			// save if a switch or last row or a change in type
+			if ((aswitchHappend && lastType != null) || !wfsOprListItr.hasNext()) {
 				if (logger.isDebugEnabled()) {
 					logger.debug("aswitchHappend has happend for handle wsfOperation.wfsOperationType " + wsfOperation.wfsOperationType + " for feature nr. "
 							+ i + " last type is " + lastType);
@@ -421,6 +426,8 @@ public class ChangeLogMarshallerHelper {
 			}
 
 			lastType = newType;
+			
+			i++;
 
 		}
 

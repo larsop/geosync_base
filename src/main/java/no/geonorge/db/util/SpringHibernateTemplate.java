@@ -1,4 +1,4 @@
-package no.skogoglandskap.db.util;
+package no.geonorge.db.util;
 
 import java.io.Serializable;
 import java.sql.BatchUpdateException;

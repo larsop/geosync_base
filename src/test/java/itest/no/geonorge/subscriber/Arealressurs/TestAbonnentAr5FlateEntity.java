@@ -15,13 +15,13 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 
+import no.geonorge.db.util.SpringHibernateTemplate;
 import no.geonorge.skjema.changelogfile.TransactionCollection;
 import no.geonorge.skjema.changelogfile.util.ChangeLogMarshallerHelper;
 import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ArealressursFlateType;
 import no.geonorge.skjema.sosi.produktspesifikasjon.util.SosiProduktMarshallerHelper;
 import no.geonorge.skjema.util.gml_geos.geoserver.GML321_2JTS;
 import no.geonorge.subscriber.Arealressurs.Ar5FlateEntity;
-import no.skogoglandskap.db.util.SpringHibernateTemplate;
 
 import opengis.net.wfs_2_0.wfs.InsertType;
 import opengis.net.wfs_2_0.wfs.Transaction;

@@ -30,6 +30,10 @@ area over which an object extends</documentation>
 
 -- Definition -- 
 main categorization according to criteria for vegetation, natural drainage and cultural impact</documentation>
+
+				<appinfo>
+                	<gml:defaultCodeSpace>http://www.geosynkronisering.no/files/skjema/Arealressurs/4.5/ArealressursArealtype.xml</gml:defaultCodeSpace>
+                </appinfo>
             </annotation>
           </element>
           <element name="skogbonitet" type="gml:CodeType">
@@ -63,6 +67,7 @@ categorization according to thickness, type and distribution of soil cover</docu
 -- Definition -- 
 information concerning which classification system has been used</documentation>
             </annotation>
+            
           </element>
         </sequence>
       </extension>

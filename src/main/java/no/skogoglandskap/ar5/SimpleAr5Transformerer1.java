@@ -3,9 +3,14 @@ package no.skogoglandskap.ar5;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.UUID;
 
 import javax.xml.bind.JAXBElement;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
 
 import no.geonorge.skjema.changelogfile.util.IConvert2ArealressursType;
 import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ArealressursFlateType;
@@ -26,6 +31,8 @@ import opengis.net.gml_3_2_1.gml.LineStringType;
 import opengis.net.gml_3_2_1.gml.PolygonType;
 import opengis.net.gml_3_2_1.gml.SegmentsElement;
 import opengis.net.gml_3_2_1.gml.SurfacePropertyType;
+
+import org.apache.log4j.Logger;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.CoordinateList;
@@ -51,6 +58,9 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 	opengis.net.gml_3_2_1.gml.ObjectFactory of = new opengis.net.gml_3_2_1.gml.ObjectFactory();
 	no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ObjectFactory ofar5 = new no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ObjectFactory();
 	GeometryFactory gf = new GeometryFactory();
+	
+	private Logger logger = Logger.getLogger(SimpleAr5Transformerer1.class);
+
 
 	/*
 	 * This mapping is one to for no.skogoglandskap.datamodel.postgres.provider.Ar5FlateProvSimpleFeatureEntity to ArealressursFlateType. The geometry is of type surface. Topology is not used here.
@@ -93,10 +103,11 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 
 		}
 
-		Calendar datafangstdato = Calendar.getInstance();
-		datafangstdato.setTime(a.getDatafangstdato());
-
-		ar5.setDatafangstdato(datafangstdato);
+		
+		
+        
+        
+		ar5.setDatafangstdato(getXmlCalender(a.getDatafangstdato()));
 
 		PolygonType polygonType = (PolygonType) JTS2GML321.toGML(a.getGeo());
 		JAXBElement<PolygonType> jaxbElementPolygonType = of.createPolygon(polygonType);
@@ -116,6 +127,26 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 
 		return ar5;
 
+	}
+
+	// move to common classes
+	private XMLGregorianCalendar getXmlCalender(Date dato) {
+		XMLGregorianCalendar now = null; 
+		        
+		GregorianCalendar gregorianCalendar = new GregorianCalendar();
+		gregorianCalendar.setTime(dato);
+        DatatypeFactory datatypeFactory;
+		try {
+			datatypeFactory = DatatypeFactory.newInstance();
+	        now = 
+	                datatypeFactory.newXMLGregorianCalendar(gregorianCalendar);
+
+		} catch (DatatypeConfigurationException e) {
+			logger.error("Failed to convert " + dato + " to XMLGregorianCalendar"); 
+			
+		}
+		
+		return now;
 	}
 
 	/*
@@ -145,7 +176,7 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 		// ar5.setArealtype(arealtype);
 
 		Calendar datafangstdato = Calendar.getInstance();
-		ar5Border.setDatafangstdato(datafangstdato);
+		ar5Border.setDatafangstdato(getXmlCalender(datafangstdato.getTime()));
 
 		CurvePropertyType curvePropertyType2 = creatCurveType(borderLineString);
 

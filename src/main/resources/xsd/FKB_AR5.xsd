@@ -159,7 +159,7 @@ Spesielt i produktspesifikasjonsarbeid vil en velge egenskaper og av grensningsl
     <complexContent>
       <extension base="gml:AbstractFeatureType">
         <sequence>
-          <element name="datafangstdato" type="dateTime">
+          <element name="datafangstdato" type="date">
             <annotation>
               <documentation>dato når objektet siste gang ble registrert/observert/målt i terrenget
 
@@ -189,7 +189,7 @@ Merknad: Inneholder informasjon om når kopidatasettet ble kopiert fra originald
 Merknad: Denne er identisk med ..KVALITET i tidligere versjoner av SOSI.</documentation>
             </annotation>
           </element>
-          <element minOccurs="0" name="oppdateringsdato" type="dateTime">
+          <element minOccurs="0" name="oppdateringsdato" type="date">
             <annotation>
               <documentation>dato for siste endring på objektetdataene 
 
@@ -221,7 +221,7 @@ Prosesshistorie vil kunne inneholde informasjon om transformasjoner. Hva slags i
               <documentation>angivelse av hvilken produktspesifikasjon som er utgangspunkt  for dataene</documentation>
             </annotation>
           </element>
-          <element name="verifiseringsdato" type="dateTime">
+          <element name="verifiseringsdato" type="date">
             <annotation>
               <documentation>dato når dataene er fastslått å være i samsvar med virkeligheten
 
@@ -252,7 +252,7 @@ Spesielt i produktspesifikasjonsarbeid vil en velge egenskaper og av grensningsl
     <complexContent>
       <extension base="gml:AbstractFeatureType">
         <sequence>
-          <element name="datafangstdato" type="dateTime">
+          <element name="datafangstdato" type="date">
             <annotation>
               <documentation>dato når objektet siste gang ble registrert/observert/målt i terrenget
 
@@ -260,7 +260,7 @@ Merknad: I mange tilfeller er denne forskjellig fra Oppdateringsdato, da registr
 Ved førstegangsregistrering settes Datafangstdato lik førsteDatafangstdato.</documentation>
             </annotation>
           </element>
-          <element minOccurs="0" name="oppdateringsdato" type="dateTime">
+          <element minOccurs="0" name="oppdateringsdato" type="date">
             <annotation>
               <documentation>dato for siste endring på objektetdataene 
 
@@ -433,7 +433,7 @@ Merknad: Kan angis med kommunenummer eller fylkesnummer. Disse bør spesifiseres
           <documentation>ansvarlig etat for forvaltning av data</documentation>
         </annotation>
       </element>
-      <element name="kopidato" type="dateTime">
+      <element name="kopidato" type="date">
         <annotation>
           <documentation>dato når objektet ble kopiert fra originaldatasettet  
 

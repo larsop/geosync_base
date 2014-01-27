@@ -2,8 +2,15 @@ package no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.util;
 
 import java.math.BigInteger;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 import javax.xml.bind.JAXBElement;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
+
+import org.apache.log4j.Logger;
 
 import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ArealressursFlateType;
 import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ArealressursGrenseType;
@@ -12,6 +19,7 @@ import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.Identifikasj
 import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.PosisjonskvalitetPropertyType;
 import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.PosisjonskvalitetType;
 import no.geonorge.skjema.util.gml_geos.inspire.JTS2GML321;
+import no.skogoglandskap.ar5.SimpleAr5Transformerer1;
 import opengis.net.gml_3_2_1.gml.AbstractCodeType;
 import opengis.net.gml_3_2_1.gml.AbstractCurveType;
 import opengis.net.gml_3_2_1.gml.CompositeCurveType;
@@ -29,6 +37,8 @@ import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.io.WKTReader;
 
 public class InspireWayDaoDummyAr5Classes {
+
+	private Logger logger = Logger.getLogger(InspireWayDaoDummyAr5Classes.class);
 
 	public Polygon borderPolygon;
 	public LineString borderLineString;
@@ -117,7 +127,7 @@ public class InspireWayDaoDummyAr5Classes {
 		}
 
 		Calendar datafangstdato = Calendar.getInstance();
-		ar5.setDatafangstdato(datafangstdato);
+		ar5.setDatafangstdato(getXmlCalender(datafangstdato.getTime()));
 		opengis.net.gml_3_2_1.gml.ObjectFactory of = new opengis.net.gml_3_2_1.gml.ObjectFactory();
 
 //		// with SurfacePropertyType
@@ -139,6 +149,27 @@ public class InspireWayDaoDummyAr5Classes {
 
 		return ar5;
 	}
+	
+	// move to common classes
+	private XMLGregorianCalendar getXmlCalender(Date dato) {
+		XMLGregorianCalendar now = null; 
+		        
+		GregorianCalendar gregorianCalendar = new GregorianCalendar();
+		gregorianCalendar.setTime(dato);
+        DatatypeFactory datatypeFactory;
+		try {
+			datatypeFactory = DatatypeFactory.newInstance();
+	        now = 
+	                datatypeFactory.newXMLGregorianCalendar(gregorianCalendar);
+
+		} catch (DatatypeConfigurationException e) {
+			logger.error("Failed to convert " + dato + " to XMLGregorianCalendar"); 
+			
+		}
+		
+		return now;
+	}
+
 
 	/*
 	    <ar5:arealtype codeSpace="http://www.geosynkronisering.no/files/skjema/Arealressurs/4.5/ArealressursArealtype.xml">12</ar5:arealtype>
@@ -168,7 +199,7 @@ public class InspireWayDaoDummyAr5Classes {
 		// ar5.setArealtype(arealtype);
 
 		Calendar datafangstdato = Calendar.getInstance();
-		ar5.setDatafangstdato(datafangstdato);
+		ar5.setDatafangstdato(getXmlCalender(datafangstdato.getTime()));
 
 		opengis.net.gml_3_2_1.gml.ObjectFactory of = new opengis.net.gml_3_2_1.gml.ObjectFactory();
 

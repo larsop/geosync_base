@@ -80,7 +80,7 @@ public class JTS2GML321 {
 
 		if (gml != null) {
 
-			StringBuffer id = new StringBuffer("");
+			StringBuffer id = new StringBuffer("Id.");
 			// add a empty or else snowflake is noe working
 
 			if (geom != null) {
@@ -215,8 +215,7 @@ public class JTS2GML321 {
 	}
 
 	private static MultiCurveType toGML(MultiLineString mls, String srsName) {
-		System.out.println("JTS geometry type not treated yet: " + mls.getClass().getSimpleName() + " " + srsName);
-		return null;
+		throw new RuntimeException("JTS geometry type not treated yet: " + mls.getClass().getSimpleName() + " " + srsName);
 	}
 
 	private static MultiSurfaceType toGML(MultiPolygon mp, String srsName) {
@@ -242,8 +241,7 @@ public class JTS2GML321 {
 		else if (gc instanceof MultiPolygon)
 			return toGML((MultiPolygon) gc, srsName);
 		else
-			System.err.println("JTS geometry type not treated: " + gc.getClass().getSimpleName());
-		return null;
+			throw new RuntimeException("JTS geometry type not treated yet: " + gc.getClass().getSimpleName() + " " + srsName);
 	}
 
 	public static EnvelopeType toGML(Envelope env) {

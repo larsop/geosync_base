@@ -2,6 +2,7 @@ package itest.no.skogoglanskap.provider.Arealressurs;
 
 /**
  * This class is used to test moving data from provider to subscriber by using ArealressursFlateType and a changelog file
+
  * 
  * This code is adjusted to how SkogogandLandskap store their data
  *  
@@ -10,19 +11,37 @@ package itest.no.skogoglanskap.provider.Arealressurs;
 // 
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
+import javax.xml.bind.JAXBElement;
 import javax.xml.transform.stream.StreamResult;
 
 import no.geonorge.skjema.changelogfile.TransactionCollection;
 import no.geonorge.skjema.changelogfile.util.ChangeLogMarshallerHelper;
+import no.geonorge.skjema.changelogfile.util.ChangeLogResult;
 import no.geonorge.skjema.changelogfile.util.SupportedWFSOperationType;
 import no.geonorge.skjema.changelogfile.util.WSFOperation;
 import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ArealressursFlateType;
 import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ArealressursGrenseType;
 import no.skogoglandskap.ar5.SimpleAr5Transformerer1;
+import no.skogoglandskap.ar5.SimpleAr5Transformerer2;
+import no.skogoglandskap.ar5.TopoGeometry;
 import no.skogoglandskap.datamodel.postgres.provider.Ar5FlateProvSimpleFeatureEntity;
 
+import opengis.net.gml_3_2_1.gml.AbstractCurveSegmentType;
+import opengis.net.gml_3_2_1.gml.AbstractRingPropertyType;
+import opengis.net.gml_3_2_1.gml.AbstractSurfacePatchType;
+import opengis.net.gml_3_2_1.gml.AbstractSurfaceType;
+import opengis.net.gml_3_2_1.gml.CurvePropertyType;
+import opengis.net.gml_3_2_1.gml.CurveType;
+import opengis.net.gml_3_2_1.gml.LineStringSegmentType;
+import opengis.net.gml_3_2_1.gml.PolygonPatchType;
+import opengis.net.gml_3_2_1.gml.RingType;
+import opengis.net.gml_3_2_1.gml.SegmentsElement;
+import opengis.net.gml_3_2_1.gml.SurfacePatchArrayPropertyType;
+
+import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -47,14 +66,14 @@ import com.vividsolutions.jts.operation.overlay.snap.GeometrySnapper;
 @ContextConfiguration(locations = { "/testSetup.xml", "/geosyncBaseMarshallerAppContext.xml" })
 public class TestGenerateInsertChangelogFile {
 
+	private Logger logger = Logger.getLogger(TestGenerateInsertChangelogDeltGeosFile.class);
+
 	@Autowired
 	private ChangeLogMarshallerHelper changelogfileJaxb2Helper;
-	
-	
-	
 
 	/**
-	 * Test transfomation of Ar5FlateProvSimpleFeatureEntity ArealressursFlateType used the changelog file
+	 * Test transfomation of Ar5FlateProvSimpleFeatureEntity
+	 * ArealressursFlateType used the changelog file
 	 * 
 	 * @throws Exception
 	 */
@@ -66,39 +85,48 @@ public class TestGenerateInsertChangelogFile {
 		providerData.add(addPolygonOne());
 		providerData.add(addPolygonTwo());
 
-		Assert.assertTrue("To few rows created " + providerData.size(), providerData.size() > 0);
+		Assert.assertTrue("To few rows created " + providerData.size(),
+				providerData.size() > 0);
 
-		SimpleAr5Transformerer1 testConver = new SimpleAr5Transformerer1();
+		SimpleAr5Transformerer2 testConver = new SimpleAr5Transformerer2();
 
 		GeometryFactory gf = new GeometryFactory();
 
-		ArrayList<LineString> lineStringsNew = testConver.findAllCommonLinestrings(providerData);
-		
-		testConver.replaceGeoWithCommonLinestrings(providerData, lineStringsNew);
+		// get common line strings with no duplicates
+		ArrayList<LineString> lineStringsNew = testConver
+				.findAllCommonLinestrings(providerData);
 
-		// all geometries now use the same geomtries so we are ready to Flate and Border polygons for the changelog
+		// use those line strings when creating the surface type
+		// the geo hashcode is the key
+		ArrayList<TopoGeometry> geoWithCommonLinestrings = testConver
+				.getGeoWithCommonLinestrings(providerData, lineStringsNew);
+
+		// all geometries now use the same geomtries so we are ready to Flate
+		// and Border polygons for the changelog
 
 		// this the list of surface objects
-		
-		
+
 		ArrayList<ArealressursFlateType> subscriberSurfcaeData = new ArrayList<>();
 
-		// convert the Flate object from local provider format to the format used by the changelog files
-		for (Ar5FlateProvSimpleFeatureEntity aa : providerData) {
+		// convert the Flate object from local provider format to the format
+		// used by the changelog files
+		for (TopoGeometry aa : geoWithCommonLinestrings) {
 
 			// convert the surface object
-			ArealressursFlateType ar5Surface = testConver.convert2FlateFromProv(UUID.randomUUID(),aa);
+			ArealressursFlateType ar5Surface = testConver
+					.convert2FlateFromProv(UUID.randomUUID(), aa);
 			subscriberSurfcaeData.add(ar5Surface);
 
 		}
 
-		// this the list of common border objects
+		// this is the list of common border objects
 		ArrayList<ArealressursGrenseType> subscriberBorderData = new ArrayList<>();
 
 		// create the grense objects
 		for (LineString ls : lineStringsNew) {
 			// convert the border object
-			ArealressursGrenseType ar5Border = testConver.convert2GrenseType(UUID.randomUUID(),ls);
+			ArealressursGrenseType ar5Border = testConver.convert2GrenseType(
+					UUID.randomUUID(), ls);
 			subscriberBorderData.add(ar5Border);
 
 		}
@@ -109,22 +137,27 @@ public class TestGenerateInsertChangelogFile {
 		int operationNumber = 0;
 
 		for (Object object : subscriberBorderData) {
-			WSFOperation wfs = new WSFOperation(operationNumber++, SupportedWFSOperationType.InsertType, object);
+			WSFOperation wfs = new WSFOperation(operationNumber++,
+					SupportedWFSOperationType.InsertType, object);
 			wfsOperationList.add(wfs);
 		}
 
 		for (Object object : subscriberSurfcaeData) {
-			WSFOperation wfs = new WSFOperation(operationNumber++, SupportedWFSOperationType.InsertType, object);
+			WSFOperation wfs = new WSFOperation(operationNumber++,
+					SupportedWFSOperationType.InsertType, object);
 			wfsOperationList.add(wfs);
 		}
 
-		TransactionCollection transactionCollection = changelogfileJaxb2Helper.getTransactionCollection(wfsOperationList);
+		TransactionCollection transactionCollection = changelogfileJaxb2Helper
+				.getTransactionCollection(wfsOperationList);
 
 		Marshaller marshaller = changelogfileJaxb2Helper.getMarshaller();
 
+		String name = "/tmp/changelog.xml";
+
 		FileOutputStream os = null;
 		try {
-			os = new FileOutputStream("/tmp/log2.xml");
+			os = new FileOutputStream(name);
 			marshaller.marshal(transactionCollection, new StreamResult(os));
 
 		} catch (Exception e1) {
@@ -136,58 +169,177 @@ public class TestGenerateInsertChangelogFile {
 			}
 		}
 
-	}
+		// test umarshall file
+
+		TransactionCollection unmarshal = changelogfileJaxb2Helper
+				.unmarshal(name);
+
+		// get all rows
+		Assert.assertEquals(
+				"To few rows found for insert ",
+				5,
+				changelogfileJaxb2Helper.getChangeLogResult(unmarshal, null).wfsOerationList
+						.size());
+
+		// get ar5 rows
+		Class<?>[] rowTypes = { ArealressursFlateType.class };
+		ChangeLogResult result = changelogfileJaxb2Helper.getChangeLogResult(
+				unmarshal, rowTypes);
+
+		ArrayList<WSFOperation> insertList = result.wfsOerationList;
+
+		Assert.assertEquals("To few rows found for insert ", 2,
+				insertList.size());
+
+		GeometryFactory geometryFactory = new GeometryFactory();
+
+		for (WSFOperation object : insertList) {
+			ArealressursFlateType simpleAr5FromXml = (ArealressursFlateType) object.product;
+			System.out.println("Found area:" + simpleAr5FromXml.getOmråde());
+
+			JAXBElement<? extends AbstractSurfaceType> abstractSurface = simpleAr5FromXml
+					.getOmråde().getAbstractSurface();
+
+			opengis.net.gml_3_2_1.gml.SurfaceType value = (opengis.net.gml_3_2_1.gml.SurfaceType) abstractSurface
+					.getValue();
+			JAXBElement<SurfacePatchArrayPropertyType> patches = value
+					.getPatches();
+
+			List<JAXBElement<? extends AbstractSurfacePatchType>> abstractSurfacePatches = patches
+					.getValue().getAbstractSurfacePatches();
+
+			ArrayList<opengis.net.gml_3_2_1.gml.RingType> list = new ArrayList<>();
+
+			for (JAXBElement<? extends AbstractSurfacePatchType> jaxbElement : abstractSurfacePatches) {
+				opengis.net.gml_3_2_1.gml.PolygonPatchType value2 = (PolygonPatchType) jaxbElement
+						.getValue();
+				AbstractRingPropertyType exterior = value2.getExterior();
+				opengis.net.gml_3_2_1.gml.RingType value3 = (RingType) exterior
+						.getAbstractRing().getValue();
+				list.add(value3);
+			}
+
+			// list of linestrings for for the pologon
+			ArrayList<Coordinate[]> lineStringList = new ArrayList<>();
+
+			int icounter = 0;
+			for (RingType ringType : list) {
+
+				opengis.net.gml_3_2_1.gml.RingType ssgeom = ringType;
+				List<CurvePropertyType> curveMembers = ssgeom.getCurveMembers();
+				for (CurvePropertyType curvePropertyType : curveMembers) {
+
+					CurveType curve = (CurveType) curvePropertyType
+							.getAbstractCurve().getValue();
+
+					SegmentsElement segments = curve.getSegments();
+
+					List<JAXBElement<? extends AbstractCurveSegmentType>> abstractCurveSegments = segments
+							.getAbstractCurveSegments();
+					for (JAXBElement<? extends AbstractCurveSegmentType> jaxbElement : abstractCurveSegments) {
+
+						opengis.net.gml_3_2_1.gml.LineStringSegmentType geom = (LineStringSegmentType) jaxbElement
+								.getValue();
+
+						if (geom != null) {
+
+							List<Double> values = geom.getPosList().getValues();
+							Coordinate[] coordinates = new Coordinate[values
+									.size() / 2];
+
+							int ix = 0;
+							for (int i = 0; i < values.size();) {
+								coordinates[ix++] = new Coordinate(new Double(
+										values.get(i++)), new Double(
+										values.get(i++)));
+							}
+
+							lineStringList.add(coordinates);
+
+							icounter = icounter + ix;
+
+						} else {
+							throw new RuntimeException(
+									"Not handle conevertion from GML to JTS  Polygon "
+											+ geom.getClass().getSimpleName());
+
+						}
+
+					}
+
+				}
+
+			}
+
+			Coordinate lastStop = null;
+
+			Coordinate[] coordinates = new Coordinate[icounter];
+
+			int a = 0;
+
+			while (lineStringList.size() > 0) {
+				int x = 0;
+				for (; x < lineStringList.size(); x++) {
+					Coordinate[] cs = lineStringList.get(x);
+
+					if (lastStop == null) {
+						lastStop = cs[cs.length - 1];
+						for (int i = 0; i < cs.length; i++) {
+							Coordinate coordinate = cs[i];
+							coordinates[a++] = coordinate;
+						}
+						break;
+					} else {
+						if (lastStop.equals(cs[0])) {
+							lastStop = cs[cs.length - 1];
+							for (int i = 0; i < cs.length; i++) {
+								Coordinate coordinate = cs[i];
+								coordinates[a++] = coordinate;
+							}
+							break;
+
+						} else if (lastStop.equals(cs[cs.length - 1])) {
+							lastStop = cs[0];
+							for (int i = cs.length - 1; i >= 0; i--) {
+								Coordinate coordinate = cs[i];
+								coordinates[a++] = coordinate;
+							}
+							break;
+						} else {
+							if (logger.isDebugEnabled()) {
+								logger.error("Failed to find start and stop for :" + lastStop + " With start coordinate " + lastStop.equals(cs[0]) + " and end coordinate " + lastStop.equals(cs[cs.length - 1]) );
+							}
+						}
+
+					}
+				}
+				if (logger.isDebugEnabled()) {
+					logger.error("New laststop is " + lastStop + " remove linstring number " + x);
+				}
+				lineStringList.remove(x);
 
 
+			}
+
+			LineString g1 = geometryFactory.createLineString(coordinates);
+			
+			if (logger.isDebugEnabled()) {
+				logger.error("Created linstring with length " + g1.getLength());
+			}
 
 
-	// @Test
-	public void testSimpleLinestringUnion() throws Exception {
+			Polygon createPolygon = geometryFactory.createPolygon(g1
+					.getCoordinateSequence());
 
-		// two overlapping lines
-		WKTReader reader = new WKTReader();
+			System.out.println("createPolygon.getArea()"
+					+ createPolygon.getArea());
 
-		// LINESTRING (59.310381 4.90523, 59.310381 4.905582)
-		// LINESTRING (59.310381 4.905582, 59.310381533333334 4.905355308333333, 59.310381 4.90523)
-		// LineString l1 = (LineString) reader.read("LINESTRING (59.310381 4.90523, 59.310381 4.905582)");
-		// LineString l2 = (LineString) reader.read("LINESTRING (59.310381 4.905582, 59.310381533333334 4.905355308333333, 59.310381 4.90523)");
+			Assert.assertTrue(createPolygon.getArea() > 0.0);
 
-		LineString l1 = (LineString) reader.read("LINESTRING (59.310381 4.90523, 59.310381 4.905582)");
-		LineString l2 = (LineString) reader.read("LINESTRING (59.310381 4.90523, 59.310381533333334 4.905355308333333, 59.310381 4.905582)");
-
-		System.out.println("Hashcode before :" + l1.hashCode() + ":" + l2.hashCode());
-
-		GeometrySnapper geometrySnapper = new GeometrySnapper(l1);
-
-		// double computeOverlaySnapTolerance = 0.000001;
-		// gir
-		// 1.0E-6:LINESTRING (59.310381 4.90523, 59.310381 4.905582)
-		// 1.0E-6:LINESTRING (59.310381 4.90523, 59.310381 4.905582, 59.310381 4.905583)
-
-		// double computeOverlaySnapTolerance = 0.00001;
-		// gir
-		// 1.0E-5:LINESTRING (59.310381 4.90523, 59.310381 4.905583)
-		// 1.0E-5:LINESTRING (59.310381 4.90523, 59.310381 4.905583)
-
-		double computeOverlaySnapTolerance = 0.00001;
-
-		Geometry[] snap = geometrySnapper.snap(l1, l2, computeOverlaySnapTolerance);
-		for (Geometry geometry : snap) {
-			System.out.println(computeOverlaySnapTolerance + ":" + geometry.toText());
 		}
 
-		l1 = (LineString) snap[0];
-		l2 = (LineString) snap[1];
-
-		System.out.println("Hashcode after :" + l1.hashCode() + ":" + l2.hashCode());
-
-		System.out.println(l1.union(l2));
-
-		System.out.println(l1.equalsTopo(l2));
-
 	}
 
-	
 	/**
 	 * The left polygon
 	 * 
@@ -195,9 +347,9 @@ public class TestGenerateInsertChangelogFile {
 	 * @throws ParseException
 	 * @throws java.text.ParseException
 	 */
-	private Ar5FlateProvSimpleFeatureEntity addPolygonOne() throws ParseException, java.text.ParseException {
+	private Ar5FlateProvSimpleFeatureEntity addPolygonOne()
+			throws ParseException, java.text.ParseException {
 		WKTReader reader = new WKTReader();
-
 
 		// with a extra point on shared line
 		// Polygon borderPolygon = (Polygon)
@@ -212,7 +364,7 @@ public class TestGenerateInsertChangelogFile {
 		Assert.assertTrue("Boder not valid", borderPolygon.isValid());
 
 		Ar5FlateProvSimpleFeatureEntity ar5f = new Ar5FlateProvSimpleFeatureEntity();
-		// what should we use this id for		
+		// what should we use this id for
 		ar5f.setId(1);
 		ar5f.setGeo(borderPolygon);
 		ar5f.setArtype(new Byte("30"));
@@ -220,7 +372,8 @@ public class TestGenerateInsertChangelogFile {
 		ar5f.setArskogbon(new Byte("14"));
 		ar5f.setArgrunnf(new Byte("44"));
 		ar5f.setArkartstd("AR5");
-		java.text.SimpleDateFormat formatter = new java.text.SimpleDateFormat("yyyyMMdd");
+		java.text.SimpleDateFormat formatter = new java.text.SimpleDateFormat(
+				"yyyyMMdd");
 		ar5f.setDatafangstdato(formatter.parse("20040801"));
 		ar5f.setVerifiseringsdato(formatter.parse("20120502"));
 
@@ -233,7 +386,8 @@ public class TestGenerateInsertChangelogFile {
 		// not handle from gml
 		// <sgm:KVALITET>82</sgm:KVALITET>
 		// <sgm:OPPHAV>Skogoglandskap</sgm:OPPHAV>
-		// <sgm:REGISTRERINGSVERSJON>FKB-AR5 "4.5 20140101"</sgm:REGISTRERINGSVERSJON>
+		// <sgm:REGISTRERINGSVERSJON>FKB-AR5
+		// "4.5 20140101"</sgm:REGISTRERINGSVERSJON>
 
 		// todo handle grense
 		// ArealressursGrenseType ar5g = new ArealressursGrenseType();
@@ -247,7 +401,8 @@ public class TestGenerateInsertChangelogFile {
 	 * @throws ParseException
 	 * @throws java.text.ParseException
 	 */
-	private Ar5FlateProvSimpleFeatureEntity addPolygonTwo() throws ParseException, java.text.ParseException {
+	private Ar5FlateProvSimpleFeatureEntity addPolygonTwo()
+			throws ParseException, java.text.ParseException {
 		WKTReader reader = new WKTReader();
 
 		// with a extra point on shared line
@@ -263,7 +418,7 @@ public class TestGenerateInsertChangelogFile {
 		Assert.assertTrue("Boder not valid", borderPolygon.isValid());
 
 		Ar5FlateProvSimpleFeatureEntity ar5f = new Ar5FlateProvSimpleFeatureEntity();
-		// what should we use this id for		
+		// what should we use this id for
 		ar5f.setId(2);
 		ar5f.setGeo(borderPolygon);
 		ar5f.setArtype(new Byte("31"));
@@ -271,7 +426,8 @@ public class TestGenerateInsertChangelogFile {
 		ar5f.setArskogbon(new Byte("15"));
 		ar5f.setArgrunnf(new Byte("45"));
 		ar5f.setArkartstd("AR5");
-		java.text.SimpleDateFormat formatter = new java.text.SimpleDateFormat("yyyyMMdd");
+		java.text.SimpleDateFormat formatter = new java.text.SimpleDateFormat(
+				"yyyyMMdd");
 		ar5f.setDatafangstdato(formatter.parse("20040801"));
 		ar5f.setVerifiseringsdato(formatter.parse("20120502"));
 
@@ -284,12 +440,12 @@ public class TestGenerateInsertChangelogFile {
 		// not handle from gml
 		// <sgm:KVALITET>82</sgm:KVALITET>
 		// <sgm:OPPHAV>Skogoglandskap</sgm:OPPHAV>
-		// <sgm:REGISTRERINGSVERSJON>FKB-AR5 "4.5 20140101"</sgm:REGISTRERINGSVERSJON>
+		// <sgm:REGISTRERINGSVERSJON>FKB-AR5
+		// "4.5 20140101"</sgm:REGISTRERINGSVERSJON>
 
 		// todo handle grense
 		// ArealressursGrenseType ar5g = new ArealressursGrenseType();
 		return ar5f;
 	}
-
 
 }

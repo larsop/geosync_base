@@ -25,10 +25,11 @@ import no.geonorge.skjema.changelogfile.util.SupportedWFSOperationType;
 import no.geonorge.skjema.changelogfile.util.WSFOperation;
 import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ArealressursFlateType;
 import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ArealressursGrenseType;
+import no.skogoglandskap.util.BuildTopo;
 import no.skogoglandskap.ar5.SimpleAr5Transformerer1;
-import no.skogoglandskap.ar5.TopoGeometry;
-import no.skogoglandskap.datamodel.PolygonFeature;
 import no.skogoglandskap.datamodel.postgres.provider.Ar5FlateProvSimpleFeatureEntity;
+import no.skogoglandskap.util.PolygonFeature;
+import no.skogoglandskap.util.TopoGeometry;
 import opengis.net.gml_3_2_1.gml.AbstractCurveSegmentType;
 import opengis.net.gml_3_2_1.gml.AbstractRingPropertyType;
 import opengis.net.gml_3_2_1.gml.AbstractSurfacePatchType;
@@ -85,11 +86,11 @@ public class TestGenerateInsertChangelogFile {
 		GeometryFactory gf = new GeometryFactory();
 
 		// get common line strings with no duplicates
-		ArrayList<LineString> lineStringsNew = testConver.findAllCommonLinestrings(providerData);
+		ArrayList<LineString> lineStringsNew = BuildTopo.findAllCommonLinestrings(providerData);
 
 		// use those line strings when creating the surface type
 		// the geo hashcode is the key
-		ArrayList<TopoGeometry> geoWithCommonLinestrings = testConver.getGeoWithCommonLinestrings(providerData, lineStringsNew);
+		ArrayList<TopoGeometry> geoWithCommonLinestrings = BuildTopo.getGeoWithCommonLinestrings(providerData, lineStringsNew);
 
 		// all geometries now use the same geomtries so we are ready to Flate
 		// and Border polygons for the changelog

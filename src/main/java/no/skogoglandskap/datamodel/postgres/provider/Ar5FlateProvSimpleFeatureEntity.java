@@ -45,7 +45,7 @@ import com.vividsolutions.jts.geom.Polygon;
 @SequenceGenerator(name = "ID_SEQ", sequenceName = "ar5.ar5_flate_id_seq")
 @Proxy(lazy = false)
 public class Ar5FlateProvSimpleFeatureEntity implements java.io.Serializable,
-		no.skogoglandskap.datamodel.PolygonFeature {
+		no.skogoglandskap.util.PolygonFeature {
 
 	private static final long serialVersionUID = 1L;
 

@@ -1,6 +1,4 @@
-package no.skogoglandskap.ar5;
-
-import no.skogoglandskap.datamodel.PolygonFeature;
+package no.skogoglandskap.util;
 
 import com.vividsolutions.jts.geom.MultiLineString;
 

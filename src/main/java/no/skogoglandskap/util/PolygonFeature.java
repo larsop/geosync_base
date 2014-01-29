@@ -1,4 +1,4 @@
-package no.skogoglandskap.datamodel;
+package no.skogoglandskap.util;
 
 import com.vividsolutions.jts.geom.Polygon;
 

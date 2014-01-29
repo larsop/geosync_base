@@ -9,6 +9,7 @@ package itest.no.skogoglanskap.provider.Arealressurs;
  */
 
 // 
+import java.awt.geom.Area;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -78,6 +79,10 @@ public class TestGenerateInsertChangelogFile {
 		ArrayList<PolygonFeature> providerData = new ArrayList<>();
 		providerData.add(addPolygonOne());
 		providerData.add(addPolygonTwo());
+		
+		double orgArea = addPolygonOne().getGeo().getArea() + addPolygonTwo().getGeo().getArea();
+		double areaAfterWriteRead = 0;  
+
 
 		Assert.assertTrue("To few rows created " + providerData.size(), providerData.size() > 0);
 
@@ -99,7 +104,7 @@ public class TestGenerateInsertChangelogFile {
 
 		ArrayList<ArealressursFlateType> subscriberSurfcaeData = new ArrayList<>();
 
-		boolean useXlinKHref = false;
+		boolean useXlinKHref = true;
 
 		// convert the Flate object from local provider format to the format
 		// used by the changelog files
@@ -320,12 +325,16 @@ public class TestGenerateInsertChangelogFile {
 			}
 
 			Polygon createPolygon = geometryFactory.createPolygon(g1.getCoordinateSequence());
+			
+			areaAfterWriteRead = areaAfterWriteRead + createPolygon.getArea(); 
 
 			System.out.println("createPolygon.getArea()" + createPolygon.getArea());
 
 			Assert.assertTrue(createPolygon.getArea() > 0.0);
 
 		}
+		
+		Assert.assertEquals(orgArea, areaAfterWriteRead, 0);
 
 	}
 

@@ -21,6 +21,7 @@ import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.Identifikasj
 import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.PosisjonskvalitetPropertyType;
 import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.PosisjonskvalitetType;
 import no.geonorge.skjema.util.gml_geos.inspire.JTS2GML321;
+import no.skogoglandskap.datamodel.PolygonFeature;
 import no.skogoglandskap.datamodel.postgres.provider.Ar5FlateProvSimpleFeatureEntity;
 import opengis.net.gml_3_2_1.gml.AbstractCodeType;
 import opengis.net.gml_3_2_1.gml.AbstractRingPropertyType;
@@ -52,50 +53,26 @@ import com.vividsolutions.jts.geom.MultiLineString;
 import com.vividsolutions.jts.geom.Polygon;
 
 /**
- * This class handles mapping of local provider DAO of type no.skogoglandskap.datamodel.postgres.provider.Ar5FlateProvSimpleFeatureEntity to the ArealressursFlateType and ArealressursGrenseType
- * product specification
+ * This class handles mapping of local provider DAO of type no.skogoglandskap.datamodel.postgres.provider.Ar5FlateProvSimpleFeatureEntity to the
+ * ArealressursFlateType and ArealressursGrenseType product specification
  * 
  * This is a test class not to be used in production
  * 
  * This is test where we don't use xlink and to keep track of commonon border but just stor all coordinates with id
  * 
-        <gml:CompositeSurface srsName="urn:ogc:def:crs:EPSG::4258" gml:id="NO.SK.PKYST.COMPOSITESURFACE1">
-          <gml:surfaceMember>
-            <gml:Surface srsName="urn:ogc:def:crs:EPSG::4258" gml:id="NO.SK.PKYST.SURFACE1">
-              <gml:patches>
-                <gml:PolygonPatch interpolation="planar">
-                  <gml:exterior>
-                    <gml:Ring>
-                      <gml:curveMember xlink:href="#NO.SK.PKYST.CURVE1"/>
-                      <gml:curveMember xlink:href="#NO.SK.PKYST.CURVE3"/>
-                    </gml:Ring>
-                  </gml:exterior>
-                </gml:PolygonPatch>
-              </gml:patches>
-            </gml:Surface>
-          </gml:surfaceMember>
-        </gml:CompositeSurface>
-
-
-	<gml:Curve srsName="urn:ogc:def:crs:EPSG::4258" gml:id="NO.SK.PKYST.CURVE1">
-              <gml:segments>
-                <gml:LineStringSegment interpolation="linear">
-                  <gml:posList>59.8 11.0 59.8 10.8 60.0 10.5 60.2 10.7</gml:posList>
-                </gml:LineStringSegment>
-              </gml:segments>
-	</gml:Curve>
-
-            
-<ar5:område>
-                    <gml:Surface>
-                        <gml:polygonPatches>
-                            <gml:PolygonPatch>
-                                <gml:exterior>
-                                    <gml:Ring>
-                                        <gml:curveMember>
-                                            <gml:Curve srsName="urn:ogc:def:crs:EPSG::4258" gml:id="-1872613-1872613">
-                                                <gml:segments>
-                                   
+ * <gml:CompositeSurface srsName="urn:ogc:def:crs:EPSG::4258" gml:id="NO.SK.PKYST.COMPOSITESURFACE1"> <gml:surfaceMember> <gml:Surface
+ * srsName="urn:ogc:def:crs:EPSG::4258" gml:id="NO.SK.PKYST.SURFACE1"> <gml:patches> <gml:PolygonPatch interpolation="planar"> <gml:exterior> <gml:Ring>
+ * <gml:curveMember xlink:href="#NO.SK.PKYST.CURVE1"/> <gml:curveMember xlink:href="#NO.SK.PKYST.CURVE3"/> </gml:Ring> </gml:exterior> </gml:PolygonPatch>
+ * </gml:patches> </gml:Surface> </gml:surfaceMember> </gml:CompositeSurface>
+ * 
+ * 
+ * <gml:Curve srsName="urn:ogc:def:crs:EPSG::4258" gml:id="NO.SK.PKYST.CURVE1"> <gml:segments> <gml:LineStringSegment interpolation="linear"> <gml:posList>59.8
+ * 11.0 59.8 10.8 60.0 10.5 60.2 10.7</gml:posList> </gml:LineStringSegment> </gml:segments> </gml:Curve>
+ * 
+ * 
+ * <ar5:område> <gml:Surface> <gml:polygonPatches> <gml:PolygonPatch> <gml:exterior> <gml:Ring> <gml:curveMember> <gml:Curve
+ * srsName="urn:ogc:def:crs:EPSG::4258" gml:id="-1872613-1872613"> <gml:segments>
+ * 
  * 
  * @author lop
  * 
@@ -105,23 +82,24 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 	opengis.net.gml_3_2_1.gml.ObjectFactory of = new opengis.net.gml_3_2_1.gml.ObjectFactory();
 	no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ObjectFactory ofar5 = new no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ObjectFactory();
 	GeometryFactory gf = new GeometryFactory();
-	
+
 	Locale nLocale = new Locale.Builder().setLanguage("nb").setRegion("NO").build();
-	
 
 	private Logger logger = Logger.getLogger(SimpleAr5Transformerer1.class);
 
-
 	/*
-	 * This mapping is one to for no.skogoglandskap.datamodel.postgres.provider.Ar5FlateProvSimpleFeatureEntity to ArealressursFlateType. The geometry is of type surface. Topology is not used here.
+	 * This mapping is one to for no.skogoglandskap.datamodel.postgres.provider.Ar5FlateProvSimpleFeatureEntity to ArealressursFlateType. The geometry is of
+	 * type surface. Topology is not used here.
 	 * 
 	 * 
-	 * @see no.geonorge.skjema.changelogfile.util.IConvert2ArealressursType#convert2FlateFromProv(java.util.UUID, java.lang.Object)
+	 * @see no.geonorge.skjema.changelogfile.util.IConvert2ArealressursType# convert2FlateFromProv(java.util.UUID, java.lang.Object)
 	 */
-	public ArealressursFlateType convert2FlateFromProv(UUID lokalId, Object input) {
+	public ArealressursFlateType convert2FlateFromProv(UUID lokalId, Object input, boolean useXlinKHref ) {
+
+		
 
 		TopoGeometry tg = (TopoGeometry) input;
-		
+
 		Ar5FlateProvSimpleFeatureEntity a = (Ar5FlateProvSimpleFeatureEntity) tg.ar5FlateProvSimpleFeatureEntity;
 
 		ArealressursFlateType ar5 = ofar5.createArealressursFlateType();
@@ -154,76 +132,50 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 			posisjonskvalitetType.setMålemetode(makeAbstractType("" + a.getMaalemetode(), "Målemetode"));
 
 		}
-		
-		 
 
 		Calendar datafangstdato = Calendar.getInstance(nLocale);
 		ar5.setDatafangstdato(getXmlCalender(datafangstdato.getTime()));
-		
-		
-		
-		
-		
-		
-		
-		
-		
+
 		PolygonPatchType newPolygonPatch = of.createPolygonPatchType();
-		
+
 		AbstractRingPropertyType valueExterior = of.createAbstractRingPropertyType();
-		
-		
-		
-		RingType  eee = of.createRingType();
-		
+
+		RingType eee = of.createRingType();
+
 		MultiLineString exteriorLineStrings = tg.exteriorLineStrings;
 		for (int i = 0; i < exteriorLineStrings.getNumGeometries(); i++) {
 			LineString ln = (LineString) exteriorLineStrings.getGeometryN(i);
-			CurvePropertyType cs = creatCurveType(ln);
+			CurvePropertyType cs = creatCurveType(ln, useXlinKHref);
 			eee.getCurveMembers().add(cs);
-			
-			
-		}
-		
-		
-		JAXBElement<RingType> valueRingType = of.createRing(eee );
-		
-		
-		valueExterior.setAbstractRing(valueRingType);
-		newPolygonPatch.setExterior(valueExterior );
-		JAXBElement<? extends AbstractSurfacePatchType> e = of.createPolygonPatch(newPolygonPatch );
-		
 
-		SurfacePatchArrayPropertyType  sss = of.createSurfacePatchArrayPropertyType();
+		}
+
+		JAXBElement<RingType> valueRingType = of.createRing(eee);
+
+		valueExterior.setAbstractRing(valueRingType);
+		newPolygonPatch.setExterior(valueExterior);
+		JAXBElement<? extends AbstractSurfacePatchType> e = of.createPolygonPatch(newPolygonPatch);
+
+		SurfacePatchArrayPropertyType sss = of.createSurfacePatchArrayPropertyType();
 
 		sss.getAbstractSurfacePatches().add(e);
-		
-		
-		JAXBElement<SurfacePatchArrayPropertyType> surfacePatchArrayPropertyType = of.createPatches(sss);
 
-		
+		JAXBElement<SurfacePatchArrayPropertyType> surfacePatchArrayPropertyType = of.createPatches(sss);
 
 		SurfacePropertyType surfacePropertyType = new SurfacePropertyType();
 
 		SurfaceType surfaceType = of.createSurfaceType();
 
 		surfaceType.setPatches(surfacePatchArrayPropertyType);
-		
-		
+
 		JAXBElement<SurfaceType> surfaceTypeAbs = of.createSurface(surfaceType);
-		
+
 		surfacePropertyType.setAbstractSurface(surfaceTypeAbs);
-		
-		
-		
+
 		SurfacePropertyType surfacePropertyTypeValid = of.createSurfacePropertyType();
 		surfacePropertyTypeValid.setAbstractSurface(surfaceTypeAbs);
-		
+
 		ar5.setOmråde(surfacePropertyType);
-		
-		
-		
-		
 
 		// set bounded by
 		String srsName = "urn:ogc:def:crs:EPSG::" + a.getGeo().getSRID();
@@ -247,7 +199,7 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 	 * 
 	 * (non-Javadoc)
 	 * 
-	 * @see no.geonorge.skjema.changelogfile.util.IConvert2ArealressursType#convert2GrenseType(java.util.UUID, java.lang.Object)
+	 * @see no.geonorge.skjema.changelogfile.util.IConvert2ArealressursType# convert2GrenseType(java.util.UUID, java.lang.Object)
 	 */
 	@Override
 	public ArealressursGrenseType convert2GrenseType(UUID lokalId, Object input) {
@@ -267,7 +219,7 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 		Calendar datafangstdato = Calendar.getInstance(nLocale);
 		ar5Border.setDatafangstdato(getXmlCalender(datafangstdato.getTime()));
 
-		CurvePropertyType curvePropertyType2 = creatCurveType(borderLineString);
+		CurvePropertyType curvePropertyType2 = creatCurveType(borderLineString, false);
 
 		ar5Border.setGrense(curvePropertyType2);
 
@@ -300,21 +252,20 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 
 	// move to common classes
 	private XMLGregorianCalendar getXmlCalender(Date dato) {
-		XMLGregorianCalendar now = null; 
-		        
+		XMLGregorianCalendar now = null;
+
 		GregorianCalendar gregorianCalendar = new GregorianCalendar();
 		gregorianCalendar.setTime(dato);
-        DatatypeFactory datatypeFactory;
+		DatatypeFactory datatypeFactory;
 		try {
 			datatypeFactory = DatatypeFactory.newInstance();
-	        now = 
-	                datatypeFactory.newXMLGregorianCalendar(gregorianCalendar);
+			now = datatypeFactory.newXMLGregorianCalendar(gregorianCalendar);
 
 		} catch (DatatypeConfigurationException e) {
-			logger.error("Failed to convert " + dato + " to XMLGregorianCalendar"); 
-			
+			logger.error("Failed to convert " + dato + " to XMLGregorianCalendar");
+
 		}
-		
+
 		return now;
 	}
 
@@ -323,10 +274,11 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 	 * 
 	 * @param of
 	 * @param borderLineString
+	 * @param useXlinKHref
 	 * @return
 	 */
 	// TODO move this to a common util method
-	private CurvePropertyType creatCurveType(LineString borderLineString) {
+	private CurvePropertyType creatCurveType(LineString borderLineString, boolean useXlinKHref) {
 
 		LineStringType lineStringType = (LineStringType) JTS2GML321.toGML(borderLineString);
 		LineStringSegmentType lineStringSegmentType = of.createLineStringSegmentType();
@@ -337,16 +289,26 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 		CurveType createCurveType = of.createCurveType();
 		createCurveType.setSegments(segments);
 
+		CurvePropertyType curvePropertyType = null;
+		curvePropertyType = of.createCurvePropertyType();
+
 		// a hack to set id
-		createCurveType.setId("ArealressursGrense." +  + borderLineString.hashCode());
-		String srsName = "urn:ogc:def:crs:EPSG::" + borderLineString.getSRID();
-		createCurveType.setSrsName(srsName);
-		JAXBElement<CurveType> abstractCurve = of.createCurve(createCurveType);
-		CurvePropertyType curvePropertyType = of.createCurvePropertyType();
-		curvePropertyType.setAbstractCurve(abstractCurve);
-		
+		if (!useXlinKHref) {
+			createCurveType.setId(getGmlId(borderLineString));
+			String srsName = "urn:ogc:def:crs:EPSG::" + borderLineString.getSRID();
+			createCurveType.setSrsName(srsName);
+			JAXBElement<CurveType> abstractCurve = of.createCurve(createCurveType);
+			curvePropertyType.setAbstractCurve(abstractCurve);
+
+		} else {
+			curvePropertyType.setHref("#" + getGmlId(borderLineString));
+		}
 
 		return curvePropertyType;
+	}
+
+	private String getGmlId(LineString borderLineString) {
+		return "ArealressursGrense." + +borderLineString.hashCode();
 	}
 
 	/**
@@ -358,157 +320,176 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 	 */
 	private AbstractCodeType makeAbstractType(String value, String codeSpaceType) {
 		AbstractCodeType abstractCodeType = new AbstractCodeType();
-		//String codeSpace = "http://www.geosynkronisering.no/files/skjema/Arealressurs/4.5/" + codeSpaceType + ".xml";
-		//abstractCodeType.setCodeSpace(codeSpace);
+
+		// this is moved to the the xsd, wait for accept on this
+		// String codeSpace = "http://www.geosynkronisering.no/files/skjema/Arealressurs/4.5/" + codeSpaceType + ".xml";
+		// abstractCodeType.setCodeSpace(codeSpace);
 		abstractCodeType.setValue(value);
 		return abstractCodeType;
 	}
 
 	/**
-	 * Find all common line strings from the list of provider data Works only for polygons.
+	 * A helper method to find all common line strings from list polygons.
 	 * 
 	 * @param providerData
-	 *            The list of input data to work on
+	 *            The list of input polygons to work on
 	 * 
 	 * @return the list of common line strings where duplicates are removed.
 	 * 
-	 *         TODO move to a util method
+	 * 
 	 */
-	// TODO handle interior rings
-	public ArrayList<LineString> findAllCommonLinestrings(ArrayList<Ar5FlateProvSimpleFeatureEntity> providerData) {
+	// TODO move to util method
+	public ArrayList<LineString> findAllCommonLinestrings(ArrayList<PolygonFeature> providerData) {
 
-		// holds the list of all line strings
-		ArrayList<LineString> lineStringsOrg = new ArrayList<LineString>();
+		// the result where common line strings are shared
+		ArrayList<LineString> lineStringsNew = new ArrayList<LineString>();
 
-		// the srid used
-		Integer srid = null;
-
-		// find all line strings in all geometries
-
-		for (Ar5FlateProvSimpleFeatureEntity aa : providerData) {
-
-			Polygon p = (Polygon) aa.getGeo();
-
-			// not good coding
-			if (srid == null) {
-				srid = p.getSRID();
+		if (providerData == null || providerData.size() == 0) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("enter, no data in for providerData");
+			}
+		} else {
+			if (logger.isDebugEnabled()) {
+				logger.debug("enter, handle data with " + providerData.size() + " geos ");
 			}
 
-			LineString lineString = getLineString(p.getExteriorRing());
+			// holds the list of all line strings found in input geos
+			ArrayList<LineString> lineStringsOrg = new ArrayList<LineString>();
 
-			lineStringsOrg.add(lineString);
+			// the srid used
+			Integer srid = providerData.get(0).getGeo().getSRID();
 
-			for (int i = 0; i < p.getNumInteriorRing(); i++) {
-				LineString ls = getLineString(p.getInteriorRingN(i));
+			// find all line strings in all geometries both Exterior and
+			// Interior
 
-				lineStringsOrg.add(ls);
+			for (int i = 0; i < providerData.size(); i++) {
+				Polygon geo = providerData.get(i).getGeo();
+				LineString lineString = geo.getExteriorRing();
+				lineStringsOrg.add(lineString);
 
+				for (int x = 0; x < geo.getNumInteriorRing(); x++) {
+					LineString ls = geo.getInteriorRingN(x);
+					lineStringsOrg.add(ls);
+				}
+
+			}
+
+			if (logger.isDebugEnabled()) {
+				logger.debug("Total number of linstrings before union " + lineStringsOrg.size());
+			}
+
+			// Create a collection of org linestrings
+			MultiLineString geometryCollectionOrgMultiLineString = gf.createMultiLineString(lineStringsOrg.toArray(new LineString[lineStringsOrg.size()]));
+
+			// // Get a union of all of the line strings
+			Geometry newLinstringGeo = geometryCollectionOrgMultiLineString.union();
+
+			// make a collection of only line strings, remove points and other geos
+			for (int i = 0; i < newLinstringGeo.getNumGeometries(); i++) {
+				Geometry g = newLinstringGeo.getGeometryN(i);
+				if (g instanceof LineString) {
+					lineStringsNew.add((LineString) g);
+					g.setSRID(srid);
+
+				}
+			}
+
+			if (logger.isDebugEnabled()) {
+				logger.debug("Total number of linstrings after union " + lineStringsNew.size());
 			}
 
 		}
 
-		// find common line string
-		// Create a collection of org linestrings
-		MultiLineString geometryCollectionOrgMultiLineString = gf.createMultiLineString(lineStringsOrg.toArray(new LineString[lineStringsOrg.size()]));
-
-		// // Get a union of all of the line strings
-		Geometry newLinstringGeo = geometryCollectionOrgMultiLineString.union();
-
-		// hold the list of linstrings after union
-		ArrayList<LineString> lineStringsNew = new ArrayList<LineString>();
-
-		// make a collection of only line strings, remove points and other geos
-		for (int i = 0; i < newLinstringGeo.getNumGeometries(); i++) {
-			Geometry g = newLinstringGeo.getGeometryN(i);
-			if (g instanceof LineString) {
-				lineStringsNew.add((LineString) g);
-				g.setSRID(srid);
-
-			}
+		if (logger.isDebugEnabled()) {
+			logger.debug("leave");
 		}
 
 		return lineStringsNew;
+
 	}
 
 	/**
-	 * Use the list of common line strings an recreate the polygons
+	 * Find all linestrings that belongs to each polygon and based on the list og listOfCommonLineStrings
 	 * 
 	 * @param providerData
-	 * @param gf
-	 * @param lineStringsNew
+	 * @param listOfCommonLineStrings
 	 */
-	public ArrayList<TopoGeometry> getGeoWithCommonLinestrings(ArrayList<Ar5FlateProvSimpleFeatureEntity> providerData, ArrayList<LineString> lineStringsNew) {
-		
-		ArrayList< TopoGeometry> lr = new ArrayList<>();
-		
-		Integer srid = null;
+	// TODO move to util method
 
-		// replace the borders with the new linstrings that are common for all polygons
-		for (Ar5FlateProvSimpleFeatureEntity ar5FlateProvSimpleFeatureEntity : providerData) {
+	public ArrayList<TopoGeometry> getGeoWithCommonLinestrings(ArrayList<PolygonFeature> providerData, ArrayList<LineString> listOfCommonLineStrings) {
 
-			Polygon p = (Polygon) ar5FlateProvSimpleFeatureEntity.getGeo();
+		ArrayList<TopoGeometry> lr = new ArrayList<>();
 
-			// not good coding
-			if (srid == null) {
-				srid = p.getSRID();
+		if (providerData == null || providerData.size() == 0) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("enter, no data in for providerData");
+			}
+		} else {
+			if (logger.isDebugEnabled()) {
+				logger.debug("enter, handle data with " + providerData.size() + " geos ");
 			}
 
-			// get exterior ring
-			LineString exteriorLineString = getLineString(p.getExteriorRing());
+			// find the linestrings that belongs to each polygon
+			for (PolygonFeature polygonFeature : providerData) {
 
-			ArrayList<LineString> exteriorLineStringtmp = getLineStringsThatIntersects(lineStringsNew, exteriorLineString);
-			MultiLineString exteriorLineStrings = gf.createMultiLineString(exteriorLineStringtmp.toArray(new LineString[exteriorLineStringtmp.size()]));
+				Polygon p = (Polygon) polygonFeature.getGeo();
 
+				LineString exteriorLineString = p.getExteriorRing();
 
-			
-			TopoGeometry tg = new TopoGeometry(ar5FlateProvSimpleFeatureEntity);
-			
-			
-			tg.exteriorLineStrings= exteriorLineStrings;
-			
+				ArrayList<LineString> exteriorLineStringtmp = getLineStringsThatIntersects(exteriorLineString, listOfCommonLineStrings);
 
+				MultiLineString exteriorLineStrings = gf.createMultiLineString(exteriorLineStringtmp.toArray(new LineString[exteriorLineStringtmp.size()]));
 
-			MultiLineString[] holes =  new MultiLineString[p.getNumGeometries()];
+				MultiLineString[] holes = new MultiLineString[p.getNumGeometries()];
 
-			for (int i = 0; i < p.getNumInteriorRing(); i++) {
-				LineString holeLineString = getLineString(p.getInteriorRingN(i));
-				
-				ArrayList<LineString> holeLineStringTmp = getLineStringsThatIntersects(lineStringsNew, holeLineString);
-				MultiLineString newLis = gf.createMultiLineString(holeLineStringTmp.toArray(new LineString[holeLineStringTmp.size()]));
+				for (int i = 0; i < p.getNumInteriorRing(); i++) {
+					LineString holeLineString = p.getInteriorRingN(i);
 
-				holes[i] = newLis;
+					ArrayList<LineString> holeLineStringTmp = getLineStringsThatIntersects(holeLineString, listOfCommonLineStrings);
+					MultiLineString newLis = gf.createMultiLineString(holeLineStringTmp.toArray(new LineString[holeLineStringTmp.size()]));
+
+					holes[i] = newLis;
+				}
+
+				TopoGeometry tg = new TopoGeometry(polygonFeature, exteriorLineStrings, holes);
+
+				lr.add(tg);
+
 			}
-			
-			tg.holes = holes ;
-			
-			lr.add(tg);
-			
-			
-			
+
+			if (logger.isDebugEnabled()) {
+				logger.debug("leave with new Topolist " + providerData.size() + " geos ");
+			}
 
 		}
-		
+
+		if (logger.isDebugEnabled()) {
+			logger.debug("leave");
+		}
+
 		return lr;
 	}
 
-
-	private ArrayList<LineString> getLineStringsThatIntersects(ArrayList<LineString> lineStringsNew, LineString thisLineString) {
+	/**
+	 * Build up a linestring list based based on the list listOfCommonLineStrings that overlaps with the inputLineString
+	 * 
+	 * @param inputLineString
+	 * @param listOfCommonLineStrings
+	 * @return the new list of linestrings
+	 */
+	// TODO move to util method
+	private ArrayList<LineString> getLineStringsThatIntersects(LineString inputLineString, ArrayList<LineString> listOfCommonLineStrings) {
 		// hold the list linstrings that is of interest for this polygon
 		ArrayList<LineString> lineStringstmp = new ArrayList<LineString>();
 
-		// get all that touch touches this polygon
-		for (LineString ls : lineStringsNew) {
-			if (thisLineString.intersects(ls) && thisLineString.intersection(ls).getLength() > 0.00000) {
+		// get all that touch touches this linestring
+		for (LineString ls : listOfCommonLineStrings) {
+			// TODO Maybe we need a better way to this
+			if (inputLineString.intersects(ls) && inputLineString.intersection(ls).getLength() > 0.00000) {
 				lineStringstmp.add(ls);
 			}
 		}
 		return lineStringstmp;
-	}
-
-	private LineString getLineString(LineString exteriorRing) {
-		Coordinate[] coordinates = exteriorRing.getCoordinates();
-		LineString createLineString = gf.createLineString(coordinates);
-		return createLineString;
 	}
 
 }

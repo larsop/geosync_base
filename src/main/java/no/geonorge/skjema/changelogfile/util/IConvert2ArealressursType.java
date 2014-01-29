@@ -23,7 +23,7 @@ public interface IConvert2ArealressursType {
 	 * 
 	 * @return the generated objected
 	 */
-	public ArealressursFlateType convert2FlateFromProv(UUID LokalId, Object input);
+	public ArealressursFlateType convert2FlateFromProv(UUID LokalId, Object input, boolean useXlinKHref);
 	
 	/**
 	 * Convert the input object to a ArealressursGrenseType. The format of the input object is know by the supplier.

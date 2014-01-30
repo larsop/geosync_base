@@ -107,7 +107,11 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 		IdentifikasjonPropertyType v = new IdentifikasjonPropertyType();
 		IdentifikasjonType v1 = new IdentifikasjonType();
 		v1.setLokalId(lokalId.toString());
+		v1.setNavnerom("no.skogoglandskap.ar5.ArealressursFlate");
+		v1.setVersjonId("1.0");
 		v.setIdentifikasjon(v1);
+		
+
 		ar5.setIdentifikasjon(v);
 
 		ar5.setArealtype(makeAbstractType("" + a.getArtype(), "ArealressursArealtype"));
@@ -211,6 +215,9 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 		IdentifikasjonPropertyType v = new IdentifikasjonPropertyType();
 		IdentifikasjonType v1 = new IdentifikasjonType();
 		v1.setLokalId(lokalId.toString());
+		v1.setNavnerom("no.skogoglandskap.ar5.ArealressursGrense");
+		v1.setVersjonId("1.0");
+
 		v.setIdentifikasjon(v1);
 		ar5Border.setIdentifikasjon(v);
 

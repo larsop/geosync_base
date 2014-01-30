@@ -148,10 +148,10 @@ public class TestGenerateInsertChangelogFile {
 
 		String name;
 
-		if (useXlinKHref) {
-			name = "/tmp/delt_geo.xml";
+		if (!useXlinKHref) {
+			name = "/tmp/fil1.xml";
 		} else {
-			name = "/tmp/eid_geo.xml";
+			name = "/tmp/fil2.xml";
 		}
 
 		FileOutputStream os = null;
@@ -169,7 +169,6 @@ public class TestGenerateInsertChangelogFile {
 		}
 
 		// test umarshall file
-
 		TransactionCollection unmarshal = changelogfileJaxb2Helper.unmarshal(name);
 
 		// get all rows
@@ -454,6 +453,7 @@ public class TestGenerateInsertChangelogFile {
 		java.text.SimpleDateFormat formatter = new java.text.SimpleDateFormat("yyyyMMdd");
 		ar5f.setDatafangstdato(formatter.parse("20040801"));
 		ar5f.setVerifiseringsdato(formatter.parse("20120502"));
+		
 
 		// Nøyaktighet is not used on flate in Ar5
 

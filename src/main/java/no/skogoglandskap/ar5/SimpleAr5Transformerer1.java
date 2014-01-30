@@ -1,5 +1,7 @@
 package no.skogoglandskap.ar5;
 
+
+
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -20,6 +22,8 @@ import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.Identifikasj
 import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.IdentifikasjonType;
 import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.PosisjonskvalitetPropertyType;
 import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.PosisjonskvalitetType;
+import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.RegistreringsversjonPropertyType;
+import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.RegistreringsversjonType;
 import no.geonorge.skjema.util.gml_geos.inspire.JTS2GML321;
 import no.skogoglandskap.datamodel.postgres.provider.Ar5FlateProvSimpleFeatureEntity;
 import no.skogoglandskap.util.TopoGeometry;
@@ -123,6 +127,11 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 		ar5.setGrunnforhold(makeAbstractType("" + a.getArgrunnf(), "ArealressursGrunnforhold"));
 
 		ar5.setKartstandard(makeAbstractType("" + a.getArkartstd(), "ArealressursKartstandard"));
+		
+		
+		
+		
+
 
 		{
 			PosisjonskvalitetPropertyType posisjonskvalitetPropertyType = new PosisjonskvalitetPropertyType();
@@ -139,6 +148,21 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 
 		Calendar datafangstdato = Calendar.getInstance(nLocale);
 		ar5.setDatafangstdato(getXmlCalender(datafangstdato.getTime()));
+		
+		RegistreringsversjonPropertyType registreringsversjon = new RegistreringsversjonPropertyType();
+		RegistreringsversjonType registreringsversjonsss = new RegistreringsversjonType();
+		registreringsversjonsss.setProdukt("ar5");
+		registreringsversjonsss.setVersjon("0.1");
+		
+		registreringsversjon.setRegistreringsversjon(registreringsversjonsss );
+		ar5.setRegistreringsversjon(registreringsversjon);
+		
+		ar5.setOppdateringsdato(getXmlCalender(datafangstdato.getTime()));
+		ar5.setOpphav("opphav");
+		ar5.setVerifiseringsdato(getXmlCalender(datafangstdato.getTime()));
+
+		ar5.getProsesshistories().add("Prosesshistories");
+
 
 		PolygonPatchType newPolygonPatch = of.createPolygonPatchType();
 
@@ -220,6 +244,7 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 
 		v.setIdentifikasjon(v1);
 		ar5Border.setIdentifikasjon(v);
+		
 
 		// ar5.setArealtype(arealtype);
 
@@ -231,6 +256,21 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 		ar5Border.setGrense(curvePropertyType2);
 
 		ar5Border.setAvgrensingType(makeAbstractType("12", "ArealressursAvgrensingType"));
+		
+		RegistreringsversjonPropertyType registreringsversjon = new RegistreringsversjonPropertyType();
+		RegistreringsversjonType registreringsversjonsss = new RegistreringsversjonType();
+		registreringsversjonsss.setProdukt("ar5");
+		registreringsversjonsss.setVersjon("0.1");
+		
+		registreringsversjon.setRegistreringsversjon(registreringsversjonsss );
+		ar5Border.setRegistreringsversjon(registreringsversjon);
+		
+		ar5Border.setOppdateringsdato(getXmlCalender(datafangstdato.getTime()));
+		ar5Border.setOpphav("opphav");
+		ar5Border.setVerifiseringsdato(getXmlCalender(datafangstdato.getTime()));
+
+		ar5Border.getProsesshistories().add("Prosesshistories");
+
 
 		{
 			PosisjonskvalitetPropertyType posisjonskvalitetPropertyType = new PosisjonskvalitetPropertyType();

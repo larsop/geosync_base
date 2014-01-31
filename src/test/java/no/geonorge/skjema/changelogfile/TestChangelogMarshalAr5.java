@@ -4,6 +4,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Locale;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.stream.StreamResult;
@@ -83,7 +85,10 @@ public class TestChangelogMarshalAr5 {
 
 		}
 
-		TransactionCollection transactionCollection = changelogfileJaxb2Helper.getTransactionCollection(wfsOperationList);
+		Locale nLocale = new Locale.Builder().setLanguage("nb").setRegion("NO").build();
+		Calendar timestamp = Calendar.getInstance(nLocale);
+
+		TransactionCollection transactionCollection = changelogfileJaxb2Helper.getTransactionCollection(wfsOperationList, timestamp);
 
 		Marshaller marshaller = genericMarshaller.getMarshaller();
 
@@ -132,7 +137,9 @@ public class TestChangelogMarshalAr5 {
 		}
 
 
-		TransactionCollection transactionCollection = changelogfileJaxb2Helper.getTransactionCollection(wfsOperationList);
+		Locale nLocale = new Locale.Builder().setLanguage("nb").setRegion("NO").build();
+		Calendar timestamp = Calendar.getInstance(nLocale);
+		TransactionCollection transactionCollection = changelogfileJaxb2Helper.getTransactionCollection(wfsOperationList,timestamp);
 
 		Marshaller marshaller = genericMarshaller.getMarshaller();
 

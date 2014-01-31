@@ -90,6 +90,10 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 	Locale nLocale = new Locale.Builder().setLanguage("nb").setRegion("NO").build();
 
 	private Logger logger = Logger.getLogger(SimpleAr5Transformerer1.class);
+	
+	private String GRENSE_PREFIX = "Grense";
+	
+
 
 	/*
 	 * This mapping is one to for no.skogoglandskap.datamodel.postgres.provider.Ar5FlateProvSimpleFeatureEntity to ArealressursFlateType. The geometry is of
@@ -98,11 +102,14 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 	 * 
 	 * @see no.geonorge.skjema.changelogfile.util.IConvert2ArealressursType# convert2FlateFromProv(java.util.UUID, java.lang.Object)
 	 */
-	public ArealressursFlateType convert2FlateFromProv(UUID lokalId, Object input, boolean useXlinKHref ) {
+	public ArealressursFlateType convert2FlateFromProv(UUID lokalId, Object input, boolean useXlinKHref, String gmlId ) {
 
 		
 
 		TopoGeometry tg = (TopoGeometry) input;
+		
+	
+		
 
 		Ar5FlateProvSimpleFeatureEntity a = (Ar5FlateProvSimpleFeatureEntity) tg.ar5FlateProvSimpleFeatureEntity;
 
@@ -114,6 +121,8 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 		v1.setNavnerom("no.skogoglandskap.ar5.ArealressursFlate");
 		v1.setVersjonId("1.0");
 		v.setIdentifikasjon(v1);
+		
+		ar5.setId(gmlId);
 		
 
 		ar5.setIdentifikasjon(v);
@@ -173,7 +182,7 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 		MultiLineString exteriorLineStrings = tg.exteriorLineStrings;
 		for (int i = 0; i < exteriorLineStrings.getNumGeometries(); i++) {
 			LineString ln = (LineString) exteriorLineStrings.getGeometryN(i);
-			CurvePropertyType cs = creatCurveType(ln, useXlinKHref);
+			CurvePropertyType cs = creatCurveType(ln, useXlinKHref, "Flate." + gmlId);
 			eee.getCurveMembers().add(cs);
 
 		}
@@ -193,7 +202,10 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 		SurfacePropertyType surfacePropertyType = new SurfacePropertyType();
 
 		SurfaceType surfaceType = of.createSurfaceType();
-
+		
+		// TODO what id should be used here ??? 
+		surfaceType.setId("Surface." + gmlId);
+		
 		surfaceType.setPatches(surfacePatchArrayPropertyType);
 
 		JAXBElement<SurfaceType> surfaceTypeAbs = of.createSurface(surfaceType);
@@ -203,7 +215,9 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 		SurfacePropertyType surfacePropertyTypeValid = of.createSurfacePropertyType();
 		surfacePropertyTypeValid.setAbstractSurface(surfaceTypeAbs);
 
+		
 		ar5.setOmråde(surfacePropertyType);
+	
 
 		// set bounded by
 		String srsName = "urn:ogc:def:crs:EPSG::" + a.getGeo().getSRID();
@@ -230,7 +244,7 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 	 * @see no.geonorge.skjema.changelogfile.util.IConvert2ArealressursType# convert2GrenseType(java.util.UUID, java.lang.Object)
 	 */
 	@Override
-	public ArealressursGrenseType convert2GrenseType(UUID lokalId, Object input) {
+	public ArealressursGrenseType convert2GrenseType(UUID lokalId, Object input, String gmlId) {
 
 		LineString borderLineString = (LineString) input;
 
@@ -244,6 +258,7 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 
 		v.setIdentifikasjon(v1);
 		ar5Border.setIdentifikasjon(v);
+		ar5Border.setId(gmlId);
 		
 
 		// ar5.setArealtype(arealtype);
@@ -251,7 +266,8 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 		Calendar datafangstdato = Calendar.getInstance(nLocale);
 		ar5Border.setDatafangstdato(getXmlCalender(datafangstdato.getTime()));
 
-		CurvePropertyType curvePropertyType2 = creatCurveType(borderLineString, false);
+		// in gense never ref always coordinats
+		CurvePropertyType curvePropertyType2 = creatCurveType(borderLineString, false, GRENSE_PREFIX);
 
 		ar5Border.setGrense(curvePropertyType2);
 
@@ -297,6 +313,7 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 
 	}
 
+
 	// move to common classes
 	private XMLGregorianCalendar getXmlCalender(Date dato) {
 		XMLGregorianCalendar now = null;
@@ -325,7 +342,7 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 	 * @return
 	 */
 	// TODO move this to a common util method
-	private CurvePropertyType creatCurveType(LineString borderLineString, boolean useXlinKHref) {
+	private CurvePropertyType creatCurveType(LineString borderLineString, boolean useXlinKHref, String idPrefix) {
 
 		LineStringType lineStringType = (LineStringType) JTS2GML321.toGML(borderLineString);
 		LineStringSegmentType lineStringSegmentType = of.createLineStringSegmentType();
@@ -334,6 +351,9 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 		SegmentsElement segments = of.createSegmentsElement();
 		segments.getAbstractCurveSegments().add(e);
 		CurveType createCurveType = of.createCurveType();
+		
+		// TODO find put what id to use her
+		createCurveType.setId(getGmlId(idPrefix ,borderLineString, useXlinKHref));
 		createCurveType.setSegments(segments);
 
 		CurvePropertyType curvePropertyType = null;
@@ -341,21 +361,27 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 
 		// a hack to set id
 		if (!useXlinKHref) {
-			createCurveType.setId(getGmlId(borderLineString));
+			createCurveType.setId(getGmlId(idPrefix , borderLineString, useXlinKHref));
 			String srsName = "urn:ogc:def:crs:EPSG::" + borderLineString.getSRID();
 			createCurveType.setSrsName(srsName);
 			JAXBElement<CurveType> abstractCurve = of.createCurve(createCurveType);
 			curvePropertyType.setAbstractCurve(abstractCurve);
 
 		} else {
-			curvePropertyType.setHref("#" + getGmlId(borderLineString));
+			// use the same id all over
+			curvePropertyType.setHref("#" + getGmlId(idPrefix ,borderLineString, useXlinKHref));
 		}
 
 		return curvePropertyType;
 	}
 
-	private String getGmlId(LineString borderLineString) {
-		return "ArealressursGrense." + +borderLineString.hashCode();
+	private String getGmlId(String idPrefix, LineString borderLineString, boolean useXlinKHref) {
+		if (useXlinKHref) {
+			return GRENSE_PREFIX +borderLineString.hashCode();
+		} else {
+			return idPrefix  +borderLineString.hashCode();
+				
+		}
 	}
 
 	/**

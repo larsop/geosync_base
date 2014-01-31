@@ -9,11 +9,13 @@ package itest.no.skogoglanskap.provider.Arealressurs;
  */
 
 // 
-import java.awt.geom.Area;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 import javax.xml.bind.JAXBElement;
@@ -26,9 +28,9 @@ import no.geonorge.skjema.changelogfile.util.SupportedWFSOperationType;
 import no.geonorge.skjema.changelogfile.util.WSFOperation;
 import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ArealressursFlateType;
 import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ArealressursGrenseType;
-import no.skogoglandskap.util.BuildTopo;
 import no.skogoglandskap.ar5.SimpleAr5Transformerer1;
 import no.skogoglandskap.datamodel.postgres.provider.Ar5FlateProvSimpleFeatureEntity;
+import no.skogoglandskap.util.BuildTopo;
 import no.skogoglandskap.util.PolygonFeature;
 import no.skogoglandskap.util.TopoGeometry;
 import opengis.net.gml_3_2_1.gml.AbstractCurveSegmentType;
@@ -108,10 +110,11 @@ public class TestGenerateInsertChangelogFile {
 
 		// convert the Flate object from local provider format to the format
 		// used by the changelog files
+		int gmlFlateId = 0;
 		for (TopoGeometry aa : geoWithCommonLinestrings) {
 
 			// convert the surface object
-			ArealressursFlateType ar5Surface = testConver.convert2FlateFromProv(UUID.randomUUID(), aa, useXlinKHref);
+			ArealressursFlateType ar5Surface = testConver.convert2FlateFromProv(UUID.randomUUID(), aa, useXlinKHref, "no.skogoglandskap.ar5.ArealressursFlate." + gmlFlateId++);
 			subscriberSurfcaeData.add(ar5Surface);
 
 		}
@@ -120,9 +123,11 @@ public class TestGenerateInsertChangelogFile {
 		ArrayList<ArealressursGrenseType> subscriberBorderData = new ArrayList<>();
 
 		// create the grense objects
+		int gmlGrenseId = 0;
+
 		for (LineString ls : lineStringsNew) {
 			// convert the border object
-			ArealressursGrenseType ar5Border = testConver.convert2GrenseType(UUID.randomUUID(), ls);
+			ArealressursGrenseType ar5Border = testConver.convert2GrenseType(UUID.randomUUID(), ls, "no.skogoglandskap.ar5.ArealressursGrense." + gmlGrenseId++);
 			subscriberBorderData.add(ar5Border);
 
 		}
@@ -142,7 +147,10 @@ public class TestGenerateInsertChangelogFile {
 			wfsOperationList.add(wfs);
 		}
 
-		TransactionCollection transactionCollection = changelogfileJaxb2Helper.getTransactionCollection(wfsOperationList);
+		Locale nLocale = new Locale.Builder().setLanguage("nb").setRegion("NO").build();
+		Calendar timestamp = Calendar.getInstance(nLocale);
+
+		TransactionCollection transactionCollection = changelogfileJaxb2Helper.getTransactionCollection(wfsOperationList, timestamp );
 
 		Marshaller marshaller = changelogfileJaxb2Helper.getMarshaller();
 

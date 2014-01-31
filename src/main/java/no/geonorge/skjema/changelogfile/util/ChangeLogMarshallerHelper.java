@@ -6,14 +6,22 @@ import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -279,7 +287,7 @@ public class ChangeLogMarshallerHelper {
 	 * @throws IllegalArgumentException
 	 * @throws InvocationTargetException
 	 */
-	public TransactionCollection getTransactionCollection(ArrayList<WSFOperation> wfsOperationList) throws ParseException, IllegalAccessException,
+	public TransactionCollection getTransactionCollection(ArrayList<WSFOperation> wfsOperationList, Calendar timestamp ) throws ParseException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException {
 
 		if (logger.isDebugEnabled()) {
@@ -296,10 +304,17 @@ public class ChangeLogMarshallerHelper {
 		SupportedWFSOperationType currentWfsOprType = null;
 
 		no.geonorge.skjema.changelogfile.TransactionCollection transactionCollection = new no.geonorge.skjema.changelogfile.TransactionCollection();
+		transactionCollection.setTimeStamp(timestamp );
 
 		List<Transaction> transactionsList = transactionCollection.getTransactions();
 		Transaction transaction = new Transaction();
 		transactionsList.add(transaction);
+		
+		// TODO find way to handle 
+		transaction.setVersion("2.0.0");
+		transaction.setService("WFS");
+		
+		
 
 		ObjectFactory wfsObjectFactory = new opengis.net.wfs_2_0.wfs.ObjectFactory();
 
@@ -440,6 +455,18 @@ public class ChangeLogMarshallerHelper {
 			i++;
 
 		}
+		
+		// TODO find out what this values should be
+		BigInteger bi = BigInteger.valueOf(i);
+		transactionCollection.setNumberMatched(bi);
+		transactionCollection.setNumberReturned(bi);
+		transactionCollection.setStartIndex(BigInteger.valueOf(0));
+		transactionCollection.setEndIndex(bi);
+		
+		
+		
+		
+
 
 		if (logger.isDebugEnabled()) {
 			logger.debug("leave");
@@ -591,5 +618,6 @@ public class ChangeLogMarshallerHelper {
 
 		return value;
 	}
+	
 
 }

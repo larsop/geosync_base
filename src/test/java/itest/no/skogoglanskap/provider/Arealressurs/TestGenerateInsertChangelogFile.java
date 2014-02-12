@@ -106,7 +106,7 @@ public class TestGenerateInsertChangelogFile {
 
 		ArrayList<ArealressursFlateType> subscriberSurfcaeData = new ArrayList<>();
 
-		boolean useXlinKHref = true;
+		boolean useXlinKHref = false;
 
 		// convert the Flate object from local provider format to the format
 		// used by the changelog files

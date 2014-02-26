@@ -34,12 +34,14 @@ import no.skogoglandskap.util.BuildTopo;
 import no.skogoglandskap.util.PolygonFeature;
 import no.skogoglandskap.util.TopoGeometry;
 import opengis.net.gml_3_2_1.gml.AbstractCurveSegmentType;
+import opengis.net.gml_3_2_1.gml.AbstractCurveType;
 import opengis.net.gml_3_2_1.gml.AbstractRingPropertyType;
 import opengis.net.gml_3_2_1.gml.AbstractSurfacePatchType;
 import opengis.net.gml_3_2_1.gml.AbstractSurfaceType;
 import opengis.net.gml_3_2_1.gml.CurvePropertyType;
 import opengis.net.gml_3_2_1.gml.CurveType;
 import opengis.net.gml_3_2_1.gml.LineStringSegmentType;
+import opengis.net.gml_3_2_1.gml.OrientableCurveType;
 import opengis.net.gml_3_2_1.gml.PolygonPatchType;
 import opengis.net.gml_3_2_1.gml.RingType;
 import opengis.net.gml_3_2_1.gml.SegmentsElement;
@@ -106,7 +108,7 @@ public class TestGenerateInsertChangelogFile {
 
 		ArrayList<ArealressursFlateType> subscriberSurfcaeData = new ArrayList<>();
 
-		boolean useXlinKHref = false;
+		boolean useXlinKHref = true;
 
 		// convert the Flate object from local provider format to the format
 		// used by the changelog files
@@ -157,9 +159,9 @@ public class TestGenerateInsertChangelogFile {
 		String name;
 
 		if (!useXlinKHref) {
-			name = "/tmp/fil1.xml";
+			name = "/tmp/fil1_topo_noxlink_OrientableCurve.xml";
 		} else {
-			name = "/tmp/fil2.xml";
+			name = "/tmp/fil2_topo_xlink_OrientableCurve.xml";
 		}
 
 		FileOutputStream os = null;
@@ -254,8 +256,22 @@ public class TestGenerateInsertChangelogFile {
 					Coordinate[] coordinates;
 
 					if (curvePropertyType.getAbstractCurve() != null) {
-						CurveType curve = (CurveType) curvePropertyType.getAbstractCurve().getValue();
-						coordinates = getCoordinats(curve);
+						AbstractCurveType curv = curvePropertyType.getAbstractCurve().getValue();
+						if (curv instanceof CurveType ) {
+							CurveType curve = (CurveType) curv;
+							coordinates = getCoordinats(curve);
+						} else {
+							OrientableCurveType curve = (OrientableCurveType) curv;
+							CurvePropertyType curvePropertyType2 = curve.getBaseCurve();
+							if (curvePropertyType2.getAbstractCurve() == null) {
+								coordinates = hrefLinkList.get(curvePropertyType2.getHref());
+								
+							} else {
+								CurveType curve2 = (CurveType) curvePropertyType2.getAbstractCurve().getValue();
+								coordinates = getCoordinats(curve2);
+							}
+						}
+						
 
 					} else {
 						coordinates = hrefLinkList.get(curvePropertyType.getHref());
@@ -344,6 +360,7 @@ public class TestGenerateInsertChangelogFile {
 		Assert.assertEquals(orgArea, areaAfterWriteRead, 0);
 
 	}
+
 
 	private Coordinate[] getCoordinats(CurveType curve) {
 		Coordinate[] coordinates = null;

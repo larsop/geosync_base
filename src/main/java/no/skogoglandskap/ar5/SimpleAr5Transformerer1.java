@@ -36,6 +36,7 @@ import opengis.net.gml_3_2_1.gml.CurveType;
 import opengis.net.gml_3_2_1.gml.EnvelopeType;
 import opengis.net.gml_3_2_1.gml.LineStringSegmentType;
 import opengis.net.gml_3_2_1.gml.LineStringType;
+import opengis.net.gml_3_2_1.gml.OrientableCurveType;
 import opengis.net.gml_3_2_1.gml.PolygonPatchType;
 import opengis.net.gml_3_2_1.gml.PolygonType;
 import opengis.net.gml_3_2_1.gml.RingType;
@@ -182,8 +183,14 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 		MultiLineString exteriorLineStrings = tg.exteriorLineStrings;
 		for (int i = 0; i < exteriorLineStrings.getNumGeometries(); i++) {
 			LineString ln = (LineString) exteriorLineStrings.getGeometryN(i);
-			CurvePropertyType cs = creatCurveType(ln, useXlinKHref, "Flate." + gmlId);
-			eee.getCurveMembers().add(cs);
+			OrientableCurveType cs = creatOrientableCurveType(ln, useXlinKHref, "Flate." + gmlId, i);
+			CurvePropertyType csd = new CurvePropertyType();
+
+			JAXBElement<OrientableCurveType> value = of.createOrientableCurve(cs);
+
+			csd.setAbstractCurve(value);
+			
+			eee.getCurveMembers().add(csd);
 
 		}
 
@@ -374,6 +381,37 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 
 		return curvePropertyType;
 	}
+	
+	
+	/**
+	 * A simple way create CurvePropertyType of a linstring
+	 * 
+	 * @param of
+	 * @param borderLineString
+	 * @param useXlinKHref
+	 * @return
+	 */
+	// TODO move this to a common util method
+	private OrientableCurveType creatOrientableCurveType(LineString borderLineString, boolean useXlinKHref, String idPrefix, int count) {
+
+		LineStringType lineStringType = (LineStringType) JTS2GML321.toGML(borderLineString);
+		LineStringSegmentType lineStringSegmentType = of.createLineStringSegmentType();
+		lineStringSegmentType.setPosList(lineStringType.getPosList());
+		JAXBElement<LineStringSegmentType> e = of.createLineStringSegment(lineStringSegmentType);
+		SegmentsElement segments = of.createSegmentsElement();
+		segments.getAbstractCurveSegments().add(e);
+		OrientableCurveType orientableCurveType = of.createOrientableCurveType();
+		
+		// TODO find put what id to use her
+		
+		orientableCurveType.setId("OCT" + count +getGmlId(idPrefix ,borderLineString, useXlinKHref));
+		
+		orientableCurveType.setBaseCurve(creatCurveType(borderLineString, useXlinKHref, idPrefix));
+		// TODO find out ortation to use
+		// orientableCurveType.setOrientation("-");
+				return orientableCurveType;
+	}
+
 
 	private String getGmlId(String idPrefix, LineString borderLineString, boolean useXlinKHref) {
 		if (useXlinKHref) {

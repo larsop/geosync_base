@@ -90,15 +90,6 @@ public class ChangeLogMarshallerHelper {
 
 		this.marshaller = m;
 		this.unmarshaller = (Unmarshaller) m;
-		
-//		NamespacePrefixMapper mapper = new NamespacePrefixMapper() {
-//	        public String getPreferredPrefix(String namespaceUri, String suggestion, boolean requirePrefix) {
-//	            if ("http://namespace".equals(namespaceUri) && !requirePrefix)
-//	                return "";
-//	            return "ns";
-//	        }
-//	    };
-//	    marshaller.setProperty("com.sun.xml.bind.namespacePrefixMapper", mapper);
 
 		if (logger.isDebugEnabled()) {
 			logger.debug("leave");

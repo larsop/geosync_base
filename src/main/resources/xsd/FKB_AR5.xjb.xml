@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <jaxb:bindings version="2.0" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
 	xmlns:namespace="http://jaxb2-commons.dev.java.net/namespace-prefix"
-	xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:annox="http://annox.dev.java.net"
+	xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc" 
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:gml="http://www.opengis.net/gml/3.2" 
+	xmlns:annox="http://annox.dev.java.net"
 	xmlns:ar5="http://skjema.geonorge.no/SOSI/produktspesifikasjon/Arealressurs/4.5"
 	xmlns:chlogf="http://skjema.geonorge.no/standard/geosynkronisering/1.0/endringslogg"
 	jaxb:extensionBindingPrefixes="xjc annox"

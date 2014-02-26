@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:oxm="http://www.springframework.org/schema/oxm"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:oxm="http://www.springframework.org/schema/oxm"
 	xmlns:util="http://www.springframework.org/schema/util"
 	xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
@@ -46,10 +47,30 @@
 					<value type="java.lang.String">http://skjema.geonorge.no/standard/geosynkronisering/1.0/endringslogg http://www.geosynkronisering.no/files/skjema/1.0/changelogfile.xsd  http://skjema.geonorge.no/SOSI/produktspesifikasjon/Arealressurs/4.5 http://geosynkronisering.no/files/skjema/Arealressurs/4.5/FKB_AR5.xsd http://skjema.geonorge.no/SOSI/produktspesifikasjon/PrimaerdataKystkontur/1.0 http://www.geosynkronisering.no/files/skjema/Kyst/PrimaerdataKystkontur.xsd</value>
 				</entry>
 
+
+<!-- com.sun.xml.bind.namespacePrefixMapper  -->
+<!-- with  -->
+<!-- com.sun.xml.internal.bind.namespacePrefixMapper -->
+<!--     			<entry key="com.sun.xml.bind.namespacePrefixMapper" value-ref="geosyncNamespacePrefixMapper"/> -->
+
+				<entry>
+					<key>
+						<value>"com.sun.xml.bind.namespacePrefixMapper"</value>
+					</key>
+					<value type="java.lang.String">geosyncNamespacePrefixMapper</value>
+				</entry>
+
+
+    		
+
 			</map>
 		</property>
 
 	</bean>
+
+
+	<!-- Namespace mapping prefix (ns2->xlink etc) -->
+	<bean id="geosyncNamespacePrefixMapper" class="no.geonorge.skjema.changelogfile.util.GeosyncNamespacePrefixMapper"/>
 
 
 	<bean id="sosiProduktMarshallerHelper"

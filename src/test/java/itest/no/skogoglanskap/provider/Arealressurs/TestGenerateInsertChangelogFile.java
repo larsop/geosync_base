@@ -43,6 +43,7 @@ import opengis.net.gml_3_2_1.gml.AbstractRingPropertyType;
 import opengis.net.gml_3_2_1.gml.AbstractSurfacePatchType;
 import opengis.net.gml_3_2_1.gml.AbstractSurfaceType;
 import opengis.net.gml_3_2_1.gml.CompositeCurveType;
+import opengis.net.gml_3_2_1.gml.CompositeSurfaceType;
 import opengis.net.gml_3_2_1.gml.CurvePropertyType;
 import opengis.net.gml_3_2_1.gml.CurveType;
 import opengis.net.gml_3_2_1.gml.LineStringSegmentType;
@@ -51,6 +52,8 @@ import opengis.net.gml_3_2_1.gml.PolygonPatchType;
 import opengis.net.gml_3_2_1.gml.RingType;
 import opengis.net.gml_3_2_1.gml.SegmentsElement;
 import opengis.net.gml_3_2_1.gml.SurfacePatchArrayPropertyType;
+import opengis.net.gml_3_2_1.gml.SurfacePropertyType;
+import opengis.net.gml_3_2_1.gml.SurfaceType;
 
 import org.apache.log4j.Logger;
 import org.junit.Assert;
@@ -292,10 +295,21 @@ public class TestGenerateInsertChangelogFile {
 
 			JAXBElement<? extends AbstractSurfaceType> abstractSurface = simpleAr5FromXml.getOmråde().getAbstractSurface();
 
-			opengis.net.gml_3_2_1.gml.SurfaceType value = (opengis.net.gml_3_2_1.gml.SurfaceType) abstractSurface.getValue();
-			JAXBElement<SurfacePatchArrayPropertyType> patches = value.getPatches();
+			opengis.net.gml_3_2_1.gml.CompositeSurfaceType value =  (CompositeSurfaceType) abstractSurface.getValue();
+			
+			SurfacePropertyType surfacePropertyType = value.getSurfaceMembers().get(0);
+			JAXBElement<? extends AbstractSurfaceType> patches = surfacePropertyType.getAbstractSurface();
+			
+			
+			SurfaceType value4 = (SurfaceType) patches.getValue();
 
-			List<JAXBElement<? extends AbstractSurfacePatchType>> abstractSurfacePatches = patches.getValue().getAbstractSurfacePatches();
+			SurfacePatchArrayPropertyType  patches3 = value4.getPatches().getValue();
+			
+			
+			
+			
+			
+			List<JAXBElement<? extends AbstractSurfacePatchType>> abstractSurfacePatches = (List<JAXBElement<? extends AbstractSurfacePatchType>>) patches3.getAbstractSurfacePatches();
 
 			ArrayList<opengis.net.gml_3_2_1.gml.RingType> list = new ArrayList<>();
 

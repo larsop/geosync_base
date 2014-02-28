@@ -31,6 +31,8 @@ import opengis.net.gml_3_2_1.gml.AbstractCodeType;
 import opengis.net.gml_3_2_1.gml.AbstractRingPropertyType;
 import opengis.net.gml_3_2_1.gml.AbstractSurfacePatchType;
 import opengis.net.gml_3_2_1.gml.BoundingShapeType;
+import opengis.net.gml_3_2_1.gml.CompositeCurveType;
+import opengis.net.gml_3_2_1.gml.CompositeSurfaceType;
 import opengis.net.gml_3_2_1.gml.CurvePropertyType;
 import opengis.net.gml_3_2_1.gml.CurveType;
 import opengis.net.gml_3_2_1.gml.EnvelopeType;
@@ -171,9 +173,31 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 		ar5.setOpphav("opphav");
 		ar5.setVerifiseringsdato(getXmlCalender(datafangstdato.getTime()));
 
-		ar5.getProsesshistories().add("Prosesshistories");
+		ar5.getProsesshistories().add("Prosesshistories1");
+		ar5.getProsesshistories().add("Prosesshistories2");
+		ar5.getProsesshistories().add("Prosesshistories3");
 
 
+		SurfacePropertyType surfacePropertyType = createCompositeSurface(useXlinKHref, gmlId, tg);
+
+		
+		ar5.setOmråde(surfacePropertyType);
+	
+
+		// set bounded by
+		String srsName = "urn:ogc:def:crs:EPSG::" + a.getGeo().getSRID();
+		Envelope env = a.getGeo().getEnvelopeInternal();
+		EnvelopeType v2 = JTS2GML321.toGML(env, srsName);
+		JAXBElement<EnvelopeType> createEnvelope = of.createEnvelope(v2);
+		BoundingShapeType value = new BoundingShapeType();
+		value.setEnvelope(createEnvelope);
+		ar5.setBoundedBy(value);
+
+		return ar5;
+
+	}
+
+	private SurfacePropertyType createCompositeSurface(boolean useXlinKHref, String gmlId, TopoGeometry tg) {
 		PolygonPatchType newPolygonPatch = of.createPolygonPatchType();
 
 		AbstractRingPropertyType valueExterior = of.createAbstractRingPropertyType();
@@ -221,22 +245,23 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 
 		SurfacePropertyType surfacePropertyTypeValid = of.createSurfacePropertyType();
 		surfacePropertyTypeValid.setAbstractSurface(surfaceTypeAbs);
+		
+
+		// wrap in to compusitetype
+		
+	
+		CompositeSurfaceType 	compositeSurfaceType = of.createCompositeSurfaceType();
+				compositeSurfaceType.setId("CS." + gmlId);
+			
+				compositeSurfaceType.getSurfaceMembers().add(surfacePropertyType);
+				SurfacePropertyType gg = new SurfacePropertyType();
+				JAXBElement<CompositeSurfaceType> abstractCurve = of.createCompositeSurface(compositeSurfaceType);
+				gg.setAbstractSurface(abstractCurve);
+				
+				return gg;
 
 		
-		ar5.setOmråde(surfacePropertyType);
-	
-
-		// set bounded by
-		String srsName = "urn:ogc:def:crs:EPSG::" + a.getGeo().getSRID();
-		Envelope env = a.getGeo().getEnvelopeInternal();
-		EnvelopeType v2 = JTS2GML321.toGML(env, srsName);
-		JAXBElement<EnvelopeType> createEnvelope = of.createEnvelope(v2);
-		BoundingShapeType value = new BoundingShapeType();
-		value.setEnvelope(createEnvelope);
-		ar5.setBoundedBy(value);
-
-		return ar5;
-
+		
 	}
 
 	/*
@@ -275,6 +300,7 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 
 		// in gense never ref always coordinats
 		CurvePropertyType curvePropertyType2 = creatCurveType(borderLineString, false, GRENSE_PREFIX);
+
 
 		ar5Border.setGrense(curvePropertyType2);
 
@@ -349,7 +375,7 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 	 * @return
 	 */
 	// TODO move this to a common util method
-	private CurvePropertyType creatCurveType(LineString borderLineString, boolean useXlinKHref, String idPrefix) {
+	private CurvePropertyType creatCurveTypeTmp(LineString borderLineString, boolean useXlinKHref, String idPrefix) {
 
 		LineStringType lineStringType = (LineStringType) JTS2GML321.toGML(borderLineString);
 		LineStringSegmentType lineStringSegmentType = of.createLineStringSegmentType();
@@ -382,6 +408,24 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 		return curvePropertyType;
 	}
 	
+	private CurvePropertyType creatCurveType(LineString borderLineString, boolean useXlinKHref, String idPrefix) {
+
+		// TODO set id
+		CurvePropertyType e = creatCurveTypeTmp(borderLineString, false, GRENSE_PREFIX);
+		CompositeCurveType 	compositeCurveType = of.createCompositeCurveType();
+		compositeCurveType.setId(getGmlId("CP" + idPrefix , borderLineString, useXlinKHref));
+	
+		compositeCurveType.getCurveMembers().add(e);
+		CurvePropertyType gg = new CurvePropertyType();
+		JAXBElement<CompositeCurveType> abstractCurve = of.createCompositeCurve(compositeCurveType);
+		gg.setAbstractCurve(abstractCurve);
+		
+
+
+		return gg;
+	}
+
+	
 	
 	/**
 	 * A simple way create CurvePropertyType of a linstring
@@ -406,7 +450,7 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 		
 		orientableCurveType.setId("OCT" + count +getGmlId(idPrefix ,borderLineString, useXlinKHref));
 		
-		orientableCurveType.setBaseCurve(creatCurveType(borderLineString, useXlinKHref, idPrefix));
+		orientableCurveType.setBaseCurve(creatCurveTypeTmp(borderLineString, useXlinKHref, idPrefix));
 		// TODO find out ortation to use
 		// orientableCurveType.setOrientation("-");
 				return orientableCurveType;

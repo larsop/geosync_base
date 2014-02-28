@@ -275,8 +275,27 @@ public class InspireWayDaoDummyAr5Classes {
     </gml:segments>
  </gml:Curve>
 */
+
+	private CurvePropertyType creatCurveType(opengis.net.gml_3_2_1.gml.ObjectFactory of, LineString borderLineString) {
+
+		// TODO set id
+		CurvePropertyType e = creatCurveTypeTmp(of, borderLineString);
+		
+		CompositeCurveType 	compositeCurveType = of.createCompositeCurveType();
+		compositeCurveType.setId("ss");
 	
-	private static CurvePropertyType creatCurveType(opengis.net.gml_3_2_1.gml.ObjectFactory of, LineString borderLineString) {
+		compositeCurveType.getCurveMembers().add(e);
+		CurvePropertyType gg = new CurvePropertyType();
+		JAXBElement<CompositeCurveType> abstractCurve = of.createCompositeCurve(compositeCurveType);
+		gg.setAbstractCurve(abstractCurve);
+		
+
+
+		return gg;
+	}
+
+
+	private static CurvePropertyType creatCurveTypeTmp(opengis.net.gml_3_2_1.gml.ObjectFactory of, LineString borderLineString) {
 		
 		LineStringType lineStringType = (LineStringType) JTS2GML321.toGML(borderLineString);
 		LineStringSegmentType lineStringSegmentType = of.createLineStringSegmentType();

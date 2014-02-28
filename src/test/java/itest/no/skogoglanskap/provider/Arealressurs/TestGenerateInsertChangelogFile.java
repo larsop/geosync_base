@@ -42,6 +42,7 @@ import opengis.net.gml_3_2_1.gml.AbstractCurveType;
 import opengis.net.gml_3_2_1.gml.AbstractRingPropertyType;
 import opengis.net.gml_3_2_1.gml.AbstractSurfacePatchType;
 import opengis.net.gml_3_2_1.gml.AbstractSurfaceType;
+import opengis.net.gml_3_2_1.gml.CompositeCurveType;
 import opengis.net.gml_3_2_1.gml.CurvePropertyType;
 import opengis.net.gml_3_2_1.gml.CurveType;
 import opengis.net.gml_3_2_1.gml.LineStringSegmentType;
@@ -140,7 +141,7 @@ public class TestGenerateInsertChangelogFile {
 		}
 
 
-		boolean testOneSingleFile = false;
+		boolean testOneSingleFile = true;
 
 		if (testOneSingleFile) {
 
@@ -217,6 +218,8 @@ public class TestGenerateInsertChangelogFile {
 		Calendar timestamp = Calendar.getInstance(nLocale);
 
 		TransactionCollection transactionCollection = changelogfileJaxb2Helper.getTransactionCollection(wfsOperationList1, timestamp);
+		
+		
 
 		Marshaller marshaller = changelogfileJaxb2Helper.getMarshaller();
 
@@ -265,7 +268,11 @@ public class TestGenerateInsertChangelogFile {
 
 				CurvePropertyType curvePropertyType = simpleAr5FromXml.getGrense();
 
-				CurveType curve = (CurveType) curvePropertyType.getAbstractCurve().getValue();
+				
+				CompositeCurveType compositeCurveType = (CompositeCurveType) curvePropertyType.getAbstractCurve().getValue();
+				
+				// HACK to test
+				CurveType curve = (CurveType) compositeCurveType.getCurveMembers().get(0).getAbstractCurve().getValue();
 
 				Coordinate[] coordinates = getCoordinats(curve);
 

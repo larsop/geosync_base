@@ -345,6 +345,17 @@ public class TestGenerateInsertChangelogFile {
 							CurvePropertyType curvePropertyType2 = curve.getBaseCurve();
 							if (curvePropertyType2.getAbstractCurve() == null) {
 								coordinates = hrefLinkList.get(curvePropertyType2.getHref());
+								
+
+								if (curve.getOrientation() != null && curve.getOrientation().equals("-")) {
+									System.out.println("Switch coordinate oriatatior for " + coordinates[0] + "......" + coordinates[coordinates.length-1]);
+									Coordinate[] reversedArray = new Coordinate[coordinates.length];
+									int j = 0;
+									for (int i = coordinates.length -1; i >= 0; i--){
+									    reversedArray[j++] = coordinates[i];
+									}
+									coordinates = reversedArray;
+								}
 
 							} else {
 								CurveType curve2 = (CurveType) curvePropertyType2.getAbstractCurve().getValue();
@@ -389,15 +400,15 @@ public class TestGenerateInsertChangelogFile {
 						}
 						break;
 					} else {
-						if (lastStop.equals(cs[0])) {
-							lastStop = cs[cs.length - 1];
-							for (int i = 0; i < cs.length; i++) {
-								Coordinate coordinate = cs[i];
-								coordinates[a++] = coordinate;
-							}
-							break;
+//						if (lastStop.equals(cs[0])) {
+//							lastStop = cs[cs.length - 1];
+//							for (int i = 0; i < cs.length; i++) {
+//								Coordinate coordinate = cs[i];
+//								coordinates[a++] = coordinate;
+//							}
+//							break;
 
-						} else if (lastStop.equals(cs[cs.length - 1])) {
+						if (lastStop.equals(cs[cs.length - 1])) {
 							lastStop = cs[0];
 							for (int i = cs.length - 1; i >= 0; i--) {
 								Coordinate coordinate = cs[i];

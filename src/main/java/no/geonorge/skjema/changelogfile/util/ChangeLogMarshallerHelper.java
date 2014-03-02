@@ -305,14 +305,18 @@ public class ChangeLogMarshallerHelper {
 
 		no.geonorge.skjema.changelogfile.TransactionCollection transactionCollection = new no.geonorge.skjema.changelogfile.TransactionCollection();
 		transactionCollection.setTimeStamp(timestamp );
+		
+		
 
 		List<Transaction> transactionsList = transactionCollection.getTransactions();
+		
 		Transaction transaction = new Transaction();
 		transactionsList.add(transaction);
 		
 		// TODO find way to handle 
 		transaction.setVersion("2.0.0");
 		transaction.setService("WFS");
+		
 		
 		
 

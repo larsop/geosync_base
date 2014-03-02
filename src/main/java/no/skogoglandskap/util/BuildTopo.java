@@ -2,8 +2,18 @@ package no.skogoglandskap.util;
 
 import java.util.ArrayList;
 
-import org.apache.log4j.Logger;
+import no.skogoglandskap.ar5.Orientation;
 
+import org.apache.log4j.Logger;
+import org.geotools.data.shapefile.shp.JTSUtilities;
+import org.geotools.geometry.jts.JTS;
+import org.geotools.referencing.CRS;
+import org.opengis.referencing.FactoryException;
+import org.opengis.referencing.NoSuchAuthorityCodeException;
+import org.opengis.referencing.crs.CoordinateReferenceSystem;
+import org.opengis.referencing.operation.MathTransform;
+
+import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
@@ -123,6 +133,8 @@ public class BuildTopo {
 
 				ArrayList<LineString> exteriorLineStringtmp = getLineStringsThatIntersects(exteriorLineString, listOfCommonLineStrings);
 
+				MultiLineStringWithOrientation multiLineStringWithOrientation = getMultiLineStringWithOrientation(exteriorLineString, listOfCommonLineStrings);
+
 				MultiLineString exteriorLineStrings = gf.createMultiLineString(exteriorLineStringtmp.toArray(new LineString[exteriorLineStringtmp.size()]));
 
 				MultiLineString[] holes = new MultiLineString[p.getNumGeometries()];
@@ -136,7 +148,7 @@ public class BuildTopo {
 					holes[i] = newLis;
 				}
 
-				TopoGeometry tg = new TopoGeometry(polygonFeature, exteriorLineStrings, holes);
+				TopoGeometry tg = new TopoGeometry(polygonFeature, exteriorLineStrings, holes, multiLineStringWithOrientation);
 
 				lr.add(tg);
 
@@ -153,6 +165,80 @@ public class BuildTopo {
 		}
 
 		return lr;
+	}
+
+	private static MultiLineStringWithOrientation getMultiLineStringWithOrientation(LineString inputLineString, ArrayList<LineString> listOfCommonLineStrings) {
+		// hold the list linstrings that is of interest for this polygon
+
+		MultiLineStringWithOrientation lineStringWithOrientation = new MultiLineStringWithOrientation();
+
+		// get all that touch touches this linestring
+		for (LineString ls : listOfCommonLineStrings) {
+			Geometry intersection;
+
+			// TODO Maybe we need a better way to this
+			if (inputLineString.intersects(ls) && (intersection = inputLineString.intersection(ls)).getLength() > 0.00000) {
+
+				LineStringWithOrientation e = new LineStringWithOrientation();
+				e.lineString = ls;
+
+				Coordinate inputFirst = inputLineString.getCoordinateN(0);
+				Coordinate thisFirst = ls.getCoordinateN(0);
+				Coordinate inputLast = inputLineString.getCoordinateN(inputLineString.getCoordinates().length - 1);
+				Coordinate thisLast = ls.getCoordinateN(ls.getCoordinates().length - 1);
+				if (inputFirst.equals2D(thisFirst)) {
+					if (logger.isDebugEnabled()) {
+						logger.debug("Use clockwise oriatation for '" + thisFirst + "' != '" + thisLast + "'");
+					}
+
+					// TDOD find out way this is different
+					if (!inputLast.equals2D(thisLast)) {
+						if (logger.isDebugEnabled()) {
+							logger.debug("distance beetween  '" + inputLast + "' != '" + thisLast + "' in degree is " + inputLast.distance(thisLast));
+							CoordinateReferenceSystem sourceCRS;
+							try {
+								// this is hack for debug test
+								sourceCRS = CRS.decode("EPSG:" + 4258);
+								CoordinateReferenceSystem targetCRS = CRS.decode("EPSG:" + 25833);
+								MathTransform transFilter = CRS.findMathTransform(sourceCRS, targetCRS);
+
+								Coordinate inputLastMeter = (Coordinate) inputLast.clone();
+								inputLastMeter.x = inputLast.y;
+								inputLastMeter.y = inputLast.x;
+								inputLastMeter = JTS.transform(inputLastMeter, null, transFilter);
+
+								Coordinate thisLastMeter = (Coordinate) thisLast.clone();
+								thisLastMeter.x = thisLast.y;
+								thisLastMeter.y = thisLast.x;
+								thisLastMeter = JTS.transform(thisLastMeter, null, transFilter);
+
+
+								logger.debug("distance beetween  '" + inputLastMeter + "' != '" + thisLastMeter + "' in meter is " + inputLastMeter.distance(thisLastMeter));
+
+							} catch (Exception e1) {
+								logger.debug("Failed to find dirtance in meter ", e1);
+							}
+ 
+							
+							
+						}
+					}
+
+				} else {
+					e.orientation = Orientation.OrientationAntiClockWise;
+					if (logger.isDebugEnabled()) {
+						logger.debug("Use non clockwise oriatation for '" + thisFirst + "' != '" + thisLast + "'");
+					}
+
+				}
+
+				lineStringWithOrientation.multiLineStringOrientation.add(e);
+
+			}
+
+		}
+
+		return lineStringWithOrientation;
 	}
 
 	/**

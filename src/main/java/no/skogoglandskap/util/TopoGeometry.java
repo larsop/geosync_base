@@ -17,10 +17,19 @@ public class TopoGeometry {
 	public PolygonFeature ar5FlateProvSimpleFeatureEntity;
 
 	// the list of linestrings that builds up the polygon exterior 
-	public MultiLineString exteriorLineStrings;
+	
+	// TODO remove exteriorLineStrings use exteriorLineStringsOrientation
+	@Deprecated
+	private MultiLineString exteriorLineStrings;
+	
+	
 	
 	// the list of linestrings that builds up the polygon holes
 	public MultiLineString[] holes;
+
+
+	
+	public MultiLineStringWithOrientation exteriorLineStringsOrientation;
 
 	/**
 	 * 
@@ -28,10 +37,13 @@ public class TopoGeometry {
 	 * @param exteriorLineStrings
 	 * @param holes
 	 */
-	public TopoGeometry(PolygonFeature ar5FlateProvSimpleFeatureEntity, MultiLineString exteriorLineStrings, MultiLineString[] holes) {
+	public TopoGeometry(PolygonFeature ar5FlateProvSimpleFeatureEntity, MultiLineString exteriorLineStrings, MultiLineString[] holes, MultiLineStringWithOrientation exteriorLineStringsOrientation) {
 		this.ar5FlateProvSimpleFeatureEntity = ar5FlateProvSimpleFeatureEntity;
 		this.exteriorLineStrings = exteriorLineStrings;
 		this.holes = holes;
+		this.exteriorLineStringsOrientation = exteriorLineStringsOrientation;
+		
+		
 	}
 
 

@@ -1,7 +1,5 @@
 package no.skogoglandskap.ar5;
 
-
-
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -26,6 +24,8 @@ import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.Registrering
 import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.RegistreringsversjonType;
 import no.geonorge.skjema.util.gml_geos.inspire.JTS2GML321;
 import no.skogoglandskap.datamodel.postgres.provider.Ar5FlateProvSimpleFeatureEntity;
+import no.skogoglandskap.util.LineStringWithOrientation;
+import no.skogoglandskap.util.MultiLineStringWithOrientation;
 import no.skogoglandskap.util.TopoGeometry;
 import opengis.net.gml_3_2_1.gml.AbstractCodeType;
 import opengis.net.gml_3_2_1.gml.AbstractRingPropertyType;
@@ -93,10 +93,8 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 	Locale nLocale = new Locale.Builder().setLanguage("nb").setRegion("NO").build();
 
 	private Logger logger = Logger.getLogger(SimpleAr5Transformerer1.class);
-	
-	private String GRENSE_PREFIX = "Grense";
-	
 
+	private String GRENSE_PREFIX = "Grense";
 
 	/*
 	 * This mapping is one to for no.skogoglandskap.datamodel.postgres.provider.Ar5FlateProvSimpleFeatureEntity to ArealressursFlateType. The geometry is of
@@ -105,14 +103,9 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 	 * 
 	 * @see no.geonorge.skjema.changelogfile.util.IConvert2ArealressursType# convert2FlateFromProv(java.util.UUID, java.lang.Object)
 	 */
-	public ArealressursFlateType convert2FlateFromProv(UUID lokalId, Object input, boolean useXlinKHref, String gmlId ) {
-
-		
+	public ArealressursFlateType convert2FlateFromProv(UUID lokalId, Object input, boolean useXlinKHref, String gmlId) {
 
 		TopoGeometry tg = (TopoGeometry) input;
-		
-	
-		
 
 		Ar5FlateProvSimpleFeatureEntity a = (Ar5FlateProvSimpleFeatureEntity) tg.ar5FlateProvSimpleFeatureEntity;
 
@@ -124,9 +117,8 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 		v1.setNavnerom("no.skogoglandskap.ar5.ArealressursFlate");
 		v1.setVersjonId("1.0");
 		v.setIdentifikasjon(v1);
-		
+
 		ar5.setId(gmlId);
-		
 
 		ar5.setIdentifikasjon(v);
 
@@ -139,11 +131,6 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 		ar5.setGrunnforhold(makeAbstractType("" + a.getArgrunnf(), "ArealressursGrunnforhold"));
 
 		ar5.setKartstandard(makeAbstractType("" + a.getArkartstd(), "ArealressursKartstandard"));
-		
-		
-		
-		
-
 
 		{
 			PosisjonskvalitetPropertyType posisjonskvalitetPropertyType = new PosisjonskvalitetPropertyType();
@@ -160,15 +147,15 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 
 		Calendar datafangstdato = Calendar.getInstance(nLocale);
 		ar5.setDatafangstdato(getXmlCalender(datafangstdato.getTime()));
-		
+
 		RegistreringsversjonPropertyType registreringsversjon = new RegistreringsversjonPropertyType();
 		RegistreringsversjonType registreringsversjonsss = new RegistreringsversjonType();
 		registreringsversjonsss.setProdukt("ar5");
 		registreringsversjonsss.setVersjon("0.1");
-		
-		registreringsversjon.setRegistreringsversjon(registreringsversjonsss );
+
+		registreringsversjon.setRegistreringsversjon(registreringsversjonsss);
 		ar5.setRegistreringsversjon(registreringsversjon);
-		
+
 		ar5.setOppdateringsdato(getXmlCalender(datafangstdato.getTime()));
 		ar5.setOpphav("opphav");
 		ar5.setVerifiseringsdato(getXmlCalender(datafangstdato.getTime()));
@@ -177,12 +164,9 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 		ar5.getProsesshistories().add("Prosesshistories2");
 		ar5.getProsesshistories().add("Prosesshistories3");
 
-
 		SurfacePropertyType surfacePropertyType = createCompositeSurface(useXlinKHref, gmlId, tg);
 
-		
 		ar5.setOmråde(surfacePropertyType);
-	
 
 		// set bounded by
 		String srsName = "urn:ogc:def:crs:EPSG::" + a.getGeo().getSRID();
@@ -197,6 +181,7 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 
 	}
 
+	// Orientation
 	private SurfacePropertyType createCompositeSurface(boolean useXlinKHref, String gmlId, TopoGeometry tg) {
 		PolygonPatchType newPolygonPatch = of.createPolygonPatchType();
 
@@ -204,16 +189,27 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 
 		RingType eee = of.createRingType();
 
-		MultiLineString exteriorLineStrings = tg.exteriorLineStrings;
-		for (int i = 0; i < exteriorLineStrings.getNumGeometries(); i++) {
-			LineString ln = (LineString) exteriorLineStrings.getGeometryN(i);
-			OrientableCurveType cs = creatOrientableCurveType(ln, useXlinKHref, "Flate." + gmlId, i);
+		
+		
+		MultiLineStringWithOrientation exteriorLineStringsOrientationObject = tg.exteriorLineStringsOrientation;
+		ArrayList<LineStringWithOrientation> multiLineStringOrientation = exteriorLineStringsOrientationObject.multiLineStringOrientation;
+		int i = 0;
+		for (LineStringWithOrientation lineStringWithOrientation : multiLineStringOrientation) {
+			
+			Orientation orientation = lineStringWithOrientation.orientation;
+			
+			LineString ln = lineStringWithOrientation.lineString;
+			OrientableCurveType cs = creatOrientableCurveType(ln, useXlinKHref, "Flate." + gmlId, i++);
+			if (orientation != null) {
+				cs.setOrientation(orientation.getOrit());
+			}
+
 			CurvePropertyType csd = new CurvePropertyType();
 
 			JAXBElement<OrientableCurveType> value = of.createOrientableCurve(cs);
 
 			csd.setAbstractCurve(value);
-			
+
 			eee.getCurveMembers().add(csd);
 
 		}
@@ -233,10 +229,10 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 		SurfacePropertyType surfacePropertyType = new SurfacePropertyType();
 
 		SurfaceType surfaceType = of.createSurfaceType();
-		
-		// TODO what id should be used here ??? 
+
+		// TODO what id should be used here ???
 		surfaceType.setId("Surface." + gmlId);
-		
+
 		surfaceType.setPatches(surfacePatchArrayPropertyType);
 
 		JAXBElement<SurfaceType> surfaceTypeAbs = of.createSurface(surfaceType);
@@ -245,23 +241,19 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 
 		SurfacePropertyType surfacePropertyTypeValid = of.createSurfacePropertyType();
 		surfacePropertyTypeValid.setAbstractSurface(surfaceTypeAbs);
-		
 
 		// wrap in to compusitetype
-		
-	
-		CompositeSurfaceType 	compositeSurfaceType = of.createCompositeSurfaceType();
-				compositeSurfaceType.setId("CS." + gmlId);
-			
-				compositeSurfaceType.getSurfaceMembers().add(surfacePropertyType);
-				SurfacePropertyType gg = new SurfacePropertyType();
-				JAXBElement<CompositeSurfaceType> abstractCurve = of.createCompositeSurface(compositeSurfaceType);
-				gg.setAbstractSurface(abstractCurve);
-				
-				return gg;
 
-		
-		
+		CompositeSurfaceType compositeSurfaceType = of.createCompositeSurfaceType();
+		compositeSurfaceType.setId("CS." + gmlId);
+
+		compositeSurfaceType.getSurfaceMembers().add(surfacePropertyType);
+		SurfacePropertyType gg = new SurfacePropertyType();
+		JAXBElement<CompositeSurfaceType> abstractCurve = of.createCompositeSurface(compositeSurfaceType);
+		gg.setAbstractSurface(abstractCurve);
+
+		return gg;
+
 	}
 
 	/*
@@ -291,7 +283,6 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 		v.setIdentifikasjon(v1);
 		ar5Border.setIdentifikasjon(v);
 		ar5Border.setId(gmlId);
-		
 
 		// ar5.setArealtype(arealtype);
 
@@ -301,25 +292,23 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 		// in gense never ref always coordinats
 		CurvePropertyType curvePropertyType2 = creatCurveType(borderLineString, false, GRENSE_PREFIX);
 
-
 		ar5Border.setGrense(curvePropertyType2);
 
 		ar5Border.setAvgrensingType(makeAbstractType("12", "ArealressursAvgrensingType"));
-		
+
 		RegistreringsversjonPropertyType registreringsversjon = new RegistreringsversjonPropertyType();
 		RegistreringsversjonType registreringsversjonsss = new RegistreringsversjonType();
 		registreringsversjonsss.setProdukt("ar5");
 		registreringsversjonsss.setVersjon("0.1");
-		
-		registreringsversjon.setRegistreringsversjon(registreringsversjonsss );
+
+		registreringsversjon.setRegistreringsversjon(registreringsversjonsss);
 		ar5Border.setRegistreringsversjon(registreringsversjon);
-		
+
 		ar5Border.setOppdateringsdato(getXmlCalender(datafangstdato.getTime()));
 		ar5Border.setOpphav("opphav");
 		ar5Border.setVerifiseringsdato(getXmlCalender(datafangstdato.getTime()));
 
 		ar5Border.getProsesshistories().add("Prosesshistories");
-
 
 		{
 			PosisjonskvalitetPropertyType posisjonskvalitetPropertyType = new PosisjonskvalitetPropertyType();
@@ -345,7 +334,6 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 		return ar5Border;
 
 	}
-
 
 	// move to common classes
 	private XMLGregorianCalendar getXmlCalender(Date dato) {
@@ -384,9 +372,9 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 		SegmentsElement segments = of.createSegmentsElement();
 		segments.getAbstractCurveSegments().add(e);
 		CurveType createCurveType = of.createCurveType();
-		
+
 		// TODO find put what id to use her
-		createCurveType.setId(getGmlId(idPrefix ,borderLineString, useXlinKHref));
+		createCurveType.setId(getGmlId(idPrefix, borderLineString, useXlinKHref));
 		createCurveType.setSegments(segments);
 
 		CurvePropertyType curvePropertyType = null;
@@ -394,7 +382,7 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 
 		// a hack to set id
 		if (!useXlinKHref) {
-			createCurveType.setId(getGmlId(idPrefix , borderLineString, useXlinKHref));
+			createCurveType.setId(getGmlId(idPrefix, borderLineString, useXlinKHref));
 			String srsName = "urn:ogc:def:crs:EPSG::" + borderLineString.getSRID();
 			createCurveType.setSrsName(srsName);
 			JAXBElement<CurveType> abstractCurve = of.createCurve(createCurveType);
@@ -402,31 +390,27 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 
 		} else {
 			// use the same id all over
-			curvePropertyType.setHref("#" + getGmlId(idPrefix ,borderLineString, useXlinKHref));
+			curvePropertyType.setHref("#" + getGmlId(idPrefix, borderLineString, useXlinKHref));
 		}
 
 		return curvePropertyType;
 	}
-	
+
 	private CurvePropertyType creatCurveType(LineString borderLineString, boolean useXlinKHref, String idPrefix) {
 
 		// TODO set id
 		CurvePropertyType e = creatCurveTypeTmp(borderLineString, false, GRENSE_PREFIX);
-		CompositeCurveType 	compositeCurveType = of.createCompositeCurveType();
-		compositeCurveType.setId(getGmlId("CP" + idPrefix , borderLineString, useXlinKHref));
-	
+		CompositeCurveType compositeCurveType = of.createCompositeCurveType();
+		compositeCurveType.setId(getGmlId("CP" + idPrefix, borderLineString, useXlinKHref));
+
 		compositeCurveType.getCurveMembers().add(e);
 		CurvePropertyType gg = new CurvePropertyType();
 		JAXBElement<CompositeCurveType> abstractCurve = of.createCompositeCurve(compositeCurveType);
 		gg.setAbstractCurve(abstractCurve);
-		
-
 
 		return gg;
 	}
 
-	
-	
 	/**
 	 * A simple way create CurvePropertyType of a linstring
 	 * 
@@ -445,24 +429,23 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 		SegmentsElement segments = of.createSegmentsElement();
 		segments.getAbstractCurveSegments().add(e);
 		OrientableCurveType orientableCurveType = of.createOrientableCurveType();
-		
+
 		// TODO find put what id to use her
-		
-		orientableCurveType.setId("OCT" + count +getGmlId(idPrefix ,borderLineString, useXlinKHref));
-		
+
+		orientableCurveType.setId("OCT" + count + getGmlId(idPrefix, borderLineString, useXlinKHref));
+
 		orientableCurveType.setBaseCurve(creatCurveTypeTmp(borderLineString, useXlinKHref, idPrefix));
 		// TODO find out ortation to use
 		// orientableCurveType.setOrientation("-");
-				return orientableCurveType;
+		return orientableCurveType;
 	}
-
 
 	private String getGmlId(String idPrefix, LineString borderLineString, boolean useXlinKHref) {
 		if (useXlinKHref) {
-			return GRENSE_PREFIX +borderLineString.hashCode();
+			return GRENSE_PREFIX + borderLineString.hashCode();
 		} else {
-			return idPrefix  +borderLineString.hashCode();
-				
+			return idPrefix + borderLineString.hashCode();
+
 		}
 	}
 

@@ -194,7 +194,7 @@ Merknad: Inneholder informasjon om når kopidatasettet ble kopiert fra originald
 Merknad: Denne er identisk med ..KVALITET i tidligere versjoner av SOSI.</documentation>
             </annotation>
           </element>
-          <element minOccurs="0" name="oppdateringsdato" type="date">
+          <element minOccurs="0" name="oppdateringsdato" type="dateTime">
             <annotation>
               <documentation>dato for siste endring på objektetdataene 
 

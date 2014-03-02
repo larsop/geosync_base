@@ -146,7 +146,7 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 		}
 
 		Calendar datafangstdato = Calendar.getInstance(nLocale);
-		ar5.setDatafangstdato(getXmlCalender(datafangstdato.getTime()));
+		ar5.setDatafangstdato(getXMLGregorianCalendar(datafangstdato.getTime()));
 
 		RegistreringsversjonPropertyType registreringsversjon = new RegistreringsversjonPropertyType();
 		RegistreringsversjonType registreringsversjonsss = new RegistreringsversjonType();
@@ -156,9 +156,9 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 		registreringsversjon.setRegistreringsversjon(registreringsversjonsss);
 		ar5.setRegistreringsversjon(registreringsversjon);
 
-		ar5.setOppdateringsdato(getXmlCalender(datafangstdato.getTime()));
+		ar5.setOppdateringsdato(getCalendar(datafangstdato.getTime()));
 		ar5.setOpphav("opphav");
-		ar5.setVerifiseringsdato(getXmlCalender(datafangstdato.getTime()));
+		ar5.setVerifiseringsdato(getXMLGregorianCalendar(datafangstdato.getTime()));
 
 		ar5.getProsesshistories().add("Prosesshistories1");
 		ar5.getProsesshistories().add("Prosesshistories2");
@@ -180,6 +180,7 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 		return ar5;
 
 	}
+
 
 	// Orientation
 	private SurfacePropertyType createCompositeSurface(boolean useXlinKHref, String gmlId, TopoGeometry tg) {
@@ -287,7 +288,7 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 		// ar5.setArealtype(arealtype);
 
 		Calendar datafangstdato = Calendar.getInstance(nLocale);
-		ar5Border.setDatafangstdato(getXmlCalender(datafangstdato.getTime()));
+		ar5Border.setDatafangstdato(getXMLGregorianCalendar(datafangstdato.getTime()));
 
 		// in gense never ref always coordinats
 		CurvePropertyType curvePropertyType2 = creatCurveType(borderLineString, false, GRENSE_PREFIX);
@@ -304,9 +305,9 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 		registreringsversjon.setRegistreringsversjon(registreringsversjonsss);
 		ar5Border.setRegistreringsversjon(registreringsversjon);
 
-		ar5Border.setOppdateringsdato(getXmlCalender(datafangstdato.getTime()));
+		ar5Border.setOppdateringsdato(getCalendar(datafangstdato.getTime()));
 		ar5Border.setOpphav("opphav");
-		ar5Border.setVerifiseringsdato(getXmlCalender(datafangstdato.getTime()));
+		ar5Border.setVerifiseringsdato(getXMLGregorianCalendar(datafangstdato.getTime()));
 
 		ar5Border.getProsesshistories().add("Prosesshistories");
 
@@ -335,8 +336,19 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 
 	}
 
-	// move to common classes
-	private XMLGregorianCalendar getXmlCalender(Date dato) {
+	
+	// move to common classes used for datetime
+	private Calendar  getCalendar(Date dato) {
+		Calendar now = null;
+
+		GregorianCalendar gregorianCalendar = new GregorianCalendar();
+		gregorianCalendar.setTime(dato);
+
+		return now;
+	}
+
+	// move to common classes used fro date
+	private XMLGregorianCalendar getXMLGregorianCalendar(Date dato) {
 		XMLGregorianCalendar now = null;
 
 		GregorianCalendar gregorianCalendar = new GregorianCalendar();

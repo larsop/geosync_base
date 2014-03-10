@@ -30,6 +30,7 @@ import no.skogoglandskap.util.TopoGeometry;
 import opengis.net.gml_3_2_1.gml.AbstractCodeType;
 import opengis.net.gml_3_2_1.gml.AbstractRingPropertyType;
 import opengis.net.gml_3_2_1.gml.AbstractSurfacePatchType;
+import opengis.net.gml_3_2_1.gml.AbstractSurfaceType;
 import opengis.net.gml_3_2_1.gml.BoundingShapeType;
 import opengis.net.gml_3_2_1.gml.CompositeCurveType;
 import opengis.net.gml_3_2_1.gml.CompositeSurfaceType;
@@ -164,9 +165,18 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 		ar5.getProsesshistories().add("Prosesshistories2");
 		ar5.getProsesshistories().add("Prosesshistories3");
 
-		SurfacePropertyType surfacePropertyType = createCompositeSurface(useXlinKHref, gmlId, tg);
+		if (useXlinKHref) {
+			SurfacePropertyType surfacePropertyType = createCompositeSurface(useXlinKHref, gmlId, tg);
+			ar5.setOmråde(surfacePropertyType);
 
-		ar5.setOmråde(surfacePropertyType);
+		} else {
+			 SurfacePropertyType surfacePropertyType = createSurface(useXlinKHref, gmlId, tg);
+			 ar5.setOmråde(surfacePropertyType);
+
+//			SurfacePropertyType surfacePropertyType = createPolygon(useXlinKHref, gmlId, tg);
+//			ar5.setOmråde(surfacePropertyType);
+
+		}
 
 		// set bounded by
 		String srsName = "urn:ogc:def:crs:EPSG::" + a.getGeo().getSRID();
@@ -181,6 +191,80 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 
 	}
 
+	private SurfacePropertyType createPolygon(boolean useXlinKHref, String gmlId, TopoGeometry tg) {
+
+		PolygonType newPolygonPatch = of.createPolygonType();
+
+		AbstractRingPropertyType valueExterior = of.createAbstractRingPropertyType();
+
+		RingType eee = of.createRingType();
+
+		MultiLineString exteriorLineStrings = tg.exteriorLineStrings;
+		for (int i = 0; i < exteriorLineStrings.getNumGeometries(); i++) {
+			LineString ln = (LineString) exteriorLineStrings.getGeometryN(i);
+			
+			// TODO set id
+			CurvePropertyType e = creatCurveTypeTmp(ln, false, GRENSE_PREFIX);
+			eee.getCurveMembers().add(e);
+
+		}
+
+		JAXBElement<RingType> valueRingType = of.createRing(eee);
+
+		valueExterior.setAbstractRing(valueRingType);
+		newPolygonPatch.setExterior(valueExterior);
+		JAXBElement<PolygonType> e = of.createPolygon(newPolygonPatch);
+
+		SurfacePropertyType sss = of.createSurfacePropertyType();
+		sss.setAbstractSurface(e);
+		return sss;
+
+	}
+
+	private SurfacePropertyType createSurface(boolean useXlinKHref, String gmlId, TopoGeometry tg) {
+
+		PolygonPatchType newPolygonPatch = of.createPolygonPatchType();
+
+		AbstractRingPropertyType valueExterior = of.createAbstractRingPropertyType();
+
+		RingType eee = of.createRingType();
+
+		MultiLineString exteriorLineStrings = tg.exteriorLineStrings;
+		for (int i = 0; i < exteriorLineStrings.getNumGeometries(); i++) {
+			LineString ln = (LineString) exteriorLineStrings.getGeometryN(i);
+			CurvePropertyType cs = creatCurveType(ln, useXlinKHref, GRENSE_PREFIX);
+			eee.getCurveMembers().add(cs);
+
+		}
+
+		JAXBElement<RingType> valueRingType = of.createRing(eee);
+
+		valueExterior.setAbstractRing(valueRingType);
+		newPolygonPatch.setExterior(valueExterior);
+		JAXBElement<? extends AbstractSurfacePatchType> e = of.createPolygonPatch(newPolygonPatch);
+
+		SurfacePatchArrayPropertyType sss = of.createSurfacePatchArrayPropertyType();
+
+		sss.getAbstractSurfacePatches().add(e);
+
+		JAXBElement<SurfacePatchArrayPropertyType> surfacePatchArrayPropertyType = of.createPatches(sss);
+
+		SurfacePropertyType surfacePropertyType = new SurfacePropertyType();
+
+		SurfaceType surfaceType = of.createSurfaceType();
+
+		surfaceType.setPatches(surfacePatchArrayPropertyType);
+
+		JAXBElement<SurfaceType> surfaceTypeAbs = of.createSurface(surfaceType);
+
+		surfacePropertyType.setAbstractSurface(surfaceTypeAbs);
+
+		SurfacePropertyType surfacePropertyTypeValid = of.createSurfacePropertyType();
+		surfacePropertyTypeValid.setAbstractSurface(surfaceTypeAbs);
+
+		return surfacePropertyTypeValid;
+
+	}
 
 	// Orientation
 	private SurfacePropertyType createCompositeSurface(boolean useXlinKHref, String gmlId, TopoGeometry tg) {
@@ -190,15 +274,13 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 
 		RingType eee = of.createRingType();
 
-		
-		
 		MultiLineStringWithOrientation exteriorLineStringsOrientationObject = tg.exteriorLineStringsOrientation;
 		ArrayList<LineStringWithOrientation> multiLineStringOrientation = exteriorLineStringsOrientationObject.multiLineStringOrientation;
 		int i = 0;
 		for (LineStringWithOrientation lineStringWithOrientation : multiLineStringOrientation) {
-			
+
 			Orientation orientation = lineStringWithOrientation.orientation;
-			
+
 			LineString ln = lineStringWithOrientation.lineString;
 			OrientableCurveType cs = creatOrientableCurveType(ln, useXlinKHref, "Flate." + gmlId, i++);
 			if (orientation != null) {
@@ -336,9 +418,8 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 
 	}
 
-	
 	// move to common classes used for datetime
-	private Calendar  getCalendar(Date dato) {
+	private Calendar getCalendar(Date dato) {
 		Calendar now = null;
 
 		GregorianCalendar gregorianCalendar = new GregorianCalendar();

@@ -21,6 +21,7 @@ import java.util.Locale;
 import java.util.UUID;
 
 import javax.xml.bind.JAXBElement;
+import javax.xml.namespace.QName;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.stream.StreamResult;
@@ -32,6 +33,7 @@ import no.geonorge.skjema.changelogfile.util.SupportedWFSOperationType;
 import no.geonorge.skjema.changelogfile.util.WSFOperation;
 import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ArealressursFlateType;
 import no.geonorge.skjema.sosi.produktspesifikasjon.Arealressurs_45.ArealressursGrenseType;
+import no.geonorge.subscriber.Arealressurs.Ar5FlateEntity;
 import no.skogoglandskap.ar5.SimpleAr5Transformerer1;
 import no.skogoglandskap.datamodel.postgres.provider.Ar5FlateProvSimpleFeatureEntity;
 import no.skogoglandskap.util.BuildTopo;
@@ -39,6 +41,9 @@ import no.skogoglandskap.util.PolygonFeature;
 import no.skogoglandskap.util.TopoGeometry;
 import opengis.net.gml_3_2_1.gml.AbstractCurveSegmentType;
 import opengis.net.gml_3_2_1.gml.AbstractCurveType;
+import opengis.net.gml_3_2_1.gml.AbstractFeatureCollectionType;
+import opengis.net.gml_3_2_1.gml.AbstractFeatureCollectionType2;
+import opengis.net.gml_3_2_1.gml.AbstractFeatureType;
 import opengis.net.gml_3_2_1.gml.AbstractRingPropertyType;
 import opengis.net.gml_3_2_1.gml.AbstractSurfacePatchType;
 import opengis.net.gml_3_2_1.gml.AbstractSurfaceType;
@@ -46,6 +51,7 @@ import opengis.net.gml_3_2_1.gml.CompositeCurveType;
 import opengis.net.gml_3_2_1.gml.CompositeSurfaceType;
 import opengis.net.gml_3_2_1.gml.CurvePropertyType;
 import opengis.net.gml_3_2_1.gml.CurveType;
+import opengis.net.gml_3_2_1.gml.FeaturePropertyType;
 import opengis.net.gml_3_2_1.gml.LineStringSegmentType;
 import opengis.net.gml_3_2_1.gml.OrientableCurveType;
 import opengis.net.gml_3_2_1.gml.PolygonPatchType;
@@ -54,6 +60,8 @@ import opengis.net.gml_3_2_1.gml.SegmentsElement;
 import opengis.net.gml_3_2_1.gml.SurfacePatchArrayPropertyType;
 import opengis.net.gml_3_2_1.gml.SurfacePropertyType;
 import opengis.net.gml_3_2_1.gml.SurfaceType;
+import opengis.net.wfs_2_0.wfs.FeatureCollectionType;
+import opengis.net.wfs_2_0.wfs.Member;
 
 import org.apache.log4j.Logger;
 import org.junit.Assert;
@@ -145,7 +153,17 @@ public class TestGenerateInsertChangelogFile {
 
 
 		boolean testOneSingleFile = true;
+		
+		
+		opengis.net.gml_3_2_1.gml.ObjectFactory of = new opengis.net.gml_3_2_1.gml.ObjectFactory();
+		
+		AbstractFeatureCollectionType2 fc2 = new AbstractFeatureCollectionType2() ;
+		JAXBElement<AbstractFeatureCollectionType2> createAbstractFeatureCollection = of.createTypeFeatureCollection(fc2);
+		
 
+		
+		
+		
 		if (testOneSingleFile) {
 
 			ArrayList<WSFOperation> wfsOperationList1 = new ArrayList<>();
@@ -154,13 +172,34 @@ public class TestGenerateInsertChangelogFile {
 
 			for (int i = 0; i < subscriberBorderData.size();) {
 
-				WSFOperation wfs = new WSFOperation(operationNumber1++, SupportedWFSOperationType.InsertType, subscriberBorderData.get(i++));
+				ArealressursGrenseType product = subscriberBorderData.get(i++);
+				WSFOperation wfs = new WSFOperation(operationNumber1++, SupportedWFSOperationType.InsertType, product);
 				wfsOperationList1.add(wfs);
+				
+				
+				
+				QName _AbstractFeature_QNAME = new QName("http://skjema.geonorge.no/SOSI/produktspesifikasjon/Arealressurs/4.5", "ArealressursGrense");
+				JAXBElement<AbstractFeatureType> g = new JAXBElement<AbstractFeatureType>(_AbstractFeature_QNAME, AbstractFeatureType.class, null, product);
+				FeaturePropertyType e =new FeaturePropertyType();
+				e.setAbstractFeature(g);
+				fc2.getFeatureMembers().add(e );
+				
+
+				
+				
 			}
 
 			for (int i = 0; i < subscriberSurfcaeData.size();) {
-				WSFOperation wfs = new WSFOperation(operationNumber1++, SupportedWFSOperationType.InsertType, subscriberSurfcaeData.get(i++));
+				ArealressursFlateType product = subscriberSurfcaeData.get(i++);
+				WSFOperation wfs = new WSFOperation(operationNumber1++, SupportedWFSOperationType.InsertType, product);
 				wfsOperationList1.add(wfs);
+				
+				QName _AbstractFeature_QNAME = new QName("http://skjema.geonorge.no/SOSI/produktspesifikasjon/Arealressurs/4.5", "ArealressursFlateType");
+				JAXBElement<AbstractFeatureType> g = new JAXBElement<AbstractFeatureType>(_AbstractFeature_QNAME, AbstractFeatureType.class, null, product);
+				FeaturePropertyType e =new FeaturePropertyType();
+				e.setAbstractFeature(g);
+				fc2.getFeatureMembers().add(e );
+
 			}
 
 			String name;
@@ -169,6 +208,28 @@ public class TestGenerateInsertChangelogFile {
 				name = "/tmp/fil1_implicit_topo_OrientableCurve.xml";
 			} else {
 				name = "/tmp/fil2_topo_xlink_OrientableCurve.xml";
+			}
+			
+
+			{
+				Marshaller marshaller = changelogfileJaxb2Helper.getMarshaller();
+
+				FileOutputStream os = null;
+				try {
+					String tname = name.replace("/tmp/", "/tmp/gml_");
+					os = new FileOutputStream(tname);
+					
+					marshaller.marshal(createAbstractFeatureCollection, new StreamResult(os));
+
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} finally {
+					if (os != null) {
+						os.close();
+					}
+				}
+
 			}
 
 			marshallList(wfsOperationList1, name);

@@ -25,6 +25,8 @@
 				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" />
 			</annox:annotate>
 		</jaxb:bindings>
+		
+		
 
 	</jaxb:bindings>
 

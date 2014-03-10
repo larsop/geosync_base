@@ -24,6 +24,8 @@
                        printMethod="javax.xml.bind.DatatypeConverter.printDateTime"/>
     </jaxb:globalBindings>
 
+
+
 <!-- Test -->
 <!-- 	<jaxb:bindings schemaLocation="gml-3.2.1/geometryBasic2d.xsd" node="//xs:complexType[@name='SurfacePropertyType']"> -->
 <!-- 			<annox:annotate target="class"> -->
@@ -39,7 +41,6 @@
 <!--             <annox:annotate annox:class="javax.xml.bind.annotation.XmlElementRef" name="Surface"/> -->
 <!--         </annox:annotate> -->
 <!--     </jaxb:bindings> -->
-
 
 
 
@@ -95,6 +96,13 @@
     <jaxb:bindings
             schemaLocation="gml-3.2.1/deprecatedTypes.xsd"
             node="/xs:schema">
+        
+<!--         <jaxb:bindings node="//xs:complexType [@name='FeatureCollectionType']"> -->
+<!--           			<annox:annotate target="class"> -->
+<!-- 				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" /> -->
+<!-- 			</annox:annotate> -->
+<!--         </jaxb:bindings> -->
+            
         <jaxb:bindings node="//xs:complexType [@name='FeatureCollectionType']">
             <jaxb:class name="AbstractFeatureCollectionType2"/>
             <jaxb:bindings
@@ -102,10 +110,12 @@
                 <jaxb:property name="membersAttribute"/>
             </jaxb:bindings>
         </jaxb:bindings>
+        
         <jaxb:bindings
                 node="//xs:complexType[@name='AbstractFeatureCollectionType']/xs:complexContent/xs:extension/xs:sequence/xs:element[@ref='gml:featureMembers']">
             <jaxb:property name="featureMembersAttribute"/>
         </jaxb:bindings>
+        
         <jaxb:bindings node="//xs:element[@name='FeatureCollection']">
             <jaxb:factoryMethod name="TypeFeatureCollection"/>
         </jaxb:bindings>
@@ -332,12 +342,21 @@
         <jaxb:schemaBindings>
             <jaxb:package name="opengis.net.wfs_2_0.wfs" />
         </jaxb:schemaBindings>
+        
         <jaxb:bindings>
             <namespace:prefix name="wfs" />
         </jaxb:bindings>
+        
         <jaxb:bindings node="//xs:complexType [@name='ValueListType']">
             <jaxb:class name="AbstractValueListType" />
         </jaxb:bindings>
+        
+<!--         <jaxb:bindings node="//xs:complexType[@name='FeatureCollectionType']"> -->
+<!-- 			<annox:annotate target="class"> -->
+<!-- 				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" /> -->
+<!-- 			</annox:annotate> -->
+<!-- 		</jaxb:bindings> -->
+        
     </jaxb:bindings>
     <!--
     <jaxb:bindings

@@ -20,6 +20,8 @@
 				<value>opengis.*</value>
 				<value>net.opengis.*</value>
 				<value>no.geonorge.skjema.changelogfile</value>
+				<value>opengis.net.wfs_2_0.wfs.*</value>
+				
 			</list>
 		</property>
 

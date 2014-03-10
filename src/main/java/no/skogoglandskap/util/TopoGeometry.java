@@ -20,7 +20,7 @@ public class TopoGeometry {
 	
 	// TODO remove exteriorLineStrings use exteriorLineStringsOrientation
 	@Deprecated
-	private MultiLineString exteriorLineStrings;
+	public MultiLineString exteriorLineStrings;
 	
 	
 	

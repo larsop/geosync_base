@@ -170,8 +170,11 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 			ar5.setOmråde(surfacePropertyType);
 
 		} else {
-			 SurfacePropertyType surfacePropertyType = createSurface(useXlinKHref, gmlId, tg);
-			 ar5.setOmråde(surfacePropertyType);
+			SurfacePropertyType surfacePropertyType = createCompositeSurface(useXlinKHref, gmlId, tg);
+			ar5.setOmråde(surfacePropertyType);
+			
+//			 SurfacePropertyType surfacePropertyType = createSurface(useXlinKHref, gmlId, tg);
+//			 ar5.setOmråde(surfacePropertyType);
 
 //			SurfacePropertyType surfacePropertyType = createPolygon(useXlinKHref, gmlId, tg);
 //			ar5.setOmråde(surfacePropertyType);
@@ -285,6 +288,8 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 			OrientableCurveType cs = creatOrientableCurveType(ln, useXlinKHref, "Flate." + gmlId, i++);
 			if (orientation != null) {
 				cs.setOrientation(orientation.getOrit());
+			} else {
+				cs.setOrientation(Orientation.OrientationClockWise.getOrit());
 			}
 
 			CurvePropertyType csd = new CurvePropertyType();
@@ -374,6 +379,8 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 
 		// in gense never ref always coordinats
 		CurvePropertyType curvePropertyType2 = creatCurveType(borderLineString, false, GRENSE_PREFIX);
+		
+		
 
 		ar5Border.setGrense(curvePropertyType2);
 
@@ -492,7 +499,9 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 	private CurvePropertyType creatCurveType(LineString borderLineString, boolean useXlinKHref, String idPrefix) {
 
 		// TODO set id
+		// creatCurveTypeTmp
 		CurvePropertyType e = creatCurveTypeTmp(borderLineString, false, GRENSE_PREFIX);
+		
 		CompositeCurveType compositeCurveType = of.createCompositeCurveType();
 		compositeCurveType.setId(getGmlId("CP" + idPrefix, borderLineString, useXlinKHref));
 

@@ -187,6 +187,7 @@ public class BuildTopo {
 				Coordinate inputLast = inputLineString.getCoordinateN(inputLineString.getCoordinates().length - 1);
 				Coordinate thisLast = ls.getCoordinateN(ls.getCoordinates().length - 1);
 				if (inputFirst.equals2D(thisFirst)) {
+					//e.orientation = Orientation.OrientationAntiClockWise;
 					if (logger.isDebugEnabled()) {
 						logger.debug("Use clockwise oriatation for '" + thisFirst + "' != '" + thisLast + "'");
 					}

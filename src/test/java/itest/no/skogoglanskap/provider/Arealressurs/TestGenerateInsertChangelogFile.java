@@ -151,19 +151,13 @@ public class TestGenerateInsertChangelogFile {
 
 		}
 
-
 		boolean testOneSingleFile = true;
-		
-		
-		opengis.net.gml_3_2_1.gml.ObjectFactory of = new opengis.net.gml_3_2_1.gml.ObjectFactory();
-		
-		AbstractFeatureCollectionType2 fc2 = new AbstractFeatureCollectionType2() ;
-		JAXBElement<AbstractFeatureCollectionType2> createAbstractFeatureCollection = of.createTypeFeatureCollection(fc2);
-		
 
-		
-		
-		
+		opengis.net.gml_3_2_1.gml.ObjectFactory of = new opengis.net.gml_3_2_1.gml.ObjectFactory();
+
+		AbstractFeatureCollectionType2 fc2 = new AbstractFeatureCollectionType2();
+		JAXBElement<AbstractFeatureCollectionType2> createAbstractFeatureCollection = of.createTypeFeatureCollection(fc2);
+
 		if (testOneSingleFile) {
 
 			ArrayList<WSFOperation> wfsOperationList1 = new ArrayList<>();
@@ -175,41 +169,35 @@ public class TestGenerateInsertChangelogFile {
 				ArealressursGrenseType product = subscriberBorderData.get(i++);
 				WSFOperation wfs = new WSFOperation(operationNumber1++, SupportedWFSOperationType.InsertType, product);
 				wfsOperationList1.add(wfs);
-				
-				
-				
+
 				QName _AbstractFeature_QNAME = new QName("http://skjema.geonorge.no/SOSI/produktspesifikasjon/Arealressurs/4.5", "ArealressursGrense");
 				JAXBElement<AbstractFeatureType> g = new JAXBElement<AbstractFeatureType>(_AbstractFeature_QNAME, AbstractFeatureType.class, null, product);
-				FeaturePropertyType e =new FeaturePropertyType();
+				FeaturePropertyType e = new FeaturePropertyType();
 				e.setAbstractFeature(g);
-				fc2.getFeatureMembers().add(e );
-				
+				fc2.getFeatureMembers().add(e);
 
-				
-				
 			}
 
 			for (int i = 0; i < subscriberSurfcaeData.size();) {
 				ArealressursFlateType product = subscriberSurfcaeData.get(i++);
 				WSFOperation wfs = new WSFOperation(operationNumber1++, SupportedWFSOperationType.InsertType, product);
 				wfsOperationList1.add(wfs);
-				
+
 				QName _AbstractFeature_QNAME = new QName("http://skjema.geonorge.no/SOSI/produktspesifikasjon/Arealressurs/4.5", "ArealressursFlateType");
 				JAXBElement<AbstractFeatureType> g = new JAXBElement<AbstractFeatureType>(_AbstractFeature_QNAME, AbstractFeatureType.class, null, product);
-				FeaturePropertyType e =new FeaturePropertyType();
+				FeaturePropertyType e = new FeaturePropertyType();
 				e.setAbstractFeature(g);
-				fc2.getFeatureMembers().add(e );
+				fc2.getFeatureMembers().add(e);
 
 			}
 
 			String name;
 
 			if (!useXlinKHref) {
-				name = "/tmp/fil1_implicit_topo_OrientableCurve.xml";
+				name = "/tmp/fil1_implicit_topo_OrientableCurve_mot_klokka.xml";
 			} else {
-				name = "/tmp/fil2_topo_xlink_OrientableCurve.xml";
+				name = "/tmp/fil2_topo_xlink_OrientableCurve_mot_klokka.xml";
 			}
-			
 
 			{
 				Marshaller marshaller = changelogfileJaxb2Helper.getMarshaller();
@@ -217,8 +205,10 @@ public class TestGenerateInsertChangelogFile {
 				FileOutputStream os = null;
 				try {
 					String tname = name.replace("/tmp/", "/tmp/gml_");
+					tname = tname.replace(".xml", ".gml");
+
 					os = new FileOutputStream(tname);
-					
+
 					marshaller.marshal(createAbstractFeatureCollection, new StreamResult(os));
 
 				} catch (Exception e1) {
@@ -258,8 +248,6 @@ public class TestGenerateInsertChangelogFile {
 				}
 			}
 
-			
-
 			if (!useXlinKHref) {
 				marshallList(wfsOperationList1, "/tmp/fil1_A_implicit_topo_OrientableCurve.xml");
 				marshallList(wfsOperationList2, "/tmp/fil1_B_implicit_topo_OrientableCurve.xml");
@@ -269,8 +257,6 @@ public class TestGenerateInsertChangelogFile {
 				marshallList(wfsOperationList2, "/tmp/fil2_B_topo_xlink_OrientableCurve.xml");
 
 			}
-
-
 
 		}
 
@@ -282,8 +268,6 @@ public class TestGenerateInsertChangelogFile {
 		Calendar timestamp = Calendar.getInstance(nLocale);
 
 		TransactionCollection transactionCollection = changelogfileJaxb2Helper.getTransactionCollection(wfsOperationList1, timestamp);
-		
-		
 
 		Marshaller marshaller = changelogfileJaxb2Helper.getMarshaller();
 
@@ -332,9 +316,8 @@ public class TestGenerateInsertChangelogFile {
 
 				CurvePropertyType curvePropertyType = simpleAr5FromXml.getGrense();
 
-				
 				CompositeCurveType compositeCurveType = (CompositeCurveType) curvePropertyType.getAbstractCurve().getValue();
-				
+
 				// HACK to test
 				CurveType curve = (CurveType) compositeCurveType.getCurveMembers().get(0).getAbstractCurve().getValue();
 
@@ -356,159 +339,190 @@ public class TestGenerateInsertChangelogFile {
 
 			JAXBElement<? extends AbstractSurfaceType> abstractSurface = simpleAr5FromXml.getOmråde().getAbstractSurface();
 
-			opengis.net.gml_3_2_1.gml.CompositeSurfaceType value =  (CompositeSurfaceType) abstractSurface.getValue();
-			
-			SurfacePropertyType surfacePropertyType = value.getSurfaceMembers().get(0);
-			JAXBElement<? extends AbstractSurfaceType> patches = surfacePropertyType.getAbstractSurface();
-			
-			
-			SurfaceType value4 = (SurfaceType) patches.getValue();
+			if (abstractSurface.getValue() instanceof opengis.net.gml_3_2_1.gml.SurfaceType) {
+				opengis.net.gml_3_2_1.gml.SurfaceType value = (SurfaceType) abstractSurface.getValue();
+				JAXBElement<SurfacePatchArrayPropertyType> surfacePropertyType = value.getPatches();
+				SurfacePatchArrayPropertyType value2 = surfacePropertyType.getValue();
 
-			SurfacePatchArrayPropertyType  patches3 = value4.getPatches().getValue();
-			
-			
-			
-			
-			
-			List<JAXBElement<? extends AbstractSurfacePatchType>> abstractSurfacePatches = (List<JAXBElement<? extends AbstractSurfacePatchType>>) patches3.getAbstractSurfacePatches();
+				areaAfterWriteRead = resolvePatches(areaAfterWriteRead, geometryFactory, hrefLinkList, value2);
 
-			ArrayList<opengis.net.gml_3_2_1.gml.RingType> list = new ArrayList<>();
+			} else {
+				opengis.net.gml_3_2_1.gml.CompositeSurfaceType value = (CompositeSurfaceType) abstractSurface.getValue();
+				SurfacePropertyType surfacePropertyType = value.getSurfaceMembers().get(0);
 
-			for (JAXBElement<? extends AbstractSurfacePatchType> jaxbElement : abstractSurfacePatches) {
-				opengis.net.gml_3_2_1.gml.PolygonPatchType value2 = (PolygonPatchType) jaxbElement.getValue();
-				AbstractRingPropertyType exterior = value2.getExterior();
+				JAXBElement<? extends AbstractSurfaceType> patches = surfacePropertyType.getAbstractSurface();
 
-				opengis.net.gml_3_2_1.gml.RingType value3 = (RingType) exterior.getAbstractRing().getValue();
+				SurfaceType value4 = (SurfaceType) patches.getValue();
 
-				list.add(value3);
+				SurfacePatchArrayPropertyType patches3 = value4.getPatches().getValue();
+
+				areaAfterWriteRead = resolvePatches(areaAfterWriteRead, geometryFactory, hrefLinkList, patches3);
 			}
 
-			// list of linestrings for for the pologon
-			ArrayList<Coordinate[]> lineStringList = new ArrayList<>();
+		}
 
-			int icounter = 0;
-			for (RingType ringType : list) {
+		Assert.assertEquals(orgArea, areaAfterWriteRead, 0);
+	}
 
-				opengis.net.gml_3_2_1.gml.RingType ssgeom = ringType;
+	private double resolvePatches(double areaAfterWriteRead, GeometryFactory geometryFactory, Hashtable<String, Coordinate[]> hrefLinkList,
+			SurfacePatchArrayPropertyType patches3) {
+		List<JAXBElement<? extends AbstractSurfacePatchType>> abstractSurfacePatches = (List<JAXBElement<? extends AbstractSurfacePatchType>>) patches3
+				.getAbstractSurfacePatches();
 
-				List<CurvePropertyType> curveMembers = ssgeom.getCurveMembers();
-				for (CurvePropertyType curvePropertyType : curveMembers) {
+		ArrayList<opengis.net.gml_3_2_1.gml.RingType> list = new ArrayList<>();
 
-					Coordinate[] coordinates;
+		for (JAXBElement<? extends AbstractSurfacePatchType> jaxbElement : abstractSurfacePatches) {
+			opengis.net.gml_3_2_1.gml.PolygonPatchType value2 = (PolygonPatchType) jaxbElement.getValue();
+			AbstractRingPropertyType exterior = value2.getExterior();
 
-					if (curvePropertyType.getAbstractCurve() != null) {
-						AbstractCurveType curv = curvePropertyType.getAbstractCurve().getValue();
-						if (curv instanceof CurveType) {
-							CurveType curve = (CurveType) curv;
-							coordinates = getCoordinats(curve);
-						} else {
-							OrientableCurveType curve = (OrientableCurveType) curv;
-							CurvePropertyType curvePropertyType2 = curve.getBaseCurve();
-							if (curvePropertyType2.getAbstractCurve() == null) {
-								coordinates = hrefLinkList.get(curvePropertyType2.getHref());
-								
+			opengis.net.gml_3_2_1.gml.RingType value3 = (RingType) exterior.getAbstractRing().getValue();
 
-								if (curve.getOrientation() != null && curve.getOrientation().equals("-")) {
-									System.out.println("Switch coordinate oriatatior for " + coordinates[0] + "......" + coordinates[coordinates.length-1]);
-									Coordinate[] reversedArray = new Coordinate[coordinates.length];
-									int j = 0;
-									for (int i = coordinates.length -1; i >= 0; i--){
-									    reversedArray[j++] = coordinates[i];
-									}
-									coordinates = reversedArray;
-								}
+			list.add(value3);
+		}
 
+		// list of linestrings for for the pologon
+		ArrayList<Coordinate[]> lineStringList = new ArrayList<>();
+
+		int icounter = 0;
+		for (RingType ringType : list) {
+
+			opengis.net.gml_3_2_1.gml.RingType ssgeom = ringType;
+
+			List<CurvePropertyType> curveMembers = ssgeom.getCurveMembers();
+			for (CurvePropertyType curvePropertyType : curveMembers) {
+
+				Coordinate[] coordinates;
+
+				if (curvePropertyType.getAbstractCurve() != null) {
+					AbstractCurveType curv = curvePropertyType.getAbstractCurve().getValue();
+					if (curv instanceof CurveType) {
+						CurveType curve = (CurveType) curv;
+						coordinates = getCoordinats(curve);
+					} else if (curv instanceof opengis.net.gml_3_2_1.gml.CompositeCurveType) {
+						CompositeCurveType curve = (CompositeCurveType) curv;
+						List<CurvePropertyType> curvePropertyType2 = curve.getCurveMembers();
+						for (CurvePropertyType curvePropertyType4 : curvePropertyType2) {
+							
+							if (curvePropertyType4.getAbstractCurve() == null) {
+								coordinates = hrefLinkList.get(curvePropertyType4.getHref());
 							} else {
-								CurveType curve2 = (CurveType) curvePropertyType2.getAbstractCurve().getValue();
+								CurveType curve2 = (CurveType) curvePropertyType4.getAbstractCurve().getValue();
 								coordinates = getCoordinats(curve2);
 							}
+							
+							icounter = icounter + coordinates.length;
+
+							lineStringList.add(coordinates);
+
 						}
+						
+						coordinates = new Coordinate[0];
+
 
 					} else {
-						coordinates = hrefLinkList.get(curvePropertyType.getHref());
-						if (coordinates == null) {
-							throw new RuntimeException("Failed to find coordinates for href " + curvePropertyType.getHref());
+						OrientableCurveType curve = (OrientableCurveType) curv;
+						CurvePropertyType curvePropertyType2 = curve.getBaseCurve();
+						if (curvePropertyType2.getAbstractCurve() == null) {
+							coordinates = hrefLinkList.get(curvePropertyType2.getHref());
+
+							if (curve.getOrientation() != null && curve.getOrientation().equals("-")) {
+								System.out.println("Switch coordinate oriatatior for " + coordinates[0] + "......" + coordinates[coordinates.length - 1]);
+								Coordinate[] reversedArray = new Coordinate[coordinates.length];
+								int j = 0;
+								for (int i = coordinates.length - 1; i >= 0; i--) {
+									reversedArray[j++] = coordinates[i];
+								}
+								coordinates = reversedArray;
+							}
+
+						} else {
+							CurveType curve2 = (CurveType) curvePropertyType2.getAbstractCurve().getValue();
+							coordinates = getCoordinats(curve2);
 						}
-
-						System.out.println("curvePropertyType.getHref()" + curvePropertyType.getHref() + " coordinates.length  " + coordinates.length);
-
 					}
 
-					icounter = icounter + coordinates.length;
+				} else {
+					coordinates = hrefLinkList.get(curvePropertyType.getHref());
+					if (coordinates == null) {
+						throw new RuntimeException("Failed to find coordinates for href " + curvePropertyType.getHref());
+					}
 
-					lineStringList.add(coordinates);
+					System.out.println("curvePropertyType.getHref()" + curvePropertyType.getHref() + " coordinates.length  " + coordinates.length);
 
 				}
 
+				icounter = icounter + coordinates.length;
+
+				lineStringList.add(coordinates);
+
 			}
 
-			Coordinate lastStop = null;
+		}
 
-			Coordinate[] coordinates = new Coordinate[icounter];
+		Coordinate lastStop = null;
 
-			int a = 0;
+		Coordinate[] coordinates = new Coordinate[icounter];
 
-			while (lineStringList.size() > 0) {
-				int x = 0;
-				for (; x < lineStringList.size(); x++) {
-					Coordinate[] cs = lineStringList.get(x);
+		int a = 0;
 
-					if (lastStop == null) {
-						lastStop = cs[cs.length - 1];
-						for (int i = 0; i < cs.length; i++) {
+		while (lineStringList.size() > 0) {
+			int x = 0;
+			for (; x < lineStringList.size(); x++) {
+				Coordinate[] cs = lineStringList.get(x);
+
+				if (lastStop == null) {
+					lastStop = cs[cs.length - 1];
+					for (int i = 0; i < cs.length; i++) {
+						Coordinate coordinate = cs[i];
+						coordinates[a++] = coordinate;
+					}
+					break;
+				} else {
+					// if (lastStop.equals(cs[0])) {
+					// lastStop = cs[cs.length - 1];
+					// for (int i = 0; i < cs.length; i++) {
+					// Coordinate coordinate = cs[i];
+					// coordinates[a++] = coordinate;
+					// }
+					// break;
+
+					if (lastStop.equals(cs[cs.length - 1])) {
+						lastStop = cs[0];
+						for (int i = cs.length - 1; i >= 0; i--) {
 							Coordinate coordinate = cs[i];
 							coordinates[a++] = coordinate;
 						}
 						break;
 					} else {
-//						if (lastStop.equals(cs[0])) {
-//							lastStop = cs[cs.length - 1];
-//							for (int i = 0; i < cs.length; i++) {
-//								Coordinate coordinate = cs[i];
-//								coordinates[a++] = coordinate;
-//							}
-//							break;
-
-						if (lastStop.equals(cs[cs.length - 1])) {
-							lastStop = cs[0];
-							for (int i = cs.length - 1; i >= 0; i--) {
-								Coordinate coordinate = cs[i];
-								coordinates[a++] = coordinate;
-							}
-							break;
-						} else {
-							if (logger.isDebugEnabled()) {
-								logger.error("Failed to find start and stop for :" + lastStop + " With start coordinate " + lastStop.equals(cs[0])
-										+ " and end coordinate " + lastStop.equals(cs[cs.length - 1]));
-							}
+						if (logger.isDebugEnabled()) {
+							logger.error("Failed to find start and stop for :" + lastStop + " With start coordinate " + lastStop.equals(cs[0])
+									+ " and end coordinate " + lastStop.equals(cs[cs.length - 1]));
 						}
-
 					}
-				}
-				if (logger.isDebugEnabled()) {
-					logger.error("New laststop is " + lastStop + " remove linstring number " + x);
-				}
-				lineStringList.remove(x);
 
+				}
 			}
-
-			LineString g1 = geometryFactory.createLineString(coordinates);
-
 			if (logger.isDebugEnabled()) {
-				logger.error("Created linstring with length " + g1.getLength());
+				logger.error("New laststop is " + lastStop + " remove linstring number " + x);
 			}
-
-			Polygon createPolygon = geometryFactory.createPolygon(g1.getCoordinateSequence());
-
-			areaAfterWriteRead = areaAfterWriteRead + createPolygon.getArea();
-
-			System.out.println("createPolygon.getArea()" + createPolygon.getArea());
-
-			Assert.assertTrue(createPolygon.getArea() > 0.0);
+			lineStringList.remove(x);
 
 		}
 
-		Assert.assertEquals(orgArea, areaAfterWriteRead, 0);
+		LineString g1 = geometryFactory.createLineString(coordinates);
+
+		if (logger.isDebugEnabled()) {
+			logger.error("Created linstring with length " + g1.getLength());
+		}
+
+		Polygon createPolygon = geometryFactory.createPolygon(g1.getCoordinateSequence());
+
+		areaAfterWriteRead = areaAfterWriteRead + createPolygon.getArea();
+
+		System.out.println("createPolygon.getArea()" + createPolygon.getArea());
+
+		Assert.assertTrue(createPolygon.getArea() > 0.0);
+		return areaAfterWriteRead;
 	}
 
 	private Coordinate[] getCoordinats(CurveType curve) {

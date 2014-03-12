@@ -543,10 +543,11 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 	}
 
 	private String getGmlId(String idPrefix, LineString borderLineString, boolean useXlinKHref) {
+		String linestringId = ""+borderLineString.hashCode();
 		if (useXlinKHref) {
-			return GRENSE_PREFIX + borderLineString.hashCode();
+			return GRENSE_PREFIX + linestringId;
 		} else {
-			return idPrefix + borderLineString.hashCode();
+			return idPrefix + linestringId;
 
 		}
 	}

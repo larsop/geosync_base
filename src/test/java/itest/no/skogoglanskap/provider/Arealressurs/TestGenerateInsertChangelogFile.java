@@ -131,7 +131,8 @@ public class TestGenerateInsertChangelogFile {
 		for (TopoGeometry aa : geoWithCommonLinestrings) {
 
 			// convert the surface object
-			ArealressursFlateType ar5Surface = testConver.convert2FlateFromProv(UUID.randomUUID(), aa, useXlinKHref, "no.skogoglandskap.ar5.ArealressursFlate."
+			String name = ""+aa.exteriorLineStrings.toText();
+			ArealressursFlateType ar5Surface = testConver.convert2FlateFromProv(UUID.nameUUIDFromBytes(name.getBytes()), aa, useXlinKHref, "no.skogoglandskap.ar5.ArealressursFlate."
 					+ gmlFlateId++);
 			subscriberSurfcaeData.add(ar5Surface);
 
@@ -145,8 +146,9 @@ public class TestGenerateInsertChangelogFile {
 
 		for (LineString ls : lineStringsNew) {
 			// convert the border object
+			String text = ls.toText();
 			ArealressursGrenseType ar5Border = testConver
-					.convert2GrenseType(UUID.randomUUID(), ls, "no.skogoglandskap.ar5.ArealressursGrense." + gmlGrenseId++);
+					.convert2GrenseType(UUID.nameUUIDFromBytes(text.getBytes() ), ls, "no.skogoglandskap.ar5.ArealressursGrense." + gmlGrenseId++);
 			subscriberBorderData.add(ar5Border);
 
 		}
@@ -194,9 +196,9 @@ public class TestGenerateInsertChangelogFile {
 			String name;
 
 			if (!useXlinKHref) {
-				name = "/tmp/fil1_implicit_topo_OrientableCurve_mot_klokka.xml";
+				name = "/tmp/fil1_implicit_topo_OrientableCurve_f1.xml";
 			} else {
-				name = "/tmp/fil2_topo_xlink_OrientableCurve_mot_klokka.xml";
+				name = "/tmp/fil2_topo_xlink_OrientableCurve_f2.xml";
 			}
 
 			{

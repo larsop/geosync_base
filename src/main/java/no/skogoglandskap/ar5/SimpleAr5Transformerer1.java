@@ -104,7 +104,7 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 	 * 
 	 * @see no.geonorge.skjema.changelogfile.util.IConvert2ArealressursType# convert2FlateFromProv(java.util.UUID, java.lang.Object)
 	 */
-	public ArealressursFlateType convert2FlateFromProv(UUID lokalId, Object input, boolean useXlinKHref, String gmlId) {
+	public ArealressursFlateType convert2FlateFromProv(UUID lokalId, Object input, boolean useXlinKHref, String gmlId,Calendar datafangstdato, Calendar verifikasjonDato) {
 
 		TopoGeometry tg = (TopoGeometry) input;
 
@@ -146,7 +146,7 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 
 		}
 
-		Calendar datafangstdato = Calendar.getInstance(nLocale);
+		
 		ar5.setDatafangstdato(getXMLGregorianCalendar(datafangstdato.getTime()));
 
 		RegistreringsversjonPropertyType registreringsversjon = new RegistreringsversjonPropertyType();
@@ -356,7 +356,7 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 	 * @see no.geonorge.skjema.changelogfile.util.IConvert2ArealressursType# convert2GrenseType(java.util.UUID, java.lang.Object)
 	 */
 	@Override
-	public ArealressursGrenseType convert2GrenseType(UUID lokalId, Object input, String gmlId) {
+	public ArealressursGrenseType convert2GrenseType(UUID lokalId, Object input, String gmlId, Calendar datafangstdato, Calendar verifikasjonDato) {
 
 		LineString borderLineString = (LineString) input;
 
@@ -374,7 +374,7 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 
 		// ar5.setArealtype(arealtype);
 
-		Calendar datafangstdato = Calendar.getInstance(nLocale);
+		 
 		ar5Border.setDatafangstdato(getXMLGregorianCalendar(datafangstdato.getTime()));
 
 		// in gense never ref always coordinats
@@ -396,7 +396,7 @@ public class SimpleAr5Transformerer1 implements IConvert2ArealressursType {
 
 		ar5Border.setOppdateringsdato(getCalendar(datafangstdato.getTime()));
 		ar5Border.setOpphav("opphav");
-		ar5Border.setVerifiseringsdato(getXMLGregorianCalendar(datafangstdato.getTime()));
+		ar5Border.setVerifiseringsdato(getXMLGregorianCalendar(verifikasjonDato.getTime()));
 
 		ar5Border.getProsesshistories().add("Prosesshistories");
 

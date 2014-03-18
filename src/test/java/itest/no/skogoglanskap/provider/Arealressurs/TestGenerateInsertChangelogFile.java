@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Hashtable;
 import java.util.List;
@@ -83,6 +84,9 @@ import com.vividsolutions.jts.io.WKTReader;
 @ContextConfiguration(locations = { "/testSetup.xml", "/geosyncBaseMarshallerAppContext.xml" })
 public class TestGenerateInsertChangelogFile {
 	private Logger logger = Logger.getLogger(TestGenerateInsertChangelogFile.class);
+	
+	private java.text.SimpleDateFormat formatter = new java.text.SimpleDateFormat("yyyyMMdd");
+	Locale nLocale = new Locale.Builder().setLanguage("nb").setRegion("NO").build();
 
 	@Autowired
 	private ChangeLogMarshallerHelper changelogfileJaxb2Helper;
@@ -133,7 +137,10 @@ public class TestGenerateInsertChangelogFile {
 			// convert the surface object
 			String name = ""+aa.exteriorLineStrings.toText();
 			ArealressursFlateType ar5Surface = testConver.convert2FlateFromProv(UUID.nameUUIDFromBytes(name.getBytes()), aa, useXlinKHref, "no.skogoglandskap.ar5.ArealressursFlate."
-					+ gmlFlateId++);
+					+ gmlFlateId++,
+					getCalendarObject(getDatofangstDato(formatter)),
+					getCalendarObject(getVerifiseringsDato2(formatter)));
+
 			subscriberSurfcaeData.add(ar5Surface);
 
 		}
@@ -147,8 +154,14 @@ public class TestGenerateInsertChangelogFile {
 		for (LineString ls : lineStringsNew) {
 			// convert the border object
 			String text = ls.toText();
+		
+			getDatofangstDato(formatter);
+			
+			
 			ArealressursGrenseType ar5Border = testConver
-					.convert2GrenseType(UUID.nameUUIDFromBytes(text.getBytes() ), ls, "no.skogoglandskap.ar5.ArealressursGrense." + gmlGrenseId++);
+					.convert2GrenseType(UUID.nameUUIDFromBytes(text.getBytes() ), ls, "no.skogoglandskap.ar5.ArealressursGrense." + gmlGrenseId++, 
+							getCalendarObject(getDatofangstDato(formatter)),
+							getCalendarObject(getVerifiseringsDato2(formatter)));
 			subscriberBorderData.add(ar5Border);
 
 		}
@@ -262,6 +275,13 @@ public class TestGenerateInsertChangelogFile {
 
 		}
 
+	}
+
+	private Calendar getCalendarObject(Date datofangstDato) throws java.text.ParseException {
+		Calendar datafangstdato = Calendar.getInstance(nLocale);
+		 
+		datafangstdato.setTime(datofangstDato);
+		return datafangstdato;
 	}
 
 	private void marshallList(ArrayList<WSFOperation> wfsOperationList1, String name) throws ParseException, IllegalAccessException, InvocationTargetException,
@@ -588,9 +608,8 @@ public class TestGenerateInsertChangelogFile {
 		ar5f.setArskogbon(new Byte("14"));
 		ar5f.setArgrunnf(new Byte("44"));
 		ar5f.setArkartstd("AR5");
-		java.text.SimpleDateFormat formatter = new java.text.SimpleDateFormat("yyyyMMdd");
-		ar5f.setDatafangstdato(formatter.parse("20040801"));
-		ar5f.setVerifiseringsdato(formatter.parse("20120502"));
+		ar5f.setDatafangstdato(getDatofangstDato(formatter));
+		ar5f.setVerifiseringsdato(getVerifiseringsDato(formatter));
 
 		// Nøyaktighet is not used on flate in Ar5
 
@@ -608,6 +627,23 @@ public class TestGenerateInsertChangelogFile {
 		// ArealressursGrenseType ar5g = new ArealressursGrenseType();
 		return ar5f;
 	}
+
+	private Date getVerifiseringsDato(java.text.SimpleDateFormat formatter)
+			throws java.text.ParseException {
+		return formatter.parse("20120502");
+	}
+
+	private Date getDatofangstDato(java.text.SimpleDateFormat formatter)
+			throws java.text.ParseException {
+		return formatter.parse("20140312");
+	}
+	
+	private Date getVerifiseringsDato2(java.text.SimpleDateFormat formatter)
+			throws java.text.ParseException {
+		return formatter.parse("20140312");
+	}
+
+	
 
 	/**
 	 * The right polygon
@@ -640,9 +676,8 @@ public class TestGenerateInsertChangelogFile {
 		ar5f.setArskogbon(new Byte("15"));
 		ar5f.setArgrunnf(new Byte("45"));
 		ar5f.setArkartstd("AR5");
-		java.text.SimpleDateFormat formatter = new java.text.SimpleDateFormat("yyyyMMdd");
-		ar5f.setDatafangstdato(formatter.parse("20040801"));
-		ar5f.setVerifiseringsdato(formatter.parse("20120502"));
+		ar5f.setDatafangstdato(getDatofangstDato(formatter));
+		ar5f.setVerifiseringsdato(getVerifiseringsDato(formatter));
 
 		// Nøyaktighet is not used on flate in Ar5
 

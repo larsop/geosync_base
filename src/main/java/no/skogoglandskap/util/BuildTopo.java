@@ -12,6 +12,7 @@ import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.NoSuchAuthorityCodeException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
+import org.opengis.referencing.operation.TransformException;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
@@ -22,6 +23,7 @@ import com.vividsolutions.jts.geom.Polygon;
 
 public class BuildTopo {
 
+	private static final double MAX_DISTANCE_DIF = 30;
 	private static Logger logger = Logger.getLogger(BuildTopo.class);
 	private static GeometryFactory gf = new GeometryFactory();
 
@@ -80,7 +82,8 @@ public class BuildTopo {
 			// // Get a union of all of the line strings
 			Geometry newLinstringGeo = geometryCollectionOrgMultiLineString.union();
 
-			// make a collection of only line strings, remove points and other geos
+			// make a collection of only line strings, remove points and other
+			// geos
 			for (int i = 0; i < newLinstringGeo.getNumGeometries(); i++) {
 				Geometry g = newLinstringGeo.getGeometryN(i);
 				if (g instanceof LineString) {
@@ -133,7 +136,7 @@ public class BuildTopo {
 
 				ArrayList<LineString> exteriorLineStringtmp = getLineStringsThatIntersects(exteriorLineString, listOfCommonLineStrings);
 
-				MultiLineStringWithOrientation multiLineStringWithOrientation = getMultiLineStringWithOrientation(exteriorLineString, listOfCommonLineStrings);
+				MultiLineStringWithOrientation multiLineStringWithOrientation = getMultiLineStringWithOrientationThatIntersects(exteriorLineString, listOfCommonLineStrings);
 
 				MultiLineString exteriorLineStrings = gf.createMultiLineString(exteriorLineStringtmp.toArray(new LineString[exteriorLineStringtmp.size()]));
 
@@ -167,90 +170,106 @@ public class BuildTopo {
 		return lr;
 	}
 
-	private static MultiLineStringWithOrientation getMultiLineStringWithOrientation(LineString inputLineString, ArrayList<LineString> listOfCommonLineStrings) {
+	// use the list of common linstrings to build up the new linestring
+	private static MultiLineStringWithOrientation getMultiLineStringWithOrientationThatIntersects(LineString inputLineString, ArrayList<LineString> listOfCommonLineStrings) {
 		// hold the list linstrings that is of interest for this polygon
 
 		MultiLineStringWithOrientation lineStringWithOrientation = new MultiLineStringWithOrientation();
+		MathTransform transFilter = null;
 
-		// get all that touch touches this linestring
-		for (LineString ls : listOfCommonLineStrings) {
-			Geometry intersection;
+		try {
 
-			// TODO Maybe we need a better way to this
-			if (inputLineString.intersects(ls) && (intersection = inputLineString.intersection(ls)).getLength() > 0.00000) {
+			CoordinateReferenceSystem sourceCRS;
+			sourceCRS = CRS.decode("EPSG:" + 4258);
+			CoordinateReferenceSystem targetCRS = CRS.decode("EPSG:" + 25833);
+			transFilter = CRS.findMathTransform(sourceCRS, targetCRS);
 
-				LineStringWithOrientation e = new LineStringWithOrientation();
-				e.lineString = ls;
+			// get all that touch touches this linestring
+			for (LineString ls : listOfCommonLineStrings) {
+				Geometry intersection;
 
-				Coordinate inputFirst = inputLineString.getCoordinateN(0);
-				Coordinate thisFirst = ls.getCoordinateN(0);
-				Coordinate inputLast = inputLineString.getCoordinateN(inputLineString.getCoordinates().length - 1);
-				Coordinate thisLast = ls.getCoordinateN(ls.getCoordinates().length - 1);
-				if (inputFirst.equals2D(thisFirst)) {
-					// f1 
-					e.orientation = Orientation.OrientationAntiClockWise;
-					
-					// f2
-					//e.orientation = Orientation.OrientationClockWise;
-					if (logger.isDebugEnabled()) {
-						logger.debug("Use clockwise oriatation for '" + thisFirst + "' != '" + thisLast + "'");
-					}
+				// TODO Maybe we need a better way to this
+				if (inputLineString.intersects(ls) && (intersection = inputLineString.intersection(ls)).getLength() > 0.00000) {
 
-					// TDOD find out way this is different
-					if (!inputLast.equals2D(thisLast)) {
+					LineStringWithOrientation e = new LineStringWithOrientation();
+					e.lineString = ls;
+
+					Coordinate inputFirst = inputLineString.getCoordinateN(0);
+					Coordinate thisFirst = ls.getCoordinateN(0);
+					Coordinate inputLast = inputLineString.getCoordinateN(inputLineString.getCoordinates().length - 1);
+					Coordinate thisLast = ls.getCoordinateN(ls.getCoordinates().length - 1);
+
+					// test if exact equal
+					if (inputFirst.equals2D(thisFirst) && inputLast.equals2D(thisLast)) {
+						e.orientation = Orientation.OrientationClockWise;
+
+						if (logger.isDebugEnabled()) {
+							logger.debug("Use non ClockWise oriatation for '" + thisFirst + "' != '" + thisLast + "'");
+						}
+					} else if (inputLast.equals2D(thisFirst) && inputLast.equals2D(thisFirst)) {
+						e.orientation = Orientation.OrientationAntiClockWise;
+						
+						if (logger.isDebugEnabled()) {
+							logger.debug("Use non ClockWise oriatation for '" + inputLast + "' != '" + inputLast + "'");
+						}
+					} else {
+						// test if they are close each other
+
 						if (logger.isDebugEnabled()) {
 							logger.debug("distance beetween  '" + inputLast + "' != '" + thisLast + "' in degree is " + inputLast.distance(thisLast));
-							CoordinateReferenceSystem sourceCRS;
-							try {
-								// this is hack for debug test
-								sourceCRS = CRS.decode("EPSG:" + 4258);
-								CoordinateReferenceSystem targetCRS = CRS.decode("EPSG:" + 25833);
-								MathTransform transFilter = CRS.findMathTransform(sourceCRS, targetCRS);
-
-								Coordinate inputLastMeter = (Coordinate) inputLast.clone();
-								inputLastMeter.x = inputLast.y;
-								inputLastMeter.y = inputLast.x;
-								inputLastMeter = JTS.transform(inputLastMeter, null, transFilter);
-
-								Coordinate thisLastMeter = (Coordinate) thisLast.clone();
-								thisLastMeter.x = thisLast.y;
-								thisLastMeter.y = thisLast.x;
-								thisLastMeter = JTS.transform(thisLastMeter, null, transFilter);
-
-
-								logger.debug("distance beetween  '" + inputLastMeter + "' != '" + thisLastMeter + "' in meter is " + inputLastMeter.distance(thisLastMeter));
-
-							} catch (Exception e1) {
-								logger.debug("Failed to find dirtance in meter ", e1);
-							}
- 
-							
-							
+							// this is hack for debug test
 						}
-					}
 
-				} else {
-					
-					// f1 
-					e.orientation = Orientation.OrientationClockWise;
-					
-					// f2
-					//e.orientation = Orientation.OrientationAntiClockWise;
-					
-					
-					if (logger.isDebugEnabled()) {
-						logger.debug("Use non clockwise oriatation for '" + thisFirst + "' != '" + thisLast + "'");
-					}
+						double distanceFirst2First = getDistance(transFilter, inputFirst, thisFirst);
+						double distanceLast2Last = getDistance(transFilter, inputLast, thisLast);
 
+						
+						if (distanceFirst2First < MAX_DISTANCE_DIF && distanceLast2Last < MAX_DISTANCE_DIF) {
+							e.orientation = Orientation.OrientationClockWise;
+						} else {
+							double distanceLast2First = getDistance(transFilter, inputLast, thisFirst);
+							double distanceFirst2Last = getDistance(transFilter, inputFirst, thisLast);
+							if (distanceLast2First < MAX_DISTANCE_DIF  && distanceFirst2Last < MAX_DISTANCE_DIF) {
+								e.orientation = Orientation.OrientationAntiClockWise;
+							} else {
+								logger.error("Not able to set correct oriatation for " + "Use non ClockWise oriatation for '" + thisFirst + "' != '" + thisLast + "'" );
+							}
+						}
+						
+						if (logger.isDebugEnabled()) {
+							logger.debug("Use " + e.orientation.name() +" for '" + inputLast + "' != '" + inputLast + "'" + " with distanceFirstFirst " + distanceFirst2First
+									+ " meter ");
+						}
+
+					}
+					lineStringWithOrientation.multiLineStringOrientation.add(e);
 				}
-
-				lineStringWithOrientation.multiLineStringOrientation.add(e);
-
 			}
 
+		} catch (Exception e1) {
+			logger.debug("Failed to find dirtance in meter ", e1);
 		}
 
 		return lineStringWithOrientation;
+	}
+
+	private static double getDistance(MathTransform transFilter, Coordinate inputLast, Coordinate thisLast) throws TransformException {
+		Coordinate inputLastMeter = (Coordinate) inputLast.clone();
+		inputLastMeter.x = inputLast.y;
+		inputLastMeter.y = inputLast.x;
+		inputLastMeter = JTS.transform(inputLastMeter, null, transFilter);
+
+		Coordinate thisLastMeter = (Coordinate) thisLast.clone();
+		thisLastMeter.x = thisLast.y;
+		thisLastMeter.y = thisLast.x;
+		thisLastMeter = JTS.transform(thisLastMeter, null, transFilter);
+
+		double distanceLast = inputLastMeter.distance(thisLastMeter);
+
+		if (logger.isDebugEnabled()) {
+			logger.debug("distance beetween  '" + inputLastMeter + "' != '" + thisLastMeter + "' in meter is " + distanceLast);
+		}
+		return distanceLast;
 	}
 
 	/**

@@ -68,12 +68,14 @@ import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.opengis.referencing.operation.TransformException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.oxm.Marshaller;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Polygon;
@@ -84,7 +86,7 @@ import com.vividsolutions.jts.io.WKTReader;
 @ContextConfiguration(locations = { "/testSetup.xml", "/geosyncBaseMarshallerAppContext.xml" })
 public class TestGenerateInsertChangelogFile {
 	private Logger logger = Logger.getLogger(TestGenerateInsertChangelogFile.class);
-	
+
 	private java.text.SimpleDateFormat formatter = new java.text.SimpleDateFormat("yyyyMMdd");
 	Locale nLocale = new Locale.Builder().setLanguage("nb").setRegion("NO").build();
 
@@ -135,10 +137,9 @@ public class TestGenerateInsertChangelogFile {
 		for (TopoGeometry aa : geoWithCommonLinestrings) {
 
 			// convert the surface object
-			String name = ""+aa.exteriorLineStrings.toText();
-			ArealressursFlateType ar5Surface = testConver.convert2FlateFromProv(UUID.nameUUIDFromBytes(name.getBytes()), aa, useXlinKHref, "no.skogoglandskap.ar5.ArealressursFlate."
-					+ gmlFlateId++,
-					getCalendarObject(getDatofangstDato(formatter)),
+			String name = "" + aa.exteriorLineStrings.toText();
+			ArealressursFlateType ar5Surface = testConver.convert2FlateFromProv(UUID.nameUUIDFromBytes(name.getBytes()), aa, useXlinKHref,
+					"no.skogoglandskap.ar5.ArealressursFlate." + gmlFlateId++, getCalendarObject(getDatofangstDato(formatter)),
 					getCalendarObject(getVerifiseringsDato2(formatter)));
 
 			subscriberSurfcaeData.add(ar5Surface);
@@ -154,14 +155,12 @@ public class TestGenerateInsertChangelogFile {
 		for (LineString ls : lineStringsNew) {
 			// convert the border object
 			String text = ls.toText();
-		
+
 			getDatofangstDato(formatter);
-			
-			
-			ArealressursGrenseType ar5Border = testConver
-					.convert2GrenseType(UUID.nameUUIDFromBytes(text.getBytes() ), ls, "no.skogoglandskap.ar5.ArealressursGrense." + gmlGrenseId++, 
-							getCalendarObject(getDatofangstDato(formatter)),
-							getCalendarObject(getVerifiseringsDato2(formatter)));
+
+			ArealressursGrenseType ar5Border = testConver.convert2GrenseType(UUID.nameUUIDFromBytes(text.getBytes()), ls,
+					"no.skogoglandskap.ar5.ArealressursGrense." + gmlGrenseId++, getCalendarObject(getDatofangstDato(formatter)),
+					getCalendarObject(getVerifiseringsDato2(formatter)));
 			subscriberBorderData.add(ar5Border);
 
 		}
@@ -249,27 +248,47 @@ public class TestGenerateInsertChangelogFile {
 			int operationNumber1 = 0;
 
 			for (int i = 0; i < subscriberBorderData.size();) {
-				wfsOperationList1.add(new WSFOperation(operationNumber1++, SupportedWFSOperationType.InsertType, subscriberBorderData.get(i++)));
+
+				ArealressursGrenseType product = subscriberBorderData.get(i++);
+				System.out.println(i + " product.getId():" + product.getId());
+				wfsOperationList1.add(new WSFOperation(operationNumber1++, SupportedWFSOperationType.InsertType, product));
+				if ("no.skogoglandskap.ar5.ArealressursGrense.1".equals(product.getId())) {
+					wfsOperationList2.add(new WSFOperation(operationNumber1++, SupportedWFSOperationType.UpdateType, product));
+					
+					System.out.println("test");
+
+				}
+
 				if (i < subscriberBorderData.size()) {
-					wfsOperationList2.add(new WSFOperation(operationNumber1++, SupportedWFSOperationType.InsertType, subscriberBorderData.get(i++)));
+					product = subscriberBorderData.get(i++);
+					System.out.println(i + " product.getId():" + product.getId());
+					
+					wfsOperationList1.add(new WSFOperation(operationNumber1++, SupportedWFSOperationType.InsertType, product));
+					if ("no.skogoglandskap.ar5.ArealressursGrense.1".equals(product.getId())) {
+						wfsOperationList2.add(new WSFOperation(operationNumber1++, SupportedWFSOperationType.UpdateType, product));
+						System.out.println("test");
+
+					}
 				}
 
 			}
 
 			for (int i = 0; i < subscriberSurfcaeData.size();) {
-				wfsOperationList1.add(new WSFOperation(operationNumber1++, SupportedWFSOperationType.InsertType, subscriberSurfcaeData.get(i++)));
+				ArealressursFlateType product = subscriberSurfcaeData.get(i++);
+				wfsOperationList1.add(new WSFOperation(operationNumber1++, SupportedWFSOperationType.InsertType, product));
 				if (i < subscriberSurfcaeData.size()) {
-					wfsOperationList2.add(new WSFOperation(operationNumber1++, SupportedWFSOperationType.InsertType, subscriberSurfcaeData.get(i++)));
+					product = subscriberSurfcaeData.get(i++);
+					wfsOperationList2.add(new WSFOperation(operationNumber1++, SupportedWFSOperationType.InsertType, product));
 				}
 			}
 
 			if (!useXlinKHref) {
-				marshallList(wfsOperationList1, "/tmp/fil1_A_implicit_topo_OrientableCurve.xml");
-				marshallList(wfsOperationList2, "/tmp/fil1_B_implicit_topo_OrientableCurve.xml");
+				marshallList(wfsOperationList1, "/tmp/leveranse1_implicit_topo_OrientableCurve.xml");
+				marshallList(wfsOperationList2, "/tmp/leveranse2_implicit_topo_OrientableCurve.xml");
 
 			} else {
-				marshallList(wfsOperationList1, "/tmp/fil2_A_topo_xlink_OrientableCurve.xml");
-				marshallList(wfsOperationList2, "/tmp/fil2_B_topo_xlink_OrientableCurve.xml");
+				marshallList(wfsOperationList1, "/tmp/leveranse1_topo_xlink_OrientableCurve.xml");
+				marshallList(wfsOperationList2, "/tmp/leveranse2_topo_xlink_OrientableCurve.xml");
 
 			}
 
@@ -279,7 +298,7 @@ public class TestGenerateInsertChangelogFile {
 
 	private Calendar getCalendarObject(Date datofangstDato) throws java.text.ParseException {
 		Calendar datafangstdato = Calendar.getInstance(nLocale);
-		 
+
 		datafangstdato.setTime(datofangstDato);
 		return datafangstdato;
 	}
@@ -424,22 +443,21 @@ public class TestGenerateInsertChangelogFile {
 						CompositeCurveType curve = (CompositeCurveType) curv;
 						List<CurvePropertyType> curvePropertyType2 = curve.getCurveMembers();
 						for (CurvePropertyType curvePropertyType4 : curvePropertyType2) {
-							
+
 							if (curvePropertyType4.getAbstractCurve() == null) {
 								coordinates = hrefLinkList.get(curvePropertyType4.getHref());
 							} else {
 								CurveType curve2 = (CurveType) curvePropertyType4.getAbstractCurve().getValue();
 								coordinates = getCoordinats(curve2);
 							}
-							
+
 							icounter = icounter + coordinates.length;
 
 							lineStringList.add(coordinates);
 
 						}
-						
-						coordinates = new Coordinate[0];
 
+						coordinates = new Coordinate[0];
 
 					} else {
 						OrientableCurveType curve = (OrientableCurveType) curv;
@@ -594,6 +612,8 @@ public class TestGenerateInsertChangelogFile {
 		Polygon borderPolygon = (Polygon) reader
 				.read("POLYGON((59.31038099999999957 4.90558199999999989,59.31026539166666822 4.90555743333333449,59.31024421666666768 4.90523724166666675,59.31038099999999957 4.90523000000000042,59.31038099999999957 4.90558199999999989))");
 
+		borderPolygon = (Polygon) switchXY(borderPolygon); 
+
 		borderPolygon.setSRID(4258);
 		borderPolygon.setUserData("NO.SK.AR5:");
 
@@ -628,22 +648,17 @@ public class TestGenerateInsertChangelogFile {
 		return ar5f;
 	}
 
-	private Date getVerifiseringsDato(java.text.SimpleDateFormat formatter)
-			throws java.text.ParseException {
+	private Date getVerifiseringsDato(java.text.SimpleDateFormat formatter) throws java.text.ParseException {
 		return formatter.parse("20120502");
 	}
 
-	private Date getDatofangstDato(java.text.SimpleDateFormat formatter)
-			throws java.text.ParseException {
-		return formatter.parse("20140312");
-	}
-	
-	private Date getVerifiseringsDato2(java.text.SimpleDateFormat formatter)
-			throws java.text.ParseException {
+	private Date getDatofangstDato(java.text.SimpleDateFormat formatter) throws java.text.ParseException {
 		return formatter.parse("20140312");
 	}
 
-	
+	private Date getVerifiseringsDato2(java.text.SimpleDateFormat formatter) throws java.text.ParseException {
+		return formatter.parse("20140312");
+	}
 
 	/**
 	 * The right polygon
@@ -662,6 +677,9 @@ public class TestGenerateInsertChangelogFile {
 		Polygon borderPolygon = (Polygon) reader
 				.read("POLYGON((59.31038099999999957 4.90523000000000042,59.31056000000000239 4.90555599999999981,59.31057200000000051 4.90555599999999981,59.31057200000000051 4.90558199999999989,59.31038099999999957 4.90558199999999989,59.31038099999999957 4.90523000000000042,59.31038099999999957 4.90523000000000042))");
 
+
+		borderPolygon = (Polygon) switchXY(borderPolygon); 
+		
 		borderPolygon.setSRID(4258);
 		borderPolygon.setUserData("NO.SK.AR5:");
 
@@ -695,5 +713,19 @@ public class TestGenerateInsertChangelogFile {
 		// ArealressursGrenseType ar5g = new ArealressursGrenseType();
 		return ar5f;
 	}
+	
+	private static Geometry switchXY(Polygon inputLineString) throws RuntimeException{
+
+		Geometry clone = (Geometry) inputLineString.clone();
+//		Coordinate[] coordinates = clone.getCoordinates();
+//		for (Coordinate coordinate : coordinates) {
+//			double newX = coordinate.y;
+//			coordinate.y = coordinate.x;
+//			coordinate.x = newX;
+//		}
+
+		return clone;
+	}
+
 
 }

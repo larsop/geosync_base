@@ -197,7 +197,7 @@ public class TestGenerateInsertChangelogFile {
 				WSFOperation wfs = new WSFOperation(operationNumber1++, SupportedWFSOperationType.InsertType, product);
 				wfsOperationList1.add(wfs);
 
-				QName _AbstractFeature_QNAME = new QName("http://skjema.geonorge.no/SOSI/produktspesifikasjon/Arealressurs/4.5", "ArealressursFlateType");
+				QName _AbstractFeature_QNAME = new QName("http://skjema.geonorge.no/SOSI/produktspesifikasjon/Arealressurs/4.5", "ArealressursFlate");
 				JAXBElement<AbstractFeatureType> g = new JAXBElement<AbstractFeatureType>(_AbstractFeature_QNAME, AbstractFeatureType.class, null, product);
 				FeaturePropertyType e = new FeaturePropertyType();
 				e.setAbstractFeature(g);

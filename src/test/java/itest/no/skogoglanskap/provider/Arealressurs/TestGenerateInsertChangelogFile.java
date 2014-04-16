@@ -254,7 +254,7 @@ public class TestGenerateInsertChangelogFile {
 				wfsOperationList1.add(new WSFOperation(operationNumber1++, SupportedWFSOperationType.InsertType, product));
 				if ("no.skogoglandskap.ar5.ArealressursGrense.1".equals(product.getId())) {
 					wfsOperationList2.add(new WSFOperation(operationNumber1++, SupportedWFSOperationType.UpdateType, product));
-					
+
 					System.out.println("test");
 
 				}
@@ -262,7 +262,7 @@ public class TestGenerateInsertChangelogFile {
 				if (i < subscriberBorderData.size()) {
 					product = subscriberBorderData.get(i++);
 					System.out.println(i + " product.getId():" + product.getId());
-					
+
 					wfsOperationList1.add(new WSFOperation(operationNumber1++, SupportedWFSOperationType.InsertType, product));
 					if ("no.skogoglandskap.ar5.ArealressursGrense.1".equals(product.getId())) {
 						wfsOperationList2.add(new WSFOperation(operationNumber1++, SupportedWFSOperationType.UpdateType, product));
@@ -466,7 +466,10 @@ public class TestGenerateInsertChangelogFile {
 							coordinates = hrefLinkList.get(curvePropertyType2.getHref());
 
 							if (curve.getOrientation() != null && curve.getOrientation().equals("-")) {
-								System.out.println("Switch coordinate oriatatior for " + coordinates[0] + "......" + coordinates[coordinates.length - 1]);
+								if (logger.isDebugEnabled()) {
+									logger.error("Switch coordinate oriatatior for " + coordinates[0] + "......" + coordinates[coordinates.length - 1]);
+								}
+
 								Coordinate[] reversedArray = new Coordinate[coordinates.length];
 								int j = 0;
 								for (int i = coordinates.length - 1; i >= 0; i--) {
@@ -518,15 +521,16 @@ public class TestGenerateInsertChangelogFile {
 					}
 					break;
 				} else {
-					// if (lastStop.equals(cs[0])) {
-					// lastStop = cs[cs.length - 1];
-					// for (int i = 0; i < cs.length; i++) {
-					// Coordinate coordinate = cs[i];
-					// coordinates[a++] = coordinate;
-					// }
-					// break;
-
-					if (lastStop.equals(cs[cs.length - 1])) {
+					// TODO find how to handle this
+					// This test should not be needed because all the line strings should be sorted already
+					if (lastStop.equals(cs[0])) {
+						lastStop = cs[cs.length - 1];
+						for (int i = 0; i < cs.length; i++) {
+							Coordinate coordinate = cs[i];
+							coordinates[a++] = coordinate;
+						}
+						break;
+					} else if (lastStop.equals(cs[cs.length - 1])) {
 						lastStop = cs[0];
 						for (int i = cs.length - 1; i >= 0; i--) {
 							Coordinate coordinate = cs[i];
@@ -612,7 +616,7 @@ public class TestGenerateInsertChangelogFile {
 		Polygon borderPolygon = (Polygon) reader
 				.read("POLYGON((59.31038099999999957 4.90558199999999989,59.31026539166666822 4.90555743333333449,59.31024421666666768 4.90523724166666675,59.31038099999999957 4.90523000000000042,59.31038099999999957 4.90558199999999989))");
 
-		borderPolygon = (Polygon) switchXY(borderPolygon); 
+		borderPolygon = (Polygon) switchXY(borderPolygon);
 
 		borderPolygon.setSRID(4258);
 		borderPolygon.setUserData("NO.SK.AR5:");
@@ -677,9 +681,8 @@ public class TestGenerateInsertChangelogFile {
 		Polygon borderPolygon = (Polygon) reader
 				.read("POLYGON((59.31038099999999957 4.90523000000000042,59.31056000000000239 4.90555599999999981,59.31057200000000051 4.90555599999999981,59.31057200000000051 4.90558199999999989,59.31038099999999957 4.90558199999999989,59.31038099999999957 4.90523000000000042,59.31038099999999957 4.90523000000000042))");
 
+		borderPolygon = (Polygon) switchXY(borderPolygon);
 
-		borderPolygon = (Polygon) switchXY(borderPolygon); 
-		
 		borderPolygon.setSRID(4258);
 		borderPolygon.setUserData("NO.SK.AR5:");
 
@@ -713,19 +716,18 @@ public class TestGenerateInsertChangelogFile {
 		// ArealressursGrenseType ar5g = new ArealressursGrenseType();
 		return ar5f;
 	}
-	
-	private static Geometry switchXY(Polygon inputLineString) throws RuntimeException{
+
+	private static Geometry switchXY(Polygon inputLineString) throws RuntimeException {
 
 		Geometry clone = (Geometry) inputLineString.clone();
-//		Coordinate[] coordinates = clone.getCoordinates();
-//		for (Coordinate coordinate : coordinates) {
-//			double newX = coordinate.y;
-//			coordinate.y = coordinate.x;
-//			coordinate.x = newX;
-//		}
+		// Coordinate[] coordinates = clone.getCoordinates();
+		// for (Coordinate coordinate : coordinates) {
+		// double newX = coordinate.y;
+		// coordinate.y = coordinate.x;
+		// coordinate.x = newX;
+		// }
 
 		return clone;
 	}
-
 
 }

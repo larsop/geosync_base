@@ -242,6 +242,16 @@
 -->
     </jaxb:bindings>
 
+<!--     <jaxb:bindings -->
+<!--             schemaLocation="iso/19139/20070417/gmd/extent.xsd" -->
+<!--             node="/xs:schema"> -->
+<!--         <jaxb:bindings -->
+<!--                 node="//xs:element[@name='EX_TemporalExtent']"> -->
+<!--            <jaxb:property name="value_EX_TemporalExtent"/> -->
+<!--             <jaxb:factoryMethod name="value_EX_TemporalExtent"/> -->
+<!--          </jaxb:bindings> -->
+<!--     </jaxb:bindings> -->
+
     <jaxb:bindings
             schemaLocation="iso/19139/20070417/gmd/gmd.xsd"
             node="/xs:schema">

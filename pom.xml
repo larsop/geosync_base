@@ -14,7 +14,7 @@
         <axis2.version>1.6.2</axis2.version>
         <!-- Common properties that can be used in child poms eg. ${spring.ws.core.version} -->
         <spring.ws.core.version>2.1.2.RELEASE</spring.ws.core.version>
-        <spring.version>3.2.3.RELEASE</spring.version>
+        <spring.version>5.3.19</spring.version>
         <geotools.version>10-RC1</geotools.version>
         <gt-opengis.version>2.7.4</gt-opengis.version>
 
